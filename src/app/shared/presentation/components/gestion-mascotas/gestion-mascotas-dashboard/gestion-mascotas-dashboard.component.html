@@ -1,0 +1,77 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1 class="heading-2">{{ 'pets.dashboard.title' | translate }}</h1>
+    <p class="large-text-regular text-muted">{{ 'pets.dashboard.subtitle' | translate }}</p>
+  </div>
+
+  <div class="dashboard-stats">
+    <div class="stat-card card">
+      <div class="stat-icon">
+        <mat-icon>pets</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3 class="heading-3">{{ totalMascotas }}</h3>
+        <p class="normal-text-regular text-muted">{{ 'pets.dashboard.registered' | translate }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card card">
+      <div class="stat-icon">
+        <mat-icon>medical_services</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3 class="heading-3">{{ totalHistorial }}</h3>
+        <p class="normal-text-regular text-muted">{{ 'pets.dashboard.medical' | translate }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card card">
+      <div class="stat-icon">
+        <mat-icon>auto_awesome</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3 class="heading-3">{{ totalRecomendaciones }}</h3>
+        <p class="normal-text-regular text-muted">{{ 'pets.dashboard.ai' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-actions">
+    <div class="action-card card">
+      <h3 class="heading-4">{{ 'pets.dashboard.manage' | translate }}</h3>
+      <p class="normal-text-regular text-muted">{{ 'pets.dashboard.manageDesc' | translate }}</p>
+      <div class="action-buttons">
+        <button class="btn-primary" (click)="navigateToMascotas()">
+          <mat-icon>pets</mat-icon>
+          {{ 'pets.dashboard.viewPets' | translate }}
+        </button>
+        <button class="btn-secondary" (click)="navigateToNuevaMascota()">
+          <mat-icon>add</mat-icon>
+          {{ 'pets.dashboard.addPet' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div class="action-card card">
+      <h3 class="heading-4">{{ 'pets.dashboard.history' | translate }}</h3>
+      <p class="normal-text-regular text-muted">{{ 'pets.dashboard.historyDesc' | translate }}</p>
+      <div class="action-buttons">
+        <button class="btn-primary" (click)="navigateToMascotas()">
+          <mat-icon>medical_services</mat-icon>
+          {{ 'pets.dashboard.viewHistory' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div class="action-card card">
+      <h3 class="heading-4">{{ 'pets.dashboard.aiRecs' | translate }}</h3>
+      <p class="normal-text-regular text-muted">{{ 'pets.dashboard.aiDesc' | translate }}</p>
+      <div class="action-buttons">
+        <button class="btn-primary" (click)="navigateToMascotas()">
+          <mat-icon>auto_awesome</mat-icon>
+          {{ 'pets.dashboard.viewRecs' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

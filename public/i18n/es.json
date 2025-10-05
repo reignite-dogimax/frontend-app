@@ -1,0 +1,40 @@
+{
+  "option": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "categories": "Categorías",
+    "courses": "Cursos"
+  },
+  "pets": {
+    "title": "Mis Mascotas",
+    "add": "Agregar Mascota",
+    "addFirst": "Agregar Primera Mascota",
+    "loading": "Cargando mascotas...",
+    "errorCreate": "Error al crear la mascota",
+    "retry": "Reintentar",
+    "details": "Ver Detalles",
+    "edit": "Editar",
+    "back": "Volver",
+    "save": "Guardar",
+    "create": "Crear",
+    "updating": "Actualizando...",
+    "creating": "Creando...",
+    "dashboard": {
+      "title": "Gestión de Mascotas - Dashboard",
+      "subtitle": "Gestiona la salud y bienestar de tus mascotas",
+      "registered": "Mascotas Registradas",
+      "medical": "Registros Médicos",
+      "ai": "Recomendaciones IA",
+      "manage": "Gestionar Mascotas",
+      "manageDesc": "Administra el perfil y salud de tus mascotas",
+      "viewPets": "Ver Mascotas",
+      "addPet": "Agregar Mascota",
+      "history": "Historial Médico",
+      "historyDesc": "Consulta y gestiona el historial médico de tus mascotas",
+      "viewHistory": "Ver Historial",
+      "aiRecs": "Recomendaciones IA",
+      "aiDesc": "Recibe recomendaciones personalizadas para el cuidado de tus mascotas",
+      "viewRecs": "Ver Recomendaciones"
+    }
+  }
+}
