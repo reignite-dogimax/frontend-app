@@ -1,3 +1,40 @@
 {
-
+  "option": {
+    "home": "Home",
+    "about": "About",
+    "categories": "Categories",
+    "courses": "Courses"
+  },
+  "pets": {
+    "title": "My Pets",
+    "add": "Add Pet",
+    "addFirst": "Add First Pet",
+    "loading": "Loading pets...",
+    "errorCreate": "Error creating pet",
+    "retry": "Retry",
+    "details": "View Details",
+    "edit": "Edit",
+    "back": "Back",
+    "save": "Save",
+    "create": "Create",
+    "updating": "Updating...",
+    "creating": "Creating...",
+    "dashboard": {
+      "title": "Pet Management - Dashboard",
+      "subtitle": "Manage your pets' health and wellbeing",
+      "registered": "Registered Pets",
+      "medical": "Medical Records",
+      "ai": "AI Recommendations",
+      "manage": "Manage Pets",
+      "manageDesc": "Manage your pets' profile and health",
+      "viewPets": "View Pets",
+      "addPet": "Add Pet",
+      "history": "Medical History",
+      "historyDesc": "View and manage your pets' medical history",
+      "viewHistory": "View History",
+      "aiRecs": "AI Recommendations",
+      "aiDesc": "Receive personalized care recommendations for your pets",
+      "viewRecs": "View Recommendations"
+    }
+  }
 }

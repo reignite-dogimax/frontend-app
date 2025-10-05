@@ -1,4 +1,292 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Arial:wght@400;500;600;700&display=swap');
+
+/* Design System Variables */
+:root {
+  /* Primary Colors */
+  --color-naranja-dark: #414535;
+  --color-naranja: #FF6B1A;
+  --color-naranja-light: #C19875;
+
+  /* Secondary Colors */
+  --color-blanco: #FFFFFF;
+
+  /* Tertiary Colors */
+  --color-gris-ceniza: #96BBBB;
+
+  /* Text Colors */
+  --color-azul-oscuro: #2C3E50;
+  --color-azul: #5D6D7E;
+
+  /* Typography */
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Arial', sans-serif;
+
+  /* Heading Sizes */
+  --heading-1-size: 52px;
+  --heading-1-line-height: 63.9px;
+  --heading-2-size: 36px;
+  --heading-2-line-height: 49px;
+  --heading-3-size: 24px;
+  --heading-3-line-height: 33px;
+  --heading-4-size: 18px;
+  --heading-4-line-height: 19px;
+  --heading-5-size: 18px;
+  --heading-5-line-height: 19px;
+
+  /* Body Text Sizes */
+  --large-text-size: 24px;
+  --large-text-line-height: 33px;
+  --medium-text-size: 18px;
+  --medium-text-line-height: 30px;
+  --normal-text-size: 16px;
+  --normal-text-line-height: 22px;
+  --small-text-size: 14px;
+  --small-text-line-height: 19px;
+
+  /* Button Styles */
+  --button-border-radius: 25px;
+  --button-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --button-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --button-shadow-active: 0 2px 4px rgba(255, 107, 26, 0.3);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-azul-oscuro);
+  background-color: #f8f9fa;
+}
+
+/* Typography Classes */
+.heading-1 {
+  font-family: var(--font-heading);
+  font-size: var(--heading-1-size);
+  line-height: var(--heading-1-line-height);
+  font-weight: 700;
+  color: var(--color-azul-oscuro);
+}
+
+.heading-2 {
+  font-family: var(--font-heading);
+  font-size: var(--heading-2-size);
+  line-height: var(--heading-2-line-height);
+  font-weight: 600;
+  color: var(--color-azul-oscuro);
+}
+
+.heading-3 {
+  font-family: var(--font-heading);
+  font-size: var(--heading-3-size);
+  line-height: var(--heading-3-line-height);
+  font-weight: 600;
+  color: var(--color-azul-oscuro);
+}
+
+.heading-4 {
+  font-family: var(--font-heading);
+  font-size: var(--heading-4-size);
+  line-height: var(--heading-4-line-height);
+  font-weight: 500;
+  color: var(--color-azul-oscuro);
+}
+
+.heading-5 {
+  font-family: var(--font-heading);
+  font-size: var(--heading-5-size);
+  line-height: var(--heading-5-line-height);
+  font-weight: 400;
+  color: var(--color-azul-oscuro);
+}
+
+.large-text-bold {
+  font-family: var(--font-body);
+  font-size: var(--large-text-size);
+  line-height: var(--large-text-line-height);
+  font-weight: 700;
+  color: var(--color-azul-oscuro);
+}
+
+.large-text-regular {
+  font-family: var(--font-body);
+  font-size: var(--large-text-size);
+  line-height: var(--large-text-line-height);
+  font-weight: 400;
+  color: var(--color-azul-oscuro);
+}
+
+.medium-text-bold {
+  font-family: var(--font-body);
+  font-size: var(--medium-text-size);
+  line-height: var(--medium-text-line-height);
+  font-weight: 700;
+  color: var(--color-azul-oscuro);
+}
+
+.medium-text-regular {
+  font-family: var(--font-body);
+  font-size: var(--medium-text-size);
+  line-height: var(--medium-text-line-height);
+  font-weight: 400;
+  color: var(--color-azul-oscuro);
+}
+
+.normal-text-bold {
+  font-family: var(--font-body);
+  font-size: var(--normal-text-size);
+  line-height: var(--normal-text-line-height);
+  font-weight: 700;
+  color: var(--color-azul-oscuro);
+}
+
+.normal-text-regular {
+  font-family: var(--font-body);
+  font-size: var(--normal-text-size);
+  line-height: var(--normal-text-line-height);
+  font-weight: 400;
+  color: var(--color-azul-oscuro);
+}
+
+.small-text-bold {
+  font-family: var(--font-body);
+  font-size: var(--small-text-size);
+  line-height: var(--small-text-line-height);
+  font-weight: 700;
+  color: var(--color-azul-oscuro);
+}
+
+.small-text-regular {
+  font-family: var(--font-body);
+  font-size: var(--small-text-size);
+  line-height: var(--small-text-line-height);
+  font-weight: 400;
+  color: var(--color-azul-oscuro);
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: var(--color-naranja);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: var(--button-border-radius);
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: var(--normal-text-size);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--button-shadow);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-blanco);
+  color: var(--color-naranja);
+  box-shadow: var(--button-shadow-hover);
+}
+
+.btn-primary:active {
+  border: 2px solid var(--color-naranja);
+  box-shadow: var(--button-shadow-active);
+}
+
+.btn-secondary {
+  background-color: var(--color-blanco);
+  color: var(--color-naranja);
+  border: 2px solid var(--color-naranja);
+  border-radius: var(--button-border-radius);
+  padding: 10px 22px;
+  font-family: var(--font-body);
+  font-size: var(--normal-text-size);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--button-shadow);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-blanco);
+  color: var(--color-naranja);
+  box-shadow: var(--button-shadow-hover);
+}
+
+.btn-secondary:active {
+  border: 2px solid var(--color-naranja);
+  box-shadow: var(--button-shadow-active);
+}
+
+.btn-disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  border: none;
+  border-radius: var(--button-border-radius);
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: var(--normal-text-size);
+  font-weight: 500;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Button Sizes */
+.btn-small {
+  padding: 8px 16px;
+  font-size: var(--small-text-size);
+}
+
+.btn-medium {
+  padding: 12px 24px;
+  font-size: var(--normal-text-size);
+}
+
+.btn-large {
+  padding: 16px 32px;
+  font-size: var(--medium-text-size);
+}
+
+.btn-full-width {
+  width: 100%;
+  padding: 12px 24px;
+}
+
+/* Card Styles */
+.card {
+  background-color: var(--color-blanco);
+  border-radius: 12px;
+  box-shadow: var(--button-shadow);
+  padding: 24px;
+  margin: 16px 0;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--button-shadow-hover);
+}
+
+/* Utility Classes */
+.text-primary {
+  color: var(--color-naranja);
+}
+
+.text-secondary {
+  color: var(--color-azul);
+}
+
+.text-muted {
+  color: var(--color-azul);
+  opacity: 0.7;
+}
+
+.bg-primary {
+  background-color: var(--color-naranja);
+}
+
+.bg-secondary {
+  background-color: var(--color-blanco);
+}
+
+.bg-tertiary {
+  background-color: var(--color-gris-ceniza);
+}

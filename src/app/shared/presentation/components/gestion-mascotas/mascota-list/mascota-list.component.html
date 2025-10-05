@@ -1,0 +1,80 @@
+<div class="mascota-list-container">
+  <div class="header">
+    <h1 class="heading-2">{{ 'pets.title' | translate }}</h1>
+    <button class="btn-primary" routerLink="/gestion-mascotas/mascotas/nueva">
+      <mat-icon>add</mat-icon>
+      {{ 'pets.add' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p class="normal-text-regular">{{ 'pets.loading' | translate }}</p>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <mat-icon class="error-icon">error</mat-icon>
+    <p class="normal-text-regular">{{ error }}</p>
+    <button class="btn-secondary" (click)="loadMascotas()">Reintentar</button>
+  </div>
+
+  <div *ngIf="!loading && !error && mascotas.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">pets</mat-icon>
+    <h3 class="heading-4">{{ 'pets.title' | translate }}</h3>
+    <p class="normal-text-regular text-muted"></p>
+    <button class="btn-primary" routerLink="/gestion-mascotas/mascotas/nueva">
+      <mat-icon>add</mat-icon>
+      {{ 'pets.addFirst' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="!loading && !error && mascotas.length > 0" class="mascotas-grid">
+    <div *ngFor="let mascota of mascotas" class="mascota-card card">
+      <div class="mascota-header">
+        <div class="mascota-info">
+          <mat-icon class="mascota-icon">{{ getEspecieIcon(mascota.especie) }}</mat-icon>
+          <div class="mascota-details">
+            <h3 class="heading-4">{{ mascota.nombre }}</h3>
+            <p class="normal-text-regular text-secondary">{{ mascota.especie }} - {{ mascota.raza }}</p>
+          </div>
+        </div>
+        <div class="mascota-actions">
+          <button class="btn-secondary btn-small" [routerLink]="['/gestion-mascotas/mascotas', mascota.id, 'editar']">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="mascota-content">
+        <div class="mascota-stats">
+          <div class="stat-item" *ngIf="mascota.peso">
+            <mat-icon>monitor_weight</mat-icon>
+            <span class="small-text-regular">{{ mascota.peso }} kg</span>
+          </div>
+          <div class="stat-item" *ngIf="mascota.fechaNacimiento">
+            <mat-icon>cake</mat-icon>
+            <span class="small-text-regular">{{ getEdadMascota(mascota.fechaNacimiento) }}</span>
+          </div>
+          <div class="stat-item" *ngIf="mascota.sexo">
+            <mat-icon>{{ mascota.sexo === 'Macho' ? 'male' : 'female' }}</mat-icon>
+            <span class="small-text-regular">{{ mascota.sexo }}</span>
+          </div>
+        </div>
+
+        <div class="mascota-tags" *ngIf="mascota.esterilizado !== undefined">
+          <mat-chip-set>
+            <mat-chip [class]="mascota.esterilizado ? 'chip-success' : 'chip-warning'">
+              {{ mascota.esterilizado ? 'Esterilizado' : 'No esterilizado' }}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+
+        <div class="mascota-actions-full">
+          <button class="btn-primary btn-full-width" [routerLink]="['/gestion-mascotas/mascotas', mascota.id]">
+            Ver Detalles
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

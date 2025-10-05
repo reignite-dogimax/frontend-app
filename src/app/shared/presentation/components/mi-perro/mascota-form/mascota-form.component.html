@@ -1,0 +1,117 @@
+<div class="mascota-form-container">
+  <div class="header">
+    <button class="btn-secondary" (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+    <h1 class="heading-2">
+      {{ isEditMode ? 'Editar Mascota' : 'Nueva Mascota' }}
+    </h1>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p class="normal-text-regular">Cargando información...</p>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <mat-icon class="error-icon">error</mat-icon>
+    <p class="normal-text-regular">{{ error }}</p>
+    <button class="btn-secondary" (click)="isEditMode ? loadMascota(mascotaId!) : null">Reintentar</button>
+  </div>
+
+  <form *ngIf="!loading" [formGroup]="mascotaForm" (ngSubmit)="onSubmit()" class="mascota-form">
+    <div class="form-card card">
+      <h3 class="heading-3">Información Básica</h3>
+      
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Nombre *</mat-label>
+          <input matInput formControlName="nombre" placeholder="Nombre de la mascota">
+          <mat-error *ngIf="isFieldInvalid('nombre')">{{ getFieldError('nombre') }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Especie *</mat-label>
+          <mat-select formControlName="especie">
+            <mat-option *ngFor="let especie of especies" [value]="especie">
+              {{ especie }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="isFieldInvalid('especie')">{{ getFieldError('especie') }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Raza *</mat-label>
+          <input matInput formControlName="raza" placeholder="Raza de la mascota">
+          <mat-error *ngIf="isFieldInvalid('raza')">{{ getFieldError('raza') }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Sexo</mat-label>
+          <mat-select formControlName="sexo">
+            <mat-option *ngFor="let sexo of sexos" [value]="sexo">
+              {{ sexo }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Peso (kg)</mat-label>
+          <input matInput type="number" formControlName="peso" placeholder="0.0" step="0.1">
+          <mat-error *ngIf="isFieldInvalid('peso')">{{ getFieldError('peso') }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Color</mat-label>
+          <input matInput formControlName="color" placeholder="Color de la mascota">
+          <mat-error *ngIf="isFieldInvalid('color')">{{ getFieldError('color') }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Microchip</mat-label>
+          <input matInput formControlName="microchip" placeholder="Número de microchip">
+          <mat-error *ngIf="isFieldInvalid('microchip')">{{ getFieldError('microchip') }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-checkbox formControlName="esterilizado" class="checkbox-field">
+          Esterilizado
+        </mat-checkbox>
+      </div>
+
+      <div class="form-row full-width">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Observaciones</mat-label>
+          <textarea matInput formControlName="observaciones" rows="3" placeholder="Observaciones adicionales sobre la mascota"></textarea>
+          <mat-error *ngIf="isFieldInvalid('observaciones')">{{ getFieldError('observaciones') }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="saving">
+        Cancelar
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="mascotaForm.invalid || saving">
+        <mat-spinner *ngIf="saving" diameter="20"></mat-spinner>
+        <mat-icon *ngIf="!saving">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+        {{ saving ? 'Guardando...' : (isEditMode ? 'Actualizar' : 'Crear') }}
+      </button>
+    </div>
+  </form>
+</div>

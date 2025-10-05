@@ -48,7 +48,7 @@
     { "id": 510, "nombre": "Javier Luna", "email": "javiluna@email.com", "telefono": "+51990123456" }
   ],
   "mascotas": [
-    { "id": 1, "usuarioId": 501, "nombre": "Bruno", "especie": "Perro", "raza": "Labrador Retriever" },
+    { "id": 1, "usuarioId": 501, "nombre": "Bruno", "especie": "Perro", "raza": "Labrador Retriever", "activo": true, "fechaRegistro": "2025-01-01T10:00:00.000Z" },
     { "id": 2, "usuarioId": 501, "nombre": "Misha", "especie": "Gato", "raza": "Siamés" },
     { "id": 3, "usuarioId": 502, "nombre": "Rocky", "especie": "Perro", "raza": "Bulldog Francés" },
     { "id": 4, "usuarioId": 503, "nombre": "Luna", "especie": "Gato", "raza": "Angora" },
@@ -57,7 +57,7 @@
     { "id": 7, "usuarioId": 506, "nombre": "Max", "especie": "Perro", "raza": "Beagle" },
     { "id": 8, "usuarioId": 507, "nombre": "Simba", "especie": "Gato", "raza": "Criollo" },
     { "id": 9, "usuarioId": 508, "nombre": "Kira", "especie": "Perro", "raza": "Golden Retriever" },
-    { "id": 10, "usuarioId": 509, "nombre": "Nala", "especie": "Gato", "raza": "Persa" }
+    { "id": 10, "usuarioId": 509, "nombre": "Nala", "especie": "Gato", "raza": "Persa", "activo": true, "fechaRegistro": "2025-01-01T10:00:00.000Z" }
   ],
   "servicios": [
     { "id": 1001, "nombre": "Consulta General", "precioBase": 80.00 },
@@ -154,5 +154,19 @@
     { "id": 908, "usuarioId": null, "mensaje": "Nuevos horarios de atención en nuestra sede de Miraflores.", "tipo": "AnuncioGeneral" },
     { "id": 909, "usuarioId": 508, "mensaje": "Tu producto 'Pipeta Antipulgas' ha sido despachado.", "tipo": "NotificacionCompra" },
     { "id": 910, "usuarioId": 510, "mensaje": "Bienvenido a VetCare, Javier. Registra a tu mascota.", "tipo": "Bienvenida" }
+  ],
+  "historial-medico": [
+    { "id": 1, "mascotaId": 1, "fechaRegistro": "2025-09-01T10:15:00.000Z", "tipoRegistro": "Consulta", "descripcion": "Consulta general de rutina", "veterinario": "Dr. Ricardo Salazar", "observaciones": "Mascota en buen estado general", "costo": 80.00 },
+    { "id": 2, "mascotaId": 1, "fechaRegistro": "2025-09-01T10:30:00.000Z", "tipoRegistro": "Vacuna", "descripcion": "Aplicación de vacuna antirrábica", "veterinario": "Dr. Ricardo Salazar", "observaciones": "Sin reacciones adversas", "costo": 120.00 },
+    { "id": 3, "mascotaId": 2, "fechaRegistro": "2025-09-02T11:00:00.000Z", "tipoRegistro": "Consulta", "descripcion": "Revisión post-operatoria", "veterinario": "Dra. Lucía Cordova", "observaciones": "Recuperación normal", "costo": 60.00 },
+    { "id": 4, "mascotaId": 3, "fechaRegistro": "2025-09-03T09:00:00.000Z", "tipoRegistro": "Cirugia", "descripcion": "Esterilización", "veterinario": "Dr. Carlos Solano", "observaciones": "Cirugía exitosa", "costo": 400.00 },
+    { "id": 5, "mascotaId": 5, "fechaRegistro": "2025-09-05T12:00:00.000Z", "tipoRegistro": "Examen", "descripcion": "Radiografía de cadera", "veterinario": "Dr. Ricardo Salazar", "observaciones": "Sin anomalías detectadas", "costo": 200.00 }
+  ],
+  "recomendaciones": [
+    { "id": 1, "mascotaId": 1, "tipo": "Alimentacion", "titulo": "Cambio de dieta recomendado", "descripcion": "Considera cambiar a una dieta específica para perros de raza grande mayores de 2 años", "prioridad": "Media", "fechaGeneracion": "2025-09-15T10:00:00.000Z", "completada": false, "fuenteIA": "Sistema IA VetCare", "confianza": 85 },
+    { "id": 2, "mascotaId": 1, "tipo": "Ejercicio", "titulo": "Aumentar actividad física", "descripcion": "Tu mascota necesita al menos 45 minutos de ejercicio diario para mantener un peso saludable", "prioridad": "Alta", "fechaGeneracion": "2025-09-15T10:00:00.000Z", "completada": false, "fuenteIA": "Sistema IA VetCare", "confianza": 92 },
+    { "id": 3, "mascotaId": 2, "tipo": "Salud", "titulo": "Control dental", "descripcion": "Programa una limpieza dental profesional en los próximos 3 meses", "prioridad": "Media", "fechaGeneracion": "2025-09-15T10:00:00.000Z", "completada": false, "fuenteIA": "Sistema IA VetCare", "confianza": 78 },
+    { "id": 4, "mascotaId": 3, "tipo": "Cuidados", "titulo": "Cuidados post-operatorios", "descripcion": "Mantén el collar isabelino por 10 días y evita baños hasta que cicatrice completamente", "prioridad": "Critica", "fechaGeneracion": "2025-09-15T10:00:00.000Z", "completada": true, "fechaCompletada": "2025-09-20T10:00:00.000Z", "fuenteIA": "Sistema IA VetCare", "confianza": 95 },
+    { "id": 5, "mascotaId": 5, "tipo": "Vacunacion", "titulo": "Vacuna anual pendiente", "descripcion": "La vacuna antirrábica anual vence en 2 meses. Programa la cita con anticipación", "prioridad": "Alta", "fechaGeneracion": "2025-09-15T10:00:00.000Z", "fechaVencimiento": "2025-11-15T10:00:00.000Z", "completada": false, "fuenteIA": "Sistema IA VetCare", "confianza": 100 }
   ]
 }
