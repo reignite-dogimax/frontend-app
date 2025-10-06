@@ -1,10 +1,10 @@
 {
   "option": {
-<<<<<<< HEAD
     "home": "Inicio",
     "about": "Acerca de",
     "categories": "Categorías",
-    "courses": "Cursos"
+    "courses": "Cursos",
+    "notifications": "Notificaciones"
   },
   "pets": {
     "title": "Mis Mascotas",
@@ -37,8 +37,6 @@
       "aiDesc": "Recibe recomendaciones personalizadas para el cuidado de tus mascotas",
       "viewRecs": "Ver Recomendaciones"
     }
-=======
-    "notifications": "Notificaciones"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -49,6 +47,5 @@
     "delete": "Eliminar",
     "empty": "No hay notificaciones",
     "seeAll": "Ver todas"
->>>>>>> refs/heads/feature/gestión_de_notificaciones
   }
 }

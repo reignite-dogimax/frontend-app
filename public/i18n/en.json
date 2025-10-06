@@ -1,10 +1,10 @@
 {
   "option": {
-<<<<<<< HEAD
     "home": "Home",
     "about": "About",
     "categories": "Categories",
-    "courses": "Courses"
+    "courses": "Courses",
+    "notifications": "Notifications"
   },
   "pets": {
     "title": "My Pets",
@@ -37,8 +37,6 @@
       "aiDesc": "Receive personalized care recommendations for your pets",
       "viewRecs": "View Recommendations"
     }
-=======
-    "notifications": "Notifications"
   },
   "notifications": {
     "title": "Notifications",
@@ -49,6 +47,5 @@
     "delete": "Delete",
     "empty": "No notifications",
     "seeAll": "See all"
->>>>>>> refs/heads/feature/gestión_de_notificaciones
   }
 }

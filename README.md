@@ -2,8 +2,6 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.5.
 
-<<<<<<< HEAD
-=======
 ## Arquitectura DDD (Domain-Driven Design)
 
 El proyecto aplica DDD de forma consistente en el feature de notificaciones y sirve como plantilla para futuros features.
@@ -32,7 +30,6 @@ Migración y deprecaciones:
 Ejemplo de uso (store -> casos de uso):
 - `notifications/state/notifications.store.ts` inyecta `ListNotificationsUseCase`, `MarkAsReadUseCase`, `MarkAllAsReadUseCase` y `RemoveNotificationUseCase` y expone señales para la UI.
 
->>>>>>> refs/heads/feature/gestión_de_notificaciones
 ## Development server
 
 To start a local development server, run:
@@ -43,15 +40,12 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-<<<<<<< HEAD
-=======
 Optional: fake API server
 
 ```bash
 npm run server
 ```
 
->>>>>>> refs/heads/feature/gestión_de_notificaciones
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
@@ -84,11 +78,8 @@ To execute unit tests with the [Karma](https://karma-runner.github.io) test runn
 ng test
 ```
 
-<<<<<<< HEAD
-=======
 Se incluye una prueba simple de mapeo DTO<->dominio en `notifications/infrastructure/mappers/notification.mapper.spec.ts`.
 
->>>>>>> refs/heads/feature/gestión_de_notificaciones
 ## Running end-to-end tests
 
 For end-to-end (e2e) testing, run:

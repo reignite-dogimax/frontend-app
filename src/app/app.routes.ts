@@ -1,12 +1,9 @@
 import { Routes } from '@angular/router';
-<<<<<<< HEAD
+import { NotificationsPageComponent } from './notifications/presentation/notifications-page/notifications-page.component';
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: '/gestion-mascotas',
-    pathMatch: 'full'
-  },
+  { path: '', pathMatch: 'full', redirectTo: 'notifications' },
+  { path: 'notifications', component: NotificationsPageComponent },
   {
     path: 'gestion-mascotas',
     loadComponent: () => import('./shared/presentation/components/gestion-mascotas/gestion-mascotas-navigation/gestion-mascotas-navigation.component').then(m => m.GestionMascotasNavigationComponent),
@@ -42,15 +39,5 @@ export const routes: Routes = [
       }
     ]
   },
-  {
-    path: '**',
-    redirectTo: '/gestion-mascotas'
-  }
-=======
-import { NotificationsPageComponent } from './notifications/presentation/notifications-page/notifications-page.component';
-
-export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'notifications' },
-  { path: 'notifications', component: NotificationsPageComponent }
->>>>>>> refs/heads/feature/gestión_de_notificaciones
+  { path: '**', redirectTo: 'notifications' }
 ];

@@ -5,11 +5,8 @@ import { routes } from './app.routes';
 import {provideTranslateService} from '@ngx-translate/core';
 import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
 import {provideHttpClient, withFetch} from '@angular/common/http';
-<<<<<<< HEAD
-=======
 import { NOTIFICATION_REPOSITORY } from './notifications/domain/notification.repository';
 import { HttpNotificationRepository } from './notifications/infrastructure/http/http-notification.repository';
->>>>>>> refs/heads/feature/gestión_de_notificaciones
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,9 +20,8 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en'
     }),
     provideHttpClient(withFetch()),
-<<<<<<< HEAD
-=======
+
     { provide: NOTIFICATION_REPOSITORY, useClass: HttpNotificationRepository }
->>>>>>> refs/heads/feature/gestión_de_notificaciones
+
   ]
 };

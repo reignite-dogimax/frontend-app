@@ -4,10 +4,7 @@ import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-language-switcher',
-<<<<<<< HEAD
-=======
   standalone: true,
->>>>>>> refs/heads/feature/gestión_de_notificaciones
   imports: [
     MatButtonToggleGroup,
     MatButtonToggle

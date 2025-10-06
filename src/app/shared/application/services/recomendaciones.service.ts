@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { 
-  Recomendacion, 
-  CreateRecomendacionRequest, 
-  IARequest, 
-  IAResponse 
+import { Observable, map } from 'rxjs';
+import {
+  Recomendacion,
+  CreateRecomendacionRequest,
+  IARequest,
+  IAResponse
 } from '../../domain/models/recomendacion.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecomendacionesService {
-  private readonly baseUrl = 'http://localhost:3000';
-  private readonly aiServiceUrl = 'http://localhost:3001'; // Simulando servicio de IA
+  // Usar el proxy para no acoplar a puertos locales
+  private readonly baseUrl = '/api/v1';
+  private readonly aiServiceUrl = '/api/v1'; // Simulación de servicio de IA bajo json-server
 
   constructor(private http: HttpClient) {}
 
@@ -57,17 +58,21 @@ export class RecomendacionesService {
 
   // Obtener recomendaciones por tipo
   getRecomendacionesByTipo(mascotaId: number, tipo: string): Observable<Recomendacion[]> {
-    return this.http.get<Recomendacion[]>(`${this.baseUrl}/recomendaciones?mascotaId=${mascotaId}&tipo=${tipo}`);
+    return this.http.get<Recomendacion[]>(`${this.baseUrl}/recomendaciones?mascotaId=${mascotaId}&tipo=${encodeURIComponent(tipo)}`);
   }
 
   // Obtener recomendaciones por prioridad
   getRecomendacionesByPrioridad(mascotaId: number, prioridad: string): Observable<Recomendacion[]> {
-    return this.http.get<Recomendacion[]>(`${this.baseUrl}/recomendaciones?mascotaId=${mascotaId}&prioridad=${prioridad}`);
+    return this.http.get<Recomendacion[]>(`${this.baseUrl}/recomendaciones?mascotaId=${mascotaId}&prioridad=${encodeURIComponent(prioridad)}`);
   }
 
-  // Generar recomendaciones usando IA
+  // Generar recomendaciones usando IA (simulado en json-server)
   generarRecomendacionesIA(request: IARequest): Observable<IAResponse> {
-    return this.http.post<IAResponse>(`${this.aiServiceUrl}/recomendaciones/generar`, request);
+    // Se guardará y devolverá un objeto IAResponse en la colección 'ia-respuestas'
+    return this.http.post<IAResponse>(`${this.aiServiceUrl}/ia-respuestas`, {
+      ...request,
+      fechaGeneracion: new Date().toISOString()
+    } as any);
   }
 
   // Obtener recomendaciones pendientes
@@ -81,7 +86,7 @@ export class RecomendacionesService {
     return this.http.get<Recomendacion[]>(`${this.baseUrl}/recomendaciones?mascotaId=${mascotaId}&fechaVencimiento_lte=${hoy}&completada=false`);
   }
 
-  // Obtener estadísticas de recomendaciones
+  // Obtener estadísticas de recomendaciones (simulado)
   getEstadisticasRecomendaciones(mascotaId: number): Observable<{
     total: number;
     completadas: number;
@@ -90,6 +95,15 @@ export class RecomendacionesService {
     porTipo: Record<string, number>;
     porPrioridad: Record<string, number>;
   }> {
-    return this.http.get<any>(`${this.baseUrl}/recomendaciones/estadisticas?mascotaId=${mascotaId}`);
+    return this.http
+      .get<any[]>(`${this.baseUrl}/recomendaciones-estadisticas?mascotaId=${mascotaId}`)
+      .pipe(map(arr => (arr && arr.length ? arr[0] : {
+        total: 0,
+        completadas: 0,
+        pendientes: 0,
+        vencidas: 0,
+        porTipo: {},
+        porPrioridad: {}
+      })));
   }
 }

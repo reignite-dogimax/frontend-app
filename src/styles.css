@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-<<<<<<< HEAD
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Arial:wght@400;500;600;700&display=swap');
 
@@ -291,7 +290,6 @@ html, body {
 .bg-tertiary {
   background-color: var(--color-gris-ceniza);
 }
-=======
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
->>>>>>> refs/heads/feature/gestión_de_notificaciones
+/* Fin de estilos globales */

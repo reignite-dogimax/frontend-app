@@ -13,7 +13,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MascotaService } from '../../../../application/services/mascota.service';
-import { Mascota, CreateMascotaRequest, UpdateMascotaRequest } from '../../../../domain/models/mascota.model';
+import { CreateMascotaRequest, UpdateMascotaRequest } from '../../../../domain/models/mascota.model';
 
 @Component({
   selector: 'app-mascota-form',
@@ -77,7 +77,6 @@ export class MascotaFormComponent implements OnInit {
       color: ['', Validators.maxLength(30)],
       sexo: [''],
       esterilizado: [false],
-      microchip: ['', Validators.maxLength(20)],
       observaciones: ['', Validators.maxLength(500)]
     });
   }
@@ -97,7 +96,6 @@ export class MascotaFormComponent implements OnInit {
           color: mascota.color,
           sexo: mascota.sexo,
           esterilizado: mascota.esterilizado,
-          microchip: mascota.microchip,
           observaciones: mascota.observaciones
         });
         this.loading = false;
@@ -115,8 +113,8 @@ export class MascotaFormComponent implements OnInit {
       this.saving = true;
       this.error = null;
 
-      const formValue = this.mascotaForm.value;
-      
+      const formValue = this.mascotaForm.value as any;
+
       if (this.isEditMode && this.mascotaId) {
         const updateData: UpdateMascotaRequest = {
           nombre: formValue.nombre,
@@ -127,14 +125,13 @@ export class MascotaFormComponent implements OnInit {
           color: formValue.color,
           sexo: formValue.sexo,
           esterilizado: formValue.esterilizado,
-          microchip: formValue.microchip,
           observaciones: formValue.observaciones
         };
 
         this.mascotaService.updateMascota(this.mascotaId, updateData).subscribe({
           next: (mascota) => {
             this.saving = false;
-            this.router.navigate(['/mi-perro/mascotas', mascota.id]);
+            this.router.navigate(['/gestion-mascotas/mascotas', mascota.id]);
           },
           error: (error) => {
             this.error = 'Error al actualizar la mascota';
@@ -153,14 +150,13 @@ export class MascotaFormComponent implements OnInit {
           color: formValue.color,
           sexo: formValue.sexo,
           esterilizado: formValue.esterilizado,
-          microchip: formValue.microchip,
           observaciones: formValue.observaciones
         };
 
         this.mascotaService.createMascota(createData).subscribe({
           next: (mascota) => {
             this.saving = false;
-            this.router.navigate(['/mi-perro/mascotas', mascota.id]);
+            this.router.navigate(['/gestion-mascotas/mascotas', mascota.id]);
           },
           error: (error) => {
             this.error = 'Error al crear la mascota';
@@ -183,9 +179,9 @@ export class MascotaFormComponent implements OnInit {
 
   onCancel(): void {
     if (this.isEditMode && this.mascotaId) {
-      this.router.navigate(['/mi-perro/mascotas', this.mascotaId]);
+      this.router.navigate(['/gestion-mascotas/mascotas', this.mascotaId]);
     } else {
-      this.router.navigate(['/mi-perro/mascotas']);
+      this.router.navigate(['/gestion-mascotas/mascotas']);
     }
   }
 
@@ -220,7 +216,6 @@ export class MascotaFormComponent implements OnInit {
       peso: 'Peso',
       color: 'Color',
       sexo: 'Sexo',
-      microchip: 'Microchip',
       observaciones: 'Observaciones'
     };
     return labels[fieldName] || fieldName;

@@ -1,18 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { LanguageSwitcherComponent } from './language-switcher.component';
+import { LanguageSwitcher } from './language-switcher.component';
 
-describe('LanguageSwitcherComponent', () => {
-  let component: LanguageSwitcherComponent;
-  let fixture: ComponentFixture<LanguageSwitcherComponent>;
+describe('LanguageSwitcher', () => {
+  let component: LanguageSwitcher;
+  let fixture: ComponentFixture<LanguageSwitcher>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LanguageSwitcherComponent]
+      imports: [LanguageSwitcher, TranslateModule.forRoot(), NoopAnimationsModule]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(LanguageSwitcherComponent);
+    fixture = TestBed.createComponent(LanguageSwitcher);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
