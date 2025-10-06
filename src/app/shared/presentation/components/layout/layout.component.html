@@ -1,0 +1,62 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="'navigation'">
+    <div class="sidenav-header">
+      <div class="logo-container">
+        <mat-icon class="logo-icon">school</mat-icon>
+        <span class="logo-text">Dogimax</span>
+      </div>
+    </div>
+
+    <div class="sidenav-content">
+      <mat-nav-list class="nav-list">
+        <a mat-list-item [routerLink]="'/home'" routerLinkActive="active" class="nav-item">
+          <mat-icon matListItemIcon>home</mat-icon>
+          <span matListItemTitle>{{ 'option.home' | translate }}</span>
+        </a>
+
+        <a mat-list-item [routerLink]="'/about'" routerLinkActive="active" class="nav-item">
+          <mat-icon matListItemIcon>info</mat-icon>
+          <span matListItemTitle>{{ 'option.about' | translate }}</span>
+        </a>
+
+        <a mat-list-item [routerLink]="'/learning/categories'" routerLinkActive="active" class="nav-item">
+          <mat-icon matListItemIcon>category</mat-icon>
+          <span matListItemTitle>{{ 'option.categories' | translate }}</span>
+        </a>
+
+        <a mat-list-item [routerLink]="'/learning/courses'" routerLinkActive="active" class="nav-item">
+          <mat-icon matListItemIcon>book</mat-icon>
+          <span matListItemTitle>{{ 'option.courses' | translate }}</span>
+        </a>
+
+        <a mat-list-item [routerLink]="'/notifications'" routerLinkActive="active" class="nav-item">
+          <mat-icon matListItemIcon>notifications</mat-icon>
+          <span matListItemTitle>{{ 'option.notifications' | translate }}</span>
+        </a>
+      </mat-nav-list>
+    </div>
+
+    <div class="sidenav-footer">
+      <div class="footer-content">
+        <mat-icon>copyright</mat-icon>
+        <span>2025 Dogimax</span>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <h1>Dogimax</h1>
+      <div class="spacer"></div>
+      <app-notification-bell></app-notification-bell>
+      <app-language-switcher/>
+    </mat-toolbar>
+
+    <div class="content">
+      <router-outlet/>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

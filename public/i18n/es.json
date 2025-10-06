@@ -1,0 +1,15 @@
+{
+  "option": {
+    "notifications": "Notificaciones"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "all": "Todas",
+    "unread": "No leídas",
+    "markAll": "Marcar todas como leídas",
+    "markOne": "Marcar leída",
+    "delete": "Eliminar",
+    "empty": "No hay notificaciones",
+    "seeAll": "Ver todas"
+  }
+}

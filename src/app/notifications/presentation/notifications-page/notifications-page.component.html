@@ -1,0 +1,23 @@
+<div class="header">
+  <h2>{{ 'notifications.title' | translate }}</h2>
+  <div class="actions">
+    <mat-button-toggle-group [value]="filter()" (change)="filter.set($event.value)">
+      <mat-button-toggle value="all">{{ 'notifications.all' | translate }}</mat-button-toggle>
+      <mat-button-toggle value="unread">{{ 'notifications.unread' | translate }}</mat-button-toggle>
+    </mat-button-toggle-group>
+    <button mat-button color="primary" (click)="store.markAllAsRead()" [disabled]="store.unreadCount()===0">{{ 'notifications.markAll' | translate }}</button>
+  </div>
+</div>
+
+<mat-list>
+  <mat-list-item *ngFor="let n of filtered()" [class.unread]="!n.leido">
+    <mat-icon matListItemIcon>{{ icon(n.tipo, n.leido) }}</mat-icon>
+    <div matListItemTitle>{{ n.mensaje }}</div>
+    <div class="row-actions">
+      <button mat-button (click)="store.markAsRead(n.id)" *ngIf="!n.leido">{{ 'notifications.markOne' | translate }}</button>
+      <button mat-button color="warn" (click)="store.remove(n.id)">{{ 'notifications.delete' | translate }}</button>
+    </div>
+  </mat-list-item>
+</mat-list>
+
+<div class="empty" *ngIf="!store.loading() && filtered().length===0">{{ 'notifications.empty' | translate }}</div>
