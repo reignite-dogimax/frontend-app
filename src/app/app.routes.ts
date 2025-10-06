@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+<<<<<<< HEAD
 
 export const routes: Routes = [
   {
@@ -45,4 +46,11 @@ export const routes: Routes = [
     path: '**',
     redirectTo: '/gestion-mascotas'
   }
+=======
+import { NotificationsPageComponent } from './notifications/presentation/notifications-page/notifications-page.component';
+
+export const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'notifications' },
+  { path: 'notifications', component: NotificationsPageComponent }
+>>>>>>> refs/heads/feature/gestión_de_notificaciones
 ];

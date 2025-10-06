@@ -1,5 +1,6 @@
 {
   "option": {
+<<<<<<< HEAD
     "home": "Inicio",
     "about": "Acerca de",
     "categories": "Categorías",
@@ -36,5 +37,18 @@
       "aiDesc": "Recibe recomendaciones personalizadas para el cuidado de tus mascotas",
       "viewRecs": "Ver Recomendaciones"
     }
+=======
+    "notifications": "Notificaciones"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "all": "Todas",
+    "unread": "No leídas",
+    "markAll": "Marcar todas como leídas",
+    "markOne": "Marcar leída",
+    "delete": "Eliminar",
+    "empty": "No hay notificaciones",
+    "seeAll": "Ver todas"
+>>>>>>> refs/heads/feature/gestión_de_notificaciones
   }
 }

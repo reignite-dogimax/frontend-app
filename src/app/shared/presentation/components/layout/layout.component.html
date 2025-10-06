@@ -3,7 +3,11 @@
     <div class="sidenav-header">
       <div class="logo-container">
         <mat-icon class="logo-icon">school</mat-icon>
+<<<<<<< HEAD
         <span class="logo-text">Dogi Max</span>
+=======
+        <span class="logo-text">Dogimax</span>
+>>>>>>> refs/heads/feature/gestión_de_notificaciones
       </div>
     </div>
 
@@ -29,6 +33,7 @@
           <span matListItemTitle>{{ 'option.courses' | translate }}</span>
         </a>
 
+<<<<<<< HEAD
         <a mat-list-item [routerLink]="'/gestion-mascotas/mascotas'" routerLinkActive="active" class="nav-item">
           <mat-icon matListItemIcon>pets</mat-icon>
           <span matListItemTitle>Gestión de Mascotas</span>
@@ -37,6 +42,11 @@
         <a mat-list-item [routerLink]="'/gestion-mascotas/test-routing'" routerLinkActive="active" class="nav-item">
           <mat-icon matListItemIcon>bug_report</mat-icon>
           <span matListItemTitle>Test Routing</span>
+=======
+        <a mat-list-item [routerLink]="'/notifications'" routerLinkActive="active" class="nav-item">
+          <mat-icon matListItemIcon>notifications</mat-icon>
+          <span matListItemTitle>{{ 'option.notifications' | translate }}</span>
+>>>>>>> refs/heads/feature/gestión_de_notificaciones
         </a>
       </mat-nav-list>
     </div>
@@ -44,7 +54,11 @@
     <div class="sidenav-footer">
       <div class="footer-content">
         <mat-icon>copyright</mat-icon>
+<<<<<<< HEAD
         <span>2025 Digmax</span>
+=======
+        <span>2025 Dogimax</span>
+>>>>>>> refs/heads/feature/gestión_de_notificaciones
       </div>
     </div>
   </mat-sidenav>
@@ -54,8 +68,14 @@
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
+<<<<<<< HEAD
       <h1>Dogi Max</h1>
       <div class="spacer"></div>
+=======
+      <h1>Dogimax</h1>
+      <div class="spacer"></div>
+      <app-notification-bell></app-notification-bell>
+>>>>>>> refs/heads/feature/gestión_de_notificaciones
       <app-language-switcher/>
     </mat-toolbar>
 

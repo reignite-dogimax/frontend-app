@@ -1,0 +1,28 @@
+<button mat-icon-button
+        [matMenuTriggerFor]="menu"
+        matBadge="{{ store.unreadCount() }}"
+        [matBadgeHidden]="store.unreadCount() === 0"
+        matBadgeColor="warn"
+        [attr.aria-label]="('notifications.title' | translate)">
+  <mat-icon>notifications</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  <ng-container *ngIf="store.items().length; else empty">
+    <div class="menu-title">{{ 'notifications.title' | translate }}</div>
+    <button mat-menu-item *ngFor="let n of store.items() | slice:0:5" (click)="store.markAsRead(n.id)">
+      <mat-icon matMenuItemIcon>{{ n.leido ? 'notifications' : 'circle_notifications' }}</mat-icon>
+      <div class="item">
+        <div class="msg" [class.unread]="!n.leido">{{ n.mensaje }}</div>
+        <div class="type">{{ n.tipo }}</div>
+      </div>
+    </button>
+    <div class="menu-actions">
+      <button mat-button (click)="store.markAllAsRead()">{{ 'notifications.markAll' | translate }}</button>
+      <a mat-button routerLink="/notifications">{{ 'notifications.seeAll' | translate }}</a>
+    </div>
+  </ng-container>
+  <ng-template #empty>
+    <div class="empty">{{ 'notifications.empty' | translate }}</div>
+  </ng-template>
+</mat-menu>

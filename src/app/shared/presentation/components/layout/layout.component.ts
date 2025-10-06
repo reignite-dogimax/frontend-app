@@ -7,10 +7,18 @@ import {LanguageSwitcher} from '../language-switcher/language-switcher.component
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
 import {MatListItem, MatNavList} from '@angular/material/list';
 import {MatIcon} from '@angular/material/icon';
+<<<<<<< HEAD
+=======
+import { NotificationBellComponent } from '../../../../notifications/presentation/notification-bell/notification-bell.component';
+>>>>>>> refs/heads/feature/gestión_de_notificaciones
 
 
 @Component({
   selector: 'app-layout',
+<<<<<<< HEAD
+=======
+  standalone: true,
+>>>>>>> refs/heads/feature/gestión_de_notificaciones
   imports: [
     RouterOutlet,
     RouterLink,
@@ -25,6 +33,10 @@ import {MatIcon} from '@angular/material/icon';
     MatNavList,
     MatListItem,
     MatIcon,
+<<<<<<< HEAD
+=======
+    NotificationBellComponent,
+>>>>>>> refs/heads/feature/gestión_de_notificaciones
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
