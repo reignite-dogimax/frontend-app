@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Mascota, CreateMascotaRequest, UpdateMascotaRequest } from '../../domain/models/mascota.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MascotaService {
-  private readonly baseUrl = 'http://localhost:3000';
+  private readonly baseUrl = environment.apiUrl;
   private readonly storageKey = 'dm_local_mascotas';
 
   constructor(private http: HttpClient) {}

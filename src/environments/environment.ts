@@ -1,6 +1,6 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000',
+  production: true,
+  apiUrl: 'https://dogimax-json-api.vercel.app',
   appointmentsEndpoint: '/citas',
   veterinariesEndpoint: '/veterinarias',
   petsEndpoint: '/mascotas',
