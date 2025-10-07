@@ -175,3 +175,7 @@ npm start         # Aplicación Angular
 **¡LISTO PARA USAR!** 🚀
 
 El bounded context "Encargado del Bounded Context de Gestión de Mascotas" está completamente implementado con routing obligatorio, siguiendo exactamente la arquitectura especificada y aplicando el design system proporcionado.
+
+
+
+

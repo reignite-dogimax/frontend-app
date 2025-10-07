@@ -68,3 +68,7 @@ export class MiPerroDashboardComponent implements OnInit {
     this.router.navigate(['/mi-perro/mascotas/nueva']);
   }
 }
+
+
+
+

@@ -42,3 +42,7 @@ export interface CreateVacunaRequest {
   veterinario?: string;
   observaciones?: string;
 }
+
+
+
+

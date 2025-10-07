@@ -120,3 +120,7 @@ export class HistorialMedicoService {
       .pipe(map(dtos => dtos.map(historialFromDto)));
   }
 }
+
+
+
+

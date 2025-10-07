@@ -46,3 +46,7 @@ export interface IAResponse {
   confianza: number;
   fechaGeneracion: Date;
 }
+
+
+
+

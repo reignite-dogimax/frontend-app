@@ -75,3 +75,7 @@ export class MascotaListComponent implements OnInit {
     return especie.toLowerCase() === 'perro' ? 'pets' : 'pets';
   }
 }
+
+
+
+
