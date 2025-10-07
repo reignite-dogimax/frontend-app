@@ -1,4 +1,87 @@
 {
+  "usuarios": [
+    {
+      "id": 501,
+      "nombre": "Carlos",
+      "apellido": "Gomez",
+      "email": "carlos.gomez@example.com",
+      "telefono": "+51987654321",
+      "fechaRegistro": "2025-08-15T14:20:00.000Z"
+    },
+    {
+      "id": 502,
+      "nombre": "Ana",
+      "apellido": "Martinez",
+      "email": "ana.martinez@example.com",
+      "telefono": "+51912345678",
+      "fechaRegistro": "2025-08-20T11:05:00.000Z"
+    },
+    {
+      "id": 510,
+      "nombre": "Javier",
+      "apellido": "Torres",
+      "email": "javier.torres@example.com",
+      "telefono": "+51955512345",
+      "fechaRegistro": "2025-10-03T15:45:00.000Z"
+    }
+  ],
+  "veterinarias": [
+    {
+      "id": 801,
+      "nombre": "Clínica Veterinaria VetSalud",
+      "direccion": "Av. Principal 123, Miraflores, Lima",
+      "telefono": "+5114445566",
+      "servicios": [
+        "Consultas",
+        "Vacunación",
+        "Cirugía",
+        "Laboratorio"
+      ],
+      "horario": "L-V 9:00-20:00, S 9:00-17:00"
+    },
+    {
+      "id": 802,
+      "nombre": "Centro Veterinario Animalia",
+      "direccion": "Calle Los Pinos 456, San Isidro, Lima",
+      "telefono": "+5112223344",
+      "servicios": [
+        "Consultas",
+        "Emergencias 24h",
+        "Ecografías",
+        "Peluquería"
+      ],
+      "horario": "24 horas"
+    }
+  ],
+  "citas": [
+    {
+      "id": 701,
+      "mascotaId": 1,
+      "veterinariaId": 801,
+      "fechaHora": "2025-09-01T10:00:00.000Z",
+      "motivo": "Consulta general de rutina y vacunación",
+      "estado": "Completada",
+      "notas": "Se aplicó vacuna antirrábica. El paciente se encuentra en buen estado."
+    },
+    {
+      "id": 702,
+      "mascotaId": 2,
+      "veterinariaId": 801,
+      "fechaHora": "2025-10-08T11:30:00.000Z",
+      "motivo": "Revisión dental",
+      "estado": "Programada",
+      "notas": ""
+    },
+    {
+      "id": 703,
+      "mascotaId": 1,
+      "veterinariaId": 802,
+      "fechaHora": "2025-10-07T16:00:00.000Z",
+      "motivo": "Consulta por recomendación de dieta",
+      "estado": "Programada",
+      "notas": "Discutir plan de alimentación generado por IA."
+    }
+  ],
   "mascotas": [
     {
       "id": 1,
@@ -19,6 +102,7 @@
     {
       "id": 1,
       "mascotaId": 1,
+      "citaId": 701,
       "fechaRegistro": "2025-09-01T10:15:00.000Z",
       "tipoRegistro": "Consulta",
       "descripcion": "Consulta general de rutina",
@@ -31,6 +115,7 @@
     {
       "id": 401,
       "mascotaId": 1,
+      "citaId": 701,
       "nombreVacuna": "Antirrábica",
       "fechaAplicacion": "2025-09-01T10:15:00.000Z"
     }
@@ -74,7 +159,9 @@
       "completada": false,
       "fuenteIA": "modelo-nutricion-v1",
       "confianza": 82,
-      "parametros": {"actividad": "moderada"}
+      "parametros": {
+        "actividad": "moderada"
+      }
     },
     {
       "id": 1002,
@@ -94,7 +181,10 @@
       "id": 2001,
       "mascotaId": 1,
       "tipoAnalisis": "General",
-      "recomendaciones": [1001, 1002],
+      "recomendaciones": [
+        1001,
+        1002
+      ],
       "resumen": "Plan general de mejoras",
       "confianza": 80,
       "fechaGeneracion": "2025-10-03T12:00:00.000Z"
@@ -108,8 +198,14 @@
       "completadas": 0,
       "pendientes": 2,
       "vencidas": 0,
-      "porTipo": {"Alimentacion": 1, "Ejercicio": 1},
-      "porPrioridad": {"Baja": 1, "Media": 1}
+      "porTipo": {
+        "Alimentacion": 1,
+        "Ejercicio": 1
+      },
+      "porPrioridad": {
+        "Baja": 1,
+        "Media": 1
+      }
     }
   ]
 }
