@@ -1,0 +1,68 @@
+<div class="appointment-form-container">
+  <h1 class="title">{{ isEdit ? ('appointments.form.title.edit' | translate) : ('appointments.form.title.new' | translate) }}</h1>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="appointment-form">
+    <mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{ 'appointments.form.petId' | translate }}</mat-label>
+      <input matInput type="number" formControlName="mascotaId" required>
+      @if (form.controls.mascotaId.hasError('required')) {
+        <mat-error>{{ 'appointments.form.errors.petIdRequired' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{ 'appointments.form.veterinary' | translate }}</mat-label>
+      <mat-select formControlName="veterinariaId" required>
+    <mat-option [value]="null">{{ 'appointments.form.selectVeterinary' | translate }}</mat-option>
+        @for (veterinary of veterinaries(); track veterinary.id) {
+          <mat-option [value]="veterinary.id">{{ veterinary.nombre }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.veterinariaId.hasError('required')) {
+        <mat-error>{{ 'appointments.form.errors.veterinaryRequired' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{ 'appointments.form.datetime' | translate }}</mat-label>
+      <input matInput type="datetime-local" formControlName="fechaHora" required>
+      @if (form.controls.fechaHora.hasError('required')) {
+        <mat-error>{{ 'appointments.form.errors.datetimeRequired' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{ 'appointments.form.reason' | translate }}</mat-label>
+      <textarea matInput formControlName="motivo" rows="3" required></textarea>
+      @if (form.controls.motivo.hasError('required')) {
+        <mat-error>{{ 'appointments.form.errors.reasonRequired' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{ 'appointments.form.status' | translate }}</mat-label>
+      <mat-select formControlName="estado" required>
+        @for (estado of estados; track estado) {
+          <mat-option [value]="estado">{{ estado }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.estado.hasError('required')) {
+        <mat-error>{{ 'appointments.form.errors.statusRequired' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{ 'appointments.form.notes' | translate }}</mat-label>
+      <textarea matInput formControlName="notas" rows="4"></textarea>
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-raised-button type="button" (click)="cancel()">
+        {{ 'appointments.form.actions.cancel' | translate }}
+      </button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        {{ isEdit ? ('appointments.form.actions.update' | translate) : ('appointments.form.actions.create' | translate) }}
+      </button>
+    </div>
+  </form>
+</div>

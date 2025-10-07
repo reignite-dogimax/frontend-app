@@ -4,7 +4,8 @@
     "about": "About",
     "categories": "Categories",
     "courses": "Courses",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "appointments": "Appointments"
   },
   "pets": {
     "title": "My Pets",
@@ -47,5 +48,52 @@
     "delete": "Delete",
     "empty": "No notifications",
     "seeAll": "See all"
+  }
+  ,
+  "appointments": {
+    "list": {
+      "title": "Appointments Management"
+    },
+    "table": {
+      "id": "ID",
+      "petId": "Pet ID",
+      "datetime": "Date & Time",
+      "reason": "Reason",
+      "status": "Status",
+      "veterinary": "Veterinary",
+      "actions": "Actions"
+    },
+    "noAssigned": "Not assigned",
+    "edit": "Edit",
+    "delete": "Delete",
+    "actions": {
+      "new": "New Appointment"
+    },
+    "form": {
+      "title": {
+        "new": "New Appointment",
+        "edit": "Edit Appointment"
+      },
+      "petId": "Pet ID",
+      "veterinary": "Veterinary",
+      "selectVeterinary": "Select a veterinary",
+      "datetime": "Date & Time",
+      "reason": "Reason",
+      "status": "Status",
+      "notes": "Notes",
+      "actions": {
+        "cancel": "Cancel",
+        "create": "Create",
+        "update": "Update"
+      },
+      "errors": {
+        "fillRequired": "Please fill in all required fields",
+        "petIdRequired": "Pet ID is required",
+        "veterinaryRequired": "Veterinary is required",
+        "datetimeRequired": "Date and time are required",
+        "reasonRequired": "Reason is required",
+        "statusRequired": "Status is required"
+      }
+    }
   }
 }

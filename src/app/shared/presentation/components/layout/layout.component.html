@@ -19,16 +19,6 @@
           <span matListItemTitle>{{ 'option.about' | translate }}</span>
         </a>
 
-        <a mat-list-item [routerLink]="'/learning/categories'" routerLinkActive="active" class="nav-item">
-          <mat-icon matListItemIcon>category</mat-icon>
-          <span matListItemTitle>{{ 'option.categories' | translate }}</span>
-        </a>
-
-        <a mat-list-item [routerLink]="'/learning/courses'" routerLinkActive="active" class="nav-item">
-          <mat-icon matListItemIcon>book</mat-icon>
-          <span matListItemTitle>{{ 'option.courses' | translate }}</span>
-        </a>
-
         <a mat-list-item [routerLink]="'/notifications'" routerLinkActive="active" class="nav-item">
           <mat-icon matListItemIcon>notifications</mat-icon>
           <span matListItemTitle>{{ 'option.notifications' | translate }}</span>
@@ -39,10 +29,11 @@
           <span matListItemTitle>Gestión de Mascotas</span>
         </a>
 
-        <a mat-list-item [routerLink]="'/gestion-mascotas/test-routing'" routerLinkActive="active" class="nav-item">
-          <mat-icon matListItemIcon>bug_report</mat-icon>
-          <span matListItemTitle>Test Routing</span>
+        <a mat-list-item [routerLink]="'/appointments'" routerLinkActive="active" class="nav-item">
+          <mat-icon matListItemIcon>event</mat-icon>
+          <span matListItemTitle>{{ 'option.appointments' | translate }}</span>
         </a>
+
       </mat-nav-list>
     </div>
 

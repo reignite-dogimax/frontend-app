@@ -2,7 +2,8 @@ import { Routes } from '@angular/router';
 import { NotificationsPageComponent } from './notifications/presentation/notifications-page/notifications-page.component';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'notifications' },
+  { path: '', pathMatch: 'full', redirectTo: 'appointments' },
+  { path: 'appointments', loadChildren: () => import('./appointments/presentation/views/appointments.routes').then(m => m.appointmentsRoutes) },
   { path: 'notifications', component: NotificationsPageComponent },
   {
     path: 'gestion-mascotas',
@@ -39,5 +40,5 @@ export const routes: Routes = [
       }
     ]
   },
-  { path: '**', redirectTo: 'notifications' }
+  { path: '**', redirectTo: 'appointments' }
 ];
