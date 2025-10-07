@@ -1,0 +1,79 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1 class="heading-2">Mi Perro - Dashboard</h1>
+    <p class="large-text-regular text-muted">Gestiona la salud y bienestar de tus mascotas</p>
+  </div>
+
+  <div class="dashboard-stats">
+    <div class="stat-card card">
+      <div class="stat-icon">
+        <mat-icon>pets</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3 class="heading-3">{{ totalMascotas }}</h3>
+        <p class="normal-text-regular text-muted">Mascotas Registradas</p>
+      </div>
+    </div>
+
+    <div class="stat-card card">
+      <div class="stat-icon">
+        <mat-icon>medical_services</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3 class="heading-3">{{ totalHistorial }}</h3>
+        <p class="normal-text-regular text-muted">Registros Médicos</p>
+      </div>
+    </div>
+
+    <div class="stat-card card">
+      <div class="stat-icon">
+        <mat-icon>auto_awesome</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3 class="heading-3">{{ totalRecomendaciones }}</h3>
+        <p class="normal-text-regular text-muted">Recomendaciones IA</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-actions">
+    <div class="action-card card">
+      <h3 class="heading-4">Gestionar Mascotas</h3>
+      <p class="normal-text-regular text-muted">Administra el perfil y salud de tus mascotas</p>
+      <div class="action-buttons">
+        <button class="btn-primary" (click)="navigateToMascotas()">
+          <mat-icon>pets</mat-icon>
+          Ver Mascotas
+        </button>
+        <button class="btn-secondary" (click)="navigateToNuevaMascota()">
+          <mat-icon>add</mat-icon>
+          Agregar Mascota
+        </button>
+      </div>
+    </div>
+
+    <div class="action-card card">
+      <h3 class="heading-4">Historial Médico</h3>
+      <p class="normal-text-regular text-muted">Consulta y gestiona el historial médico de tus mascotas</p>
+      <div class="action-buttons">
+        <button class="btn-primary" (click)="navigateToMascotas()">
+          <mat-icon>medical_services</mat-icon>
+          Ver Historial
+        </button>
+      </div>
+    </div>
+
+    <div class="action-card card">
+      <h3 class="heading-4">Recomendaciones IA</h3>
+      <p class="normal-text-regular text-muted">Recibe recomendaciones personalizadas para el cuidado de tus mascotas</p>
+      <div class="action-buttons">
+        <button class="btn-primary" (click)="navigateToMascotas()">
+          <mat-icon>auto_awesome</mat-icon>
+          Ver Recomendaciones
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

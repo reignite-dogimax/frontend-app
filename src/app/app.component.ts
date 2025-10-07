@@ -1,7 +1,7 @@
 import {Component, inject, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-import {Layout} from './shared/presentation/components/layout/layout.component';
+import {Layout} from './Gestion/presentation/components/layout/layout.component';
 
 @Component({
   selector: 'app-root',
