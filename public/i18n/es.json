@@ -4,7 +4,8 @@
     "about": "Acerca de",
     "categories": "Categorías",
     "courses": "Cursos",
-    "notifications": "Notificaciones"
+    "notifications": "Notificaciones",
+    "appointments": "Citas"
   },
   "pets": {
     "title": "Mis Mascotas",
@@ -47,5 +48,52 @@
     "delete": "Eliminar",
     "empty": "No hay notificaciones",
     "seeAll": "Ver todas"
+  }
+  ,
+  "appointments": {
+    "list": {
+      "title": "Gestión de Citas"
+    },
+    "table": {
+      "id": "ID",
+      "petId": "ID Mascota",
+      "datetime": "Fecha y Hora",
+      "reason": "Motivo",
+      "status": "Estado",
+      "veterinary": "Veterinaria",
+      "actions": "Acciones"
+    },
+    "noAssigned": "No asignada",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "actions": {
+      "new": "Nueva Cita"
+    },
+    "form": {
+      "title": {
+        "new": "Nueva Cita",
+        "edit": "Editar Cita"
+      },
+      "petId": "ID de Mascota",
+      "veterinary": "Veterinaria",
+      "selectVeterinary": "Seleccione una veterinaria",
+      "datetime": "Fecha y Hora",
+      "reason": "Motivo",
+      "status": "Estado",
+      "notes": "Notas",
+      "actions": {
+        "cancel": "Cancelar",
+        "create": "Crear",
+        "update": "Actualizar"
+      },
+      "errors": {
+        "fillRequired": "Por favor complete todos los campos requeridos",
+        "petIdRequired": "El ID de mascota es requerido",
+        "veterinaryRequired": "La veterinaria es requerida",
+        "datetimeRequired": "La fecha y hora son requeridas",
+        "reasonRequired": "El motivo es requerido",
+        "statusRequired": "El estado es requerido"
+      }
+    }
   }
 }
