@@ -41,21 +41,24 @@
       "usuarioId": 501,
       "mensaje": "Recordatorio: La cita de Bruno es mañana.",
       "tipo": "RecordatorioCita",
-      "leido": true
+      "leido": false,
+      "createdAt": "2025-10-05T09:00:00.000Z"
     },
     {
       "id": 902,
       "usuarioId": 502,
       "mensaje": "Su factura 803 por S/580.00 ha vencido.",
       "tipo": "RecordatorioPago",
-      "leido": true
+      "leido": true,
+      "createdAt": "2025-10-04T12:30:00.000Z"
     },
     {
       "id": 910,
       "usuarioId": 510,
       "mensaje": "Bienvenido a Dogimax, Javier. Registra a tu mascota.",
       "tipo": "Bienvenida",
-      "leido": true
+      "leido": false,
+      "createdAt": "2025-10-03T15:45:00.000Z"
     }
   ],
   "recomendaciones": [
