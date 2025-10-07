@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { NotificationsStore } from '../../state/notifications.store';
+import { NotificationsStore } from '../state/notifications.store';
 import { NgFor, NgIf } from '@angular/common';
 import { MatList, MatListItem, MatListItemIcon, MatListItemTitle } from '@angular/material/list';
 import { MatIcon } from '@angular/material/icon';
@@ -25,7 +25,8 @@ export class NotificationsPageComponent {
   });
 
   ngOnInit() {
-    if (!this.store.items().length && !this.store.loading()) {
+    // Evita relanzar si ya se intentó cargar
+    if (!this.store.loaded()) {
       this.store.load();
     }
   }

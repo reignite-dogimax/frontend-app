@@ -4,7 +4,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatBadge } from '@angular/material/badge';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { NgFor, NgIf, SlicePipe } from '@angular/common';
-import { NotificationsStore } from '../../state/notifications.store';
+import { NotificationsStore } from '../state/notifications.store';
 import { RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -21,7 +21,8 @@ export class NotificationBellComponent {
 
   constructor() {
     effect(() => {
-      if (!this.store.items().length && !this.store.loading()) {
+      // Solo cargar una vez. Si ya se intentó, no repitas aunque la lista esté vacía.
+      if (!this.store.loaded() && !this.store.loading()) {
         this.store.load();
       }
     });

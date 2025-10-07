@@ -4,6 +4,7 @@ export const environment = {
   appointmentsEndpoint: '/citas',
   veterinariesEndpoint: '/veterinarias',
   petsEndpoint: '/mascotas',
+  notificationsEndpoint: '/notificaciones',
   userId: 1,
   userName: 'Carlos'
 };

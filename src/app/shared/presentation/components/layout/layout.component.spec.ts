@@ -4,7 +4,7 @@ import { Layout } from './layout.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NotificationsStore } from '../../../../notifications/state/notifications.store';
+import { NotificationsStore } from '../../../../notifications/presentation/state/notifications.store';
 
 class MockNotificationsStore {
   items = () => [] as any[];

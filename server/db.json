@@ -126,7 +126,7 @@
       "usuarioId": 501,
       "mensaje": "Recordatorio: La cita de Bruno es mañana.",
       "tipo": "RecordatorioCita",
-      "leido": false,
+      "leido": true,
       "createdAt": "2025-10-05T09:00:00.000Z"
     },
     {
@@ -142,7 +142,7 @@
       "usuarioId": 510,
       "mensaje": "Bienvenido a Dogimax, Javier. Registra a tu mascota.",
       "tipo": "Bienvenida",
-      "leido": false,
+      "leido": true,
       "createdAt": "2025-10-03T15:45:00.000Z"
     }
   ],
