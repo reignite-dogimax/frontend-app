@@ -6,9 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MascotaService } from '../../../../application/services/mascota.service';
+import { GestionStore } from '../../../../application/gestion.store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Mascota } from '../../../../domain/models/mascota.model';
+import { Mascota } from '../../../../domain/model/mascota.entity';
 
 @Component({
   selector: 'app-mascota-list',
@@ -27,33 +27,23 @@ import { Mascota } from '../../../../domain/models/mascota.model';
   styleUrl: './mascota-list.component.css'
 })
 export class MascotaListComponent implements OnInit {
-  mascotas: Mascota[] = [];
-  loading = false;
-  error: string | null = null;
+  mascotas: any;
+  loading: any;
+  error: any;
 
-  constructor(private mascotaService: MascotaService) {}
-
-  ngOnInit(): void {
-    this.loadMascotas();
+  constructor(private gestionStore: GestionStore) {
+    // Inicializar las propiedades después de que el constructor haya inyectado gestionStore
+    this.mascotas = this.gestionStore.mascotas;
+    this.loading = this.gestionStore.loading;
+    this.error = this.gestionStore.error;
   }
 
-  loadMascotas(): void {
-    this.loading = true;
-    this.error = null;
-    
-    // Por ahora usamos un usuarioId fijo, en una app real vendría del servicio de autenticación
-    const usuarioId = 501;
-    
-    this.mascotaService.getMascotasByUsuario(usuarioId).subscribe({
-      next: (mascotas) => {
-        this.mascotas = mascotas;
-        this.loading = false;
-      },
-      error: (error) => {
-        this.error = 'Error al cargar las mascotas';
-        this.loading = false;
-        console.error('Error loading mascotas:', error);
-      }
+  ngOnInit(): void {
+    // Los datos se cargan automáticamente en el constructor del store
+    console.log('MascotaListComponent initialized with:', {
+      mascotas: this.mascotas(),
+      loading: this.loading(),
+      error: this.error()
     });
   }
 

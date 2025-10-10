@@ -12,9 +12,35 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MascotaService } from '../../../../application/services/mascota.service';
+import { GestionStore } from '../../../../application/gestion.store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Mascota, CreateMascotaRequest, UpdateMascotaRequest } from '../../../../domain/models/mascota.model';
+import { Mascota } from '../../../../domain/model/mascota.entity';
+
+// Tipos temporales para las requests
+interface CreateMascotaRequest {
+  usuarioId: number;
+  nombre: string;
+  especie: string;
+  raza: string;
+  fechaNacimiento?: string;
+  peso?: number;
+  color?: string;
+  sexo?: 'Macho' | 'Hembra';
+  esterilizado?: boolean;
+  observaciones?: string;
+}
+
+interface UpdateMascotaRequest {
+  nombre?: string;
+  especie?: string;
+  raza?: string;
+  fechaNacimiento?: string;
+  peso?: number;
+  color?: string;
+  sexo?: 'Macho' | 'Hembra';
+  esterilizado?: boolean;
+  observaciones?: string;
+}
 
 @Component({
   selector: 'app-mascota-form',
@@ -53,7 +79,7 @@ export class MascotaFormComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private mascotaService: MascotaService
+    private gestionStore: GestionStore
   ) {
     this.mascotaForm = this.createForm();
   }
@@ -87,27 +113,26 @@ export class MascotaFormComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.mascotaService.getMascotaById(id).subscribe({
-      next: (mascota) => {
-        this.mascotaForm.patchValue({
-          nombre: mascota.nombre,
-          especie: mascota.especie,
-          raza: mascota.raza,
-          fechaNacimiento: mascota.fechaNacimiento ? new Date(mascota.fechaNacimiento) : null,
-          peso: mascota.peso,
-          color: mascota.color,
-          sexo: mascota.sexo,
-          esterilizado: mascota.esterilizado,
-          observaciones: mascota.observaciones
-        });
-        this.loading = false;
-      },
-      error: (error) => {
-        this.error = 'Error al cargar la mascota';
-        this.loading = false;
-        console.error('Error loading mascota:', error);
-      }
-    });
+    // Usar el store para obtener la mascota
+    const mascotaSignal = this.gestionStore.getMascotaById(id);
+    const mascota = mascotaSignal();
+    
+    if (mascota) {
+      this.mascotaForm.patchValue({
+        nombre: mascota.nombre,
+        especie: mascota.especie,
+        raza: mascota.raza,
+        fechaNacimiento: mascota.fechaNacimiento ? new Date(mascota.fechaNacimiento) : null,
+        peso: mascota.peso,
+        color: mascota.color,
+        sexo: mascota.sexo,
+        esterilizado: mascota.esterilizado,
+        observaciones: mascota.observaciones
+      });
+    } else {
+      this.error = 'Mascota no encontrada';
+    }
+    this.loading = false;
   }
 
   onSubmit(): void {
@@ -130,17 +155,35 @@ export class MascotaFormComponent implements OnInit {
           observaciones: formValue.observaciones
         };
 
-        this.mascotaService.updateMascota(this.mascotaId, updateData).subscribe({
-          next: (mascota) => {
-            this.saving = false;
-            this.router.navigate(['/gestion-mascotas/mascotas', mascota.id]);
-          },
-          error: (error) => {
-            this.error = 'Error al actualizar la mascota';
-            this.saving = false;
-            console.error('Error updating mascota:', error);
-          }
-        });
+        // Crear entidad Mascota para actualizar
+        const mascotaSignal = this.gestionStore.getMascotaById(this.mascotaId);
+        const mascotaExistente = mascotaSignal();
+        
+        if (mascotaExistente) {
+          const mascotaActualizada = new Mascota({
+            id: mascotaExistente.id,
+            usuarioId: mascotaExistente.usuarioId,
+            nombre: updateData.nombre || mascotaExistente.nombre,
+            especie: updateData.especie || mascotaExistente.especie,
+            raza: updateData.raza || mascotaExistente.raza,
+            fechaNacimiento: updateData.fechaNacimiento || mascotaExistente.fechaNacimiento,
+            peso: updateData.peso || mascotaExistente.peso,
+            color: updateData.color || mascotaExistente.color,
+            sexo: updateData.sexo || mascotaExistente.sexo,
+            esterilizado: updateData.esterilizado !== undefined ? updateData.esterilizado : mascotaExistente.esterilizado,
+            observaciones: updateData.observaciones || mascotaExistente.observaciones,
+            foto: mascotaExistente.foto,
+            fechaRegistro: mascotaExistente.fechaRegistro,
+            activo: mascotaExistente.activo
+          });
+          
+          this.gestionStore.updateMascota(mascotaActualizada);
+          this.saving = false;
+          this.router.navigate(['/gestion-mascotas/mascotas', mascotaActualizada.id]);
+        } else {
+          this.error = 'Mascota no encontrada para actualizar';
+          this.saving = false;
+        }
       } else {
         const createData: CreateMascotaRequest = {
           usuarioId: 501, // En una app real vendría del servicio de autenticación
@@ -155,17 +198,26 @@ export class MascotaFormComponent implements OnInit {
           observaciones: formValue.observaciones
         };
 
-        this.mascotaService.createMascota(createData).subscribe({
-          next: (mascota) => {
-            this.saving = false;
-            this.router.navigate(['/gestion-mascotas/mascotas', mascota.id]);
-          },
-          error: (error) => {
-            this.error = 'Error al crear la mascota';
-            this.saving = false;
-            console.error('Error creating mascota:', error);
-          }
+        // Crear nueva entidad Mascota
+        const nuevaMascota = new Mascota({
+          id: 0, // Se asignará automáticamente
+          usuarioId: createData.usuarioId,
+          nombre: createData.nombre,
+          especie: createData.especie,
+          raza: createData.raza,
+          fechaNacimiento: createData.fechaNacimiento,
+          peso: createData.peso,
+          color: createData.color,
+          sexo: createData.sexo,
+          esterilizado: createData.esterilizado,
+          observaciones: createData.observaciones,
+          fechaRegistro: new Date().toISOString(),
+          activo: true
         });
+        
+        this.gestionStore.addMascota(nuevaMascota);
+        this.saving = false;
+        this.router.navigate(['/gestion-mascotas/mascotas']);
       }
     } else {
       this.markFormGroupTouched();

@@ -7,18 +7,18 @@
     </button>
   </div>
 
-  <div *ngIf="loading" class="loading-container">
+  <div *ngIf="loading()" class="loading-container">
     <mat-spinner></mat-spinner>
     <p class="normal-text-regular">{{ 'pets.loading' | translate }}</p>
   </div>
 
-  <div *ngIf="error" class="error-container">
+  <div *ngIf="error()" class="error-container">
     <mat-icon class="error-icon">error</mat-icon>
-    <p class="normal-text-regular">{{ error }}</p>
-    <button class="btn-secondary" (click)="loadMascotas()">Reintentar</button>
+    <p class="normal-text-regular">{{ error() }}</p>
+    <button class="btn-secondary" (click)="ngOnInit()">Reintentar</button>
   </div>
 
-  <div *ngIf="!loading && !error && mascotas.length === 0" class="empty-state">
+  <div *ngIf="!loading() && !error() && mascotas().length === 0" class="empty-state">
     <mat-icon class="empty-icon">pets</mat-icon>
     <h3 class="heading-4">{{ 'pets.title' | translate }}</h3>
     <p class="normal-text-regular text-muted"></p>
@@ -28,8 +28,8 @@
     </button>
   </div>
 
-  <div *ngIf="!loading && !error && mascotas.length > 0" class="mascotas-grid">
-    <div *ngFor="let mascota of mascotas" class="mascota-card card">
+  <div *ngIf="!loading() && !error() && mascotas().length > 0" class="mascotas-grid">
+    <div *ngFor="let mascota of mascotas()" class="mascota-card card">
       <div class="mascota-header">
         <div class="mascota-info">
           <mat-icon class="mascota-icon">{{ getEspecieIcon(mascota.especie) }}</mat-icon>

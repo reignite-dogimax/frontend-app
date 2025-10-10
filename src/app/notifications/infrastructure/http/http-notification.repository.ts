@@ -9,7 +9,7 @@ import { notificationFromDto } from '../mappers/notification.mapper';
 @Injectable({ providedIn: 'root' })
 export class HttpNotificationRepository implements NotificationRepository {
   private http = inject(HttpClient);
-  private readonly baseUrl = '/api/v1/notificaciones';
+  private readonly baseUrl = 'https://dogimax-api.arroz.dev/notificaciones';
 
   list(): Observable<NotificationItem[]> {
     return this.http.get<NotificationDto[]>(this.baseUrl).pipe(

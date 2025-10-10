@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000',
+  apiUrl: 'https://dogimax-api.arroz.dev',
   appointmentsEndpoint: '/citas',
   veterinariesEndpoint: '/veterinarias',
   petsEndpoint: '/mascotas',

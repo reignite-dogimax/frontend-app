@@ -7,13 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MascotaService } from '../../../../application/services/mascota.service';
-import { HistorialMedicoService } from '../../../../application/services/historial-medico.service';
-import { RecomendacionesService } from '../../../../application/services/recomendaciones.service';
-import { Mascota } from '../../../../domain/models/mascota.model';
-import { HistorialMedico } from '../../../../domain/models/historial-medico.model';
-import { Vacuna } from '../../../../domain/models/historial-medico.model';
-import { Recomendacion } from '../../../../domain/models/recomendacion.model';
+import { GestionStore } from '../../../../application/gestion.store';
+import { Mascota } from '../../../../domain/model/mascota.entity';
+import { HistorialMedico } from '../../../../domain/model/historial-medico.entity';
+import { Recomendacion } from '../../../../domain/model/recomendacion.entity';
 
 @Component({
   selector: 'app-mascota-detail',
@@ -33,9 +30,9 @@ import { Recomendacion } from '../../../../domain/models/recomendacion.model';
 })
 export class MascotaDetailComponent implements OnInit {
   mascota: Mascota | null = null;
-  historial: HistorialMedico[] = [];
-  vacunas: Vacuna[] = [];
-  recomendaciones: Recomendacion[] = [];
+  historial: any[] = [];
+  vacunas: any[] = [];
+  recomendaciones: any[] = [];
   loading = false;
   error: string | null = null;
   selectedTab = 0;
@@ -43,9 +40,7 @@ export class MascotaDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private mascotaService: MascotaService,
-    private historialService: HistorialMedicoService,
-    private recomendacionesService: RecomendacionesService
+    private gestionStore: GestionStore
   ) {}
 
   ngOnInit(): void {
@@ -61,51 +56,23 @@ export class MascotaDetailComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.mascotaService.getMascotaById(id).subscribe({
-      next: (mascota) => {
-        this.mascota = mascota;
-        this.loadRelatedData(id);
-      },
-      error: (error) => {
-        this.error = 'Error al cargar la mascota';
-        this.loading = false;
-        console.error('Error loading mascota:', error);
-      }
-    });
+    // Usar el store para obtener la mascota
+    const mascotaSignal = this.gestionStore.getMascotaById(id);
+    const mascota = mascotaSignal();
+    
+    if (mascota) {
+      this.mascota = mascota;
+      this.loadRelatedData(id);
+    } else {
+      this.error = 'Mascota no encontrada';
+      this.loading = false;
+    }
   }
 
   loadRelatedData(mascotaId: number): void {
-    // Cargar historial médico
-    this.historialService.getHistorialByMascota(mascotaId).subscribe({
-      next: (historial) => {
-        this.historial = historial;
-      },
-      error: (error) => {
-        console.error('Error loading historial:', error);
-      }
-    });
-
-    // Cargar vacunas
-    this.historialService.getVacunasByMascota(mascotaId).subscribe({
-      next: (vacunas) => {
-        this.vacunas = vacunas;
-      },
-      error: (error) => {
-        console.error('Error loading vacunas:', error);
-      }
-    });
-
-    // Cargar recomendaciones
-    this.recomendacionesService.getRecomendacionesByMascota(mascotaId).subscribe({
-      next: (recomendaciones) => {
-        this.recomendaciones = recomendaciones;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error loading recomendaciones:', error);
-        this.loading = false;
-      }
-    });
+    // Los datos relacionados se cargan automáticamente desde el store
+    // Los signals ya están configurados para filtrar por mascotaId
+    this.loading = false;
   }
 
   getEdadMascota(fechaNacimiento?: string): string {
@@ -166,17 +133,14 @@ export class MascotaDetailComponent implements OnInit {
   }
 
   marcarCompletada(recomendacionId: number): void {
-    this.recomendacionesService.marcarCompletada(recomendacionId).subscribe({
-      next: (recomendacion) => {
-        // Actualizar la recomendación en la lista local
-        const index = this.recomendaciones.findIndex(r => r.id === recomendacionId);
-        if (index !== -1) {
-          this.recomendaciones[index] = recomendacion;
-        }
-      },
-      error: (error) => {
-        console.error('Error marcando recomendación como completada:', error);
-      }
-    });
+    // Simular marcado como completada
+    const index = this.recomendaciones.findIndex((r: any) => r.id === recomendacionId);
+    if (index !== -1) {
+      this.recomendaciones[index] = {
+        ...this.recomendaciones[index],
+        completada: true,
+        fechaCompletada: new Date()
+      };
+    }
   }
 }

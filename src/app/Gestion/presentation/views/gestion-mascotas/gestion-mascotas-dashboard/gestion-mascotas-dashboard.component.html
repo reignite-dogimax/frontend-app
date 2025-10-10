@@ -4,13 +4,24 @@
     <p class="large-text-regular text-muted">{{ 'pets.dashboard.subtitle' | translate }}</p>
   </div>
 
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-container">
+    <p>Cargando datos...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error()" class="error-container" style="background-color: #ffebee; color: #c62828; padding: 16px; border-radius: 8px; margin: 16px 0;">
+    <h3>Error al cargar los datos</h3>
+    <p>{{ error() }}</p>
+  </div>
+
   <div class="dashboard-stats">
     <div class="stat-card card">
       <div class="stat-icon">
         <mat-icon>pets</mat-icon>
       </div>
       <div class="stat-content">
-        <h3 class="heading-3">{{ totalMascotas }}</h3>
+        <h3 class="heading-3">{{ totalMascotas() }}</h3>
         <p class="normal-text-regular text-muted">{{ 'pets.dashboard.registered' | translate }}</p>
       </div>
     </div>
@@ -20,7 +31,7 @@
         <mat-icon>medical_services</mat-icon>
       </div>
       <div class="stat-content">
-        <h3 class="heading-3">{{ totalHistorial }}</h3>
+        <h3 class="heading-3">{{ totalHistorial() }}</h3>
         <p class="normal-text-regular text-muted">{{ 'pets.dashboard.medical' | translate }}</p>
       </div>
     </div>
@@ -30,7 +41,7 @@
         <mat-icon>auto_awesome</mat-icon>
       </div>
       <div class="stat-content">
-        <h3 class="heading-3">{{ totalRecomendaciones }}</h3>
+        <h3 class="heading-3">{{ totalRecomendaciones() }}</h3>
         <p class="normal-text-regular text-muted">{{ 'pets.dashboard.ai' | translate }}</p>
       </div>
     </div>
