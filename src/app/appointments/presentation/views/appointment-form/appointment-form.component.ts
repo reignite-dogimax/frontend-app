@@ -38,7 +38,7 @@ export class AppointmentFormComponent {
 
   form = this.fb.group({
     mascotaId: new FormControl<number>(1, { nonNullable: true, validators: [Validators.required] }),
-    veterinariaId: new FormControl<number | null>(null, { validators: [Validators.required] }),
+    veterinaryId: new FormControl<number | null>(null, { validators: [Validators.required] }),
     fechaHora: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     motivo: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     estado: new FormControl<string>('Programada', { nonNullable: true, validators: [Validators.required] }),
@@ -59,7 +59,7 @@ export class AppointmentFormComponent {
         if (appointment) {
           this.form.patchValue({
             mascotaId: appointment.mascotaId,
-            veterinariaId: appointment.veterinariaId,
+            veterinaryId: appointment.veterinaryId,
             fechaHora: appointment.fechaHora,
             motivo: appointment.motivo,
             estado: appointment.estado,
@@ -79,7 +79,7 @@ export class AppointmentFormComponent {
     const appointment: Appointment = new Appointment({
       id: this.appointmentId ?? 0,
       mascotaId: this.form.value.mascotaId!,
-      veterinariaId: this.form.value.veterinariaId!,
+      veterinaryId: this.form.value.veterinaryId!,
       fechaHora: this.form.value.fechaHora!,
       motivo: this.form.value.motivo!,
       estado: this.form.value.estado!,
