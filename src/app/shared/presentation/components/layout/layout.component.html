@@ -1,63 +1,85 @@
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="'navigation'">
-    <div class="sidenav-header">
-      <div class="logo-container">
-        <mat-icon class="logo-icon">school</mat-icon>
-        <span class="logo-text">Dogimax</span>
+<!-- Show layout only if not on auth pages (login/register) -->
+@if (!isAuthPage) {
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="'navigation'">
+      <div class="sidenav-header">
+        <div class="logo-container">
+          <mat-icon class="logo-icon">school</mat-icon>
+          <span class="logo-text">Dogimax</span>
+        </div>
       </div>
-    </div>
 
-    <div class="sidenav-content">
-      <mat-nav-list class="nav-list">
-        <a mat-list-item [routerLink]="'/home'" routerLinkActive="active" class="nav-item">
-          <mat-icon matListItemIcon>home</mat-icon>
-          <span matListItemTitle>{{ 'option.home' | translate }}</span>
-        </a>
+      <div class="sidenav-content">
+        <mat-nav-list class="nav-list">
+          <a mat-list-item [routerLink]="'/home'" routerLinkActive="active" class="nav-item">
+            <mat-icon matListItemIcon>home</mat-icon>
+            <span matListItemTitle>{{ 'option.home' | translate }}</span>
+          </a>
 
-        <a mat-list-item [routerLink]="'/about'" routerLinkActive="active" class="nav-item">
-          <mat-icon matListItemIcon>info</mat-icon>
-          <span matListItemTitle>{{ 'option.about' | translate }}</span>
-        </a>
+          <a mat-list-item [routerLink]="'/about'" routerLinkActive="active" class="nav-item">
+            <mat-icon matListItemIcon>info</mat-icon>
+            <span matListItemTitle>{{ 'option.about' | translate }}</span>
+          </a>
 
-        <a mat-list-item [routerLink]="'/notifications'" routerLinkActive="active" class="nav-item">
-          <mat-icon matListItemIcon>notifications</mat-icon>
-          <span matListItemTitle>{{ 'option.notifications' | translate }}</span>
-        </a>
+          <a mat-list-item [routerLink]="'/notifications'" routerLinkActive="active" class="nav-item">
+            <mat-icon matListItemIcon>notifications</mat-icon>
+            <span matListItemTitle>{{ 'option.notifications' | translate }}</span>
+          </a>
 
-        <a mat-list-item [routerLink]="'/gestion-mascotas/mascotas'" routerLinkActive="active" class="nav-item">
-          <mat-icon matListItemIcon>pets</mat-icon>
-          <span matListItemTitle>Gestión de Mascotas</span>
-        </a>
+          <a mat-list-item [routerLink]="'/gestion-mascotas/mascotas'" routerLinkActive="active" class="nav-item">
+            <mat-icon matListItemIcon>pets</mat-icon>
+            <span matListItemTitle>Gestión de Mascotas</span>
+          </a>
 
-        <a mat-list-item [routerLink]="'/appointments'" routerLinkActive="active" class="nav-item">
-          <mat-icon matListItemIcon>event</mat-icon>
-          <span matListItemTitle>{{ 'option.appointments' | translate }}</span>
-        </a>
+          <a mat-list-item [routerLink]="'/appointments'" routerLinkActive="active" class="nav-item">
+            <mat-icon matListItemIcon>event</mat-icon>
+            <span matListItemTitle>{{ 'option.appointments' | translate }}</span>
+          </a>
 
-      </mat-nav-list>
-    </div>
-
-    <div class="sidenav-footer">
-      <div class="footer-content">
-        <mat-icon>copyright</mat-icon>
-        <span>2025 Dogimax</span>
+        </mat-nav-list>
       </div>
-    </div>
-  </mat-sidenav>
 
-  <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      <h1>Dogimax</h1>
-      <div class="spacer"></div>
-      <app-notification-bell></app-notification-bell>
-      <app-language-switcher/>
-    </mat-toolbar>
+      <div class="sidenav-footer">
+        <div class="footer-content">
+          <mat-icon>copyright</mat-icon>
+          <span>2025 Dogimax</span>
+        </div>
+      </div>
+    </mat-sidenav>
 
-    <div class="content">
-      <router-outlet/>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    <mat-sidenav-content>
+      <mat-toolbar color="primary">
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <h1>Dogimax</h1>
+        <div class="spacer"></div>
+        
+        @if ((isAuthenticated$ | async)) {
+          <div class="user-info">
+            @if (currentUser$ | async; as user) {
+              <span class="user-name">{{ user.nombre }} {{ user.apellido }}</span>
+            }
+          </div>
+        }
+        
+        <app-notification-bell></app-notification-bell>
+        <app-language-switcher/>
+        
+        @if ((isAuthenticated$ | async)) {
+          <button mat-button (click)="logout()" class="logout-button">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </button>
+        }
+      </mat-toolbar>
+
+      <div class="content">
+        <router-outlet/>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+} @else {
+  <!-- Auth pages (login/register) without layout -->
+  <router-outlet/>
+}
