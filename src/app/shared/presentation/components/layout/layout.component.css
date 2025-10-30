@@ -199,4 +199,54 @@
   .nav-item:nth-child(4) {
     animation-delay: 0.24s;
   }
+
+/* User info in toolbar */
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+/* Logout button */
+.logout-button {
+  margin-left: 8px;
+  color: white;
+  transition: background 0.2s ease;
+}
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.logout-button mat-icon {
+  margin-right: 4px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.logout-button span {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .user-info {
+    display: none; /* Ocultar nombre en móvil */
+  }
+  
+  .logout-button span {
+    display: none; /* Solo mostrar icono en móvil */
+  }
+}
 }}}
+

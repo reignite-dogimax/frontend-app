@@ -12,13 +12,13 @@
 
     <mat-form-field appearance="outline" class="full-width">
   <mat-label>{{ 'appointments.form.veterinary' | translate }}</mat-label>
-      <mat-select formControlName="veterinariaId" required>
+      <mat-select formControlName="veterinaryId" required>
     <mat-option [value]="null">{{ 'appointments.form.selectVeterinary' | translate }}</mat-option>
         @for (veterinary of veterinaries(); track veterinary.id) {
           <mat-option [value]="veterinary.id">{{ veterinary.nombre }}</mat-option>
         }
       </mat-select>
-      @if (form.controls.veterinariaId.hasError('required')) {
+      @if (form.controls.veterinaryId.hasError('required')) {
         <mat-error>{{ 'appointments.form.errors.veterinaryRequired' | translate }}</mat-error>
       }
     </mat-form-field>

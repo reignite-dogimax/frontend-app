@@ -9,7 +9,7 @@ import { Veterinary } from './veterinary.entity';
 export class Appointment implements BaseEntity {
   private _id: number;
   private _mascotaId: number;
-  private _veterinariaId: number;
+  private _veterinaryId: number;
   private _fechaHora: string;
   private _motivo: string;
   private _estado: string;
@@ -19,7 +19,7 @@ export class Appointment implements BaseEntity {
   constructor(appointment: {
     id: number;
     mascotaId: number;
-    veterinariaId: number;
+    veterinaryId: number;
     fechaHora: string;
     motivo: string;
     estado: string;
@@ -27,7 +27,7 @@ export class Appointment implements BaseEntity {
   }) {
     this._id = appointment.id;
     this._mascotaId = appointment.mascotaId;
-    this._veterinariaId = appointment.veterinariaId;
+    this._veterinaryId = appointment.veterinaryId;
     this._fechaHora = appointment.fechaHora;
     this._motivo = appointment.motivo;
     this._estado = appointment.estado;
@@ -51,12 +51,12 @@ export class Appointment implements BaseEntity {
     this._mascotaId = value;
   }
 
-  get veterinariaId(): number {
-    return this._veterinariaId;
+  get veterinaryId(): number {
+    return this._veterinaryId;
   }
 
-  set veterinariaId(value: number) {
-    this._veterinariaId = value;
+  set veterinaryId(value: number) {
+    this._veterinaryId = value;
   }
 
   get fechaHora(): string {

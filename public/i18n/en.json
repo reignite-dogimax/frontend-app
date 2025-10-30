@@ -50,6 +50,46 @@
     "seeAll": "See all"
   }
   ,
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Welcome back to DogiMax",
+      "email": "Email",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email format",
+      "password": "Password",
+      "passwordRequired": "Password is required",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register here"
+    },
+    "register": {
+      "title": "Register",
+      "subtitle": "Create your DogiMax account",
+      "nombre": "First Name",
+      "nombreRequired": "First name is required",
+      "apellido": "Last Name",
+      "apellidoRequired": "Last name is required",
+      "email": "Email",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email format",
+      "telefono": "Phone",
+      "telefonoRequired": "Phone is required",
+      "rol": "Role",
+      "rolRequired": "Role is required",
+      "rolPetlover": "Pet Lover",
+      "rolVeterinary": "Veterinary",
+      "password": "Password",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordRequired": "Confirm password is required",
+      "passwordMismatch": "Passwords do not match",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Login here"
+    }
+  },
   "appointments": {
     "list": {
       "title": "Appointments Management"

@@ -50,6 +50,46 @@
     "seeAll": "Ver todas"
   }
   ,
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "subtitle": "Bienvenido de nuevo a DogiMax",
+      "email": "Correo Electrónico",
+      "emailRequired": "El correo electrónico es requerido",
+      "emailInvalid": "Formato de correo electrónico inválido",
+      "password": "Contraseña",
+      "passwordRequired": "La contraseña es requerida",
+      "submit": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "registerLink": "Regístrate aquí"
+    },
+    "register": {
+      "title": "Registrarse",
+      "subtitle": "Crea tu cuenta de DogiMax",
+      "nombre": "Nombre",
+      "nombreRequired": "El nombre es requerido",
+      "apellido": "Apellido",
+      "apellidoRequired": "El apellido es requerido",
+      "email": "Correo Electrónico",
+      "emailRequired": "El correo electrónico es requerido",
+      "emailInvalid": "Formato de correo electrónico inválido",
+      "telefono": "Teléfono",
+      "telefonoRequired": "El teléfono es requerido",
+      "rol": "Rol",
+      "rolRequired": "El rol es requerido",
+      "rolPetlover": "Dueño de Mascota",
+      "rolVeterinary": "Veterinario",
+      "password": "Contraseña",
+      "passwordRequired": "La contraseña es requerida",
+      "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+      "confirmPassword": "Confirmar Contraseña",
+      "confirmPasswordRequired": "La confirmación de contraseña es requerida",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "submit": "Registrarse",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Inicia sesión aquí"
+    }
+  },
   "appointments": {
     "list": {
       "title": "Gestión de Citas"
@@ -60,7 +100,7 @@
       "datetime": "Fecha y Hora",
       "reason": "Motivo",
       "status": "Estado",
-      "veterinary": "Veterinaria",
+      "veterinary": "veterinary",
       "actions": "Acciones"
     },
     "noAssigned": "No asignada",
@@ -75,8 +115,8 @@
         "edit": "Editar Cita"
       },
       "petId": "ID de Mascota",
-      "veterinary": "Veterinaria",
-      "selectVeterinary": "Seleccione una veterinaria",
+      "veterinary": "veterinary",
+      "selectVeterinary": "Seleccione una veterinary",
       "datetime": "Fecha y Hora",
       "reason": "Motivo",
       "status": "Estado",
@@ -89,7 +129,7 @@
       "errors": {
         "fillRequired": "Por favor complete todos los campos requeridos",
         "petIdRequired": "El ID de mascota es requerido",
-        "veterinaryRequired": "La veterinaria es requerida",
+        "veterinaryRequired": "La veterinary es requerida",
         "datetimeRequired": "La fecha y hora son requeridas",
         "reasonRequired": "El motivo es requerido",
         "statusRequired": "El estado es requerido"
