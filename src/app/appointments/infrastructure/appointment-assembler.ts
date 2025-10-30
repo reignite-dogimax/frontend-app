@@ -2,12 +2,15 @@ import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
 import { Appointment } from '../domain/model/appointment.entity';
 import { AppointmentResource, AppointmentsResponse } from './appointments-response';
 
+/**
+ * Assembler for converting between Appointment entities and API resources
+ */
 export class AppointmentAssembler implements BaseAssembler<Appointment, AppointmentResource, AppointmentsResponse> {
   toEntityFromResource(resource: AppointmentResource): Appointment {
     return new Appointment({
       id: resource.id,
       mascotaId: resource.mascotaId,
-      veterinariaId: resource.veterinariaId,
+      veterinaryId: resource.veterinaryId,
       fechaHora: resource.fechaHora,
       motivo: resource.motivo,
       estado: resource.estado,
@@ -19,7 +22,7 @@ export class AppointmentAssembler implements BaseAssembler<Appointment, Appointm
     return {
       id: entity.id,
       mascotaId: entity.mascotaId,
-      veterinariaId: entity.veterinariaId,
+      veterinaryId: entity.veterinaryId,
       fechaHora: entity.fechaHora,
       motivo: entity.motivo,
       estado: entity.estado,
@@ -28,6 +31,7 @@ export class AppointmentAssembler implements BaseAssembler<Appointment, Appointm
   }
 
   toEntitiesFromResponse(response: AppointmentsResponse): Appointment[] {
-    return response.citas.map(resource => this.toEntityFromResource(resource));
+    // Backend returns array directly, not wrapped in { citas: [...] }
+    return response.map(resource => this.toEntityFromResource(resource));
   }
 }

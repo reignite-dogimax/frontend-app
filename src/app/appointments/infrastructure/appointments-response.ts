@@ -1,15 +1,21 @@
 import { BaseResource } from '../../shared/infrastructure/base-response';
 
+/**
+ * Appointment resource from backend API
+ * Matches the structure of AppointmentResource.java
+ */
 export interface AppointmentResource extends BaseResource {
   id: number;
   mascotaId: number;
-  veterinariaId: number;
-  fechaHora: string;
+  veterinaryId: number;
+  fechaHora: string; // ISO 8601 format from LocalDateTime
   motivo: string;
   estado: string;
   notas: string;
 }
 
-export interface AppointmentsResponse {
-  citas: AppointmentResource[];
-}
+/**
+ * Response wrapper for appointments list
+ * Backend returns array directly, not wrapped
+ */
+export type AppointmentsResponse = AppointmentResource[];

@@ -214,7 +214,7 @@ export class AppointmentsStore {
   }
 
   private assignVeterinaryToAppointment(appointment: Appointment): Appointment {
-    const veterinaryId = appointment.veterinariaId ?? 0;
+    const veterinaryId = appointment.veterinaryId ?? 0;
     appointment.veterinary = veterinaryId ? this.getVeterinaryById(veterinaryId)() ?? null : null;
     return appointment;
   }
