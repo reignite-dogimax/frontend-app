@@ -1,13 +1,27 @@
 import { Routes } from '@angular/router';
 import { NotificationsPageComponent } from './notifications/presentation/notifications-page/notifications-page.component';
+import { LoginComponent } from './iam/presentation/login/login.component';
+import { RegisterComponent } from './iam/presentation/register/register.component';
+import { authGuard } from './iam/infrastructure/auth.guard';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'appointments' },
-  { path: 'appointments', loadChildren: () => import('./appointments/presentation/views/appointments.routes').then(m => m.appointmentsRoutes) },
-  { path: 'notifications', component: NotificationsPageComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { 
+    path: 'appointments', 
+    loadChildren: () => import('./appointments/presentation/views/appointments.routes').then(m => m.appointmentsRoutes),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'notifications', 
+    component: NotificationsPageComponent,
+    canActivate: [authGuard]
+  },
   {
     path: 'gestion-mascotas',
     loadComponent: () => import('./Gestion/presentation/views/gestion-mascotas/gestion-mascotas-navigation/gestion-mascotas-navigation.component').then(m => m.GestionMascotasNavigationComponent),
+    canActivate: [authGuard],
     children: [
       {
         path: '',
