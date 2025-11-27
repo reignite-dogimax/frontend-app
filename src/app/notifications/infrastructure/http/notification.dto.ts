@@ -1,9 +1,9 @@
 export interface NotificationDto {
   id: number;
-  usuarioId: number | null;
-  mensaje: string;
-  tipo: string;
-  leido: boolean;
+  userId: number | null;
+  message: string;
+  type: string;
+  isRead: boolean;
   createdAt?: string | null;
 }
 

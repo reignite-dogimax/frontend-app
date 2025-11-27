@@ -18,8 +18,8 @@ export class NotificationsStore {
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
   readonly loaded = this._loaded.asReadonly();
-  readonly unreadCount = computed(() => this._items().filter(n => !n.leido).length);
-  readonly unreadItems = computed(() => this._items().filter(n => !n.leido));
+  readonly unreadCount = computed(() => this._items().filter(n => !n.isRead).length);
+  readonly unreadItems = computed(() => this._items().filter(n => !n.isRead));
 
   // Use cases inyectados según DDD
   private readonly listNotifications: ListNotificationsUseCase = inject(ListNotificationsUseCase);
@@ -54,16 +54,16 @@ export class NotificationsStore {
   async markAsRead(id: number) {
     try {
       await firstValueFrom(this.markAsReadUc.execute(id));
-      this._items.update(list => list.map(n => n.id === id ? { ...n, leido: true } : n));
+      this._items.update(list => list.map(n => n.id === id ? { ...n, isRead: true } : n));
     } catch {}
   }
 
   async markAllAsRead() {
-    const ids = this._items().filter(n => !n.leido).map(n => n.id);
+    const ids = this._items().filter(n => !n.isRead).map(n => n.id);
     try {
       if (ids.length === 0) return;
       await firstValueFrom(this.markAllAsReadUc.execute(ids));
-      this._items.update(list => list.map(n => ({ ...n, leido: true })));
+      this._items.update(list => list.map(n => ({ ...n, isRead: true })));
     } catch {}
   }
 
