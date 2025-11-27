@@ -47,7 +47,26 @@
     "markOne": "Marcar leída",
     "delete": "Eliminar",
     "empty": "No hay notificaciones",
-    "seeAll": "Ver todas"
+    "emptyDesc": "Cuando recibas notificaciones, aparecerán aquí",
+    "seeAll": "Ver todas",
+    "newSingular": "notificación nueva",
+    "newPlural": "notificaciones nuevas",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "older": "Anteriores",
+    "types": {
+      "appointment": "Cita",
+      "payment": "Pago",
+      "promotion": "Promoción",
+      "exam": "Resultado Examen",
+      "confirmation": "Confirmación",
+      "health": "Salud",
+      "survey": "Encuesta",
+      "announcement": "Anuncio",
+      "purchase": "Compra",
+      "welcome": "Bienvenida",
+      "general": "General"
+    }
   }
   ,
   "auth": {

@@ -1,7 +1,7 @@
 import { computed, Injectable, Signal, signal } from '@angular/core';
-import { Mascota } from '../domain/model/mascota.entity';
-import { HistorialMedico } from '../domain/model/historial-medico.entity';
-import { Recomendacion } from '../domain/model/recomendacion.entity';
+import { Pet } from '../domain/model/pet.entity';
+import { MedicalHistory } from '../domain/model/medical-history.entity';
+import { Recommendation } from '../domain/model/recommendation.entity';
 import { GestionApi } from '../infrastructure/gestion-api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { retry } from 'rxjs';
@@ -17,13 +17,13 @@ export class GestionStore {
   readonly historialCount = computed(() => this.historiales().length);
   readonly recomendacionCount = computed(() => this.recomendaciones().length);
   
-  private readonly mascotasSignal = signal<Mascota[]>([]);
+  private readonly mascotasSignal = signal<Pet[]>([]);
   readonly mascotas = this.mascotasSignal.asReadonly();
   
-  private readonly historialesSignal = signal<HistorialMedico[]>([]);
+  private readonly historialesSignal = signal<MedicalHistory[]>([]);
   readonly historiales = this.historialesSignal.asReadonly();
   
-  private readonly recomendacionesSignal = signal<Recomendacion[]>([]);
+  private readonly recomendacionesSignal = signal<Recommendation[]>([]);
   readonly recomendaciones = this.recomendacionesSignal.asReadonly();
   
   private readonly loadingSignal = signal<boolean>(false);
@@ -39,64 +39,64 @@ export class GestionStore {
   }
 
   /**
-   * Retrieves a mascota by its ID as a signal.
-   * @param id - The ID of the mascota.
-   * @returns A Signal containing the Mascota object or undefined if not found.
+   * Retrieves a pet by its ID as a signal.
+   * @param id - The ID of the pet.
+   * @returns A Signal containing the Pet object or undefined if not found.
    */
-  getMascotaById(id: number): Signal<Mascota | undefined> {
+  getMascotaById(id: number): Signal<Pet | undefined> {
     return computed(() => id ? this.mascotas().find(m => m.id === id) : undefined);
   }
 
   /**
-   * Retrieves a historial by its ID as a signal.
-   * @param id - The ID of the historial.
-   * @returns A Signal containing the HistorialMedico object or undefined if not found.
+   * Retrieves a medical history by its ID as a signal.
+   * @param id - The ID of the medical history.
+   * @returns A Signal containing the MedicalHistory object or undefined if not found.
    */
-  getHistorialById(id: number): Signal<HistorialMedico | undefined> {
+  getHistorialById(id: number): Signal<MedicalHistory | undefined> {
     return computed(() => id ? this.historiales().find(h => h.id === id) : undefined);
   }
 
   /**
-   * Retrieves a recomendacion by its ID as a signal.
-   * @param id - The ID of the recomendacion.
-   * @returns A Signal containing the Recomendacion object or undefined if not found.
+   * Retrieves a recommendation by its ID as a signal.
+   * @param id - The ID of the recommendation.
+   * @returns A Signal containing the Recommendation object or undefined if not found.
    */
-  getRecomendacionById(id: number): Signal<Recomendacion | undefined> {
+  getRecomendacionById(id: number): Signal<Recommendation | undefined> {
     return computed(() => id ? this.recomendaciones().find(r => r.id === id) : undefined);
   }
 
   /**
-   * Retrieves mascotas by usuario ID as a signal.
-   * @param usuarioId - The ID of the usuario.
-   * @returns A Signal containing filtered Mascota array.
+   * Retrieves pets by user ID as a signal.
+   * @param usuarioId - The ID of the user.
+   * @returns A Signal containing filtered Pet array.
    */
-  getMascotasByUsuario(usuarioId: number): Signal<Mascota[]> {
-    return computed(() => this.mascotas().filter(m => m.usuarioId === usuarioId));
+  getMascotasByUsuario(usuarioId: number): Signal<Pet[]> {
+    return computed(() => this.mascotas().filter(m => m.userId === usuarioId));
   }
 
   /**
-   * Retrieves historiales by mascota ID as a signal.
-   * @param mascotaId - The ID of the mascota.
-   * @returns A Signal containing filtered HistorialMedico array.
+   * Retrieves medical histories by pet ID as a signal.
+   * @param mascotaId - The ID of the pet.
+   * @returns A Signal containing filtered MedicalHistory array.
    */
-  getHistorialesByMascota(mascotaId: number): Signal<HistorialMedico[]> {
-    return computed(() => this.historiales().filter(h => h.mascotaId === mascotaId));
+  getHistorialesByMascota(mascotaId: number): Signal<MedicalHistory[]> {
+    return computed(() => this.historiales().filter(h => h.petId === mascotaId));
   }
 
   /**
-   * Retrieves recomendaciones by mascota ID as a signal.
-   * @param mascotaId - The ID of the mascota.
-   * @returns A Signal containing filtered Recomendacion array.
+   * Retrieves recommendations by pet ID as a signal.
+   * @param mascotaId - The ID of the pet.
+   * @returns A Signal containing filtered Recommendation array.
    */
-  getRecomendacionesByMascota(mascotaId: number): Signal<Recomendacion[]> {
-    return computed(() => this.recomendaciones().filter(r => r.mascotaId === mascotaId));
+  getRecomendacionesByMascota(mascotaId: number): Signal<Recommendation[]> {
+    return computed(() => this.recomendaciones().filter(r => r.petId === mascotaId));
   }
 
   /**
-   * Adds a new mascota.
-   * @param mascota - The mascota to add.
+   * Adds a new pet.
+   * @param mascota - The pet to add.
    */
-  addMascota(mascota: Mascota): void {
+  addMascota(mascota: Pet): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.gestionApi.createMascota(mascota).pipe(retry(2)).subscribe({
@@ -105,17 +105,17 @@ export class GestionStore {
         this.loadingSignal.set(false);
       },
       error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to create mascota'));
+        this.errorSignal.set(this.formatError(err, 'Failed to create pet'));
         this.loadingSignal.set(false);
       }
     });
   }
 
   /**
-   * Updates an existing mascota.
-   * @param updatedMascota - The mascota to update.
+   * Updates an existing pet.
+   * @param updatedMascota - The pet to update.
    */
-  updateMascota(updatedMascota: Mascota): void {
+  updateMascota(updatedMascota: Pet): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.mascotasSignal.update(mascotas =>
@@ -125,8 +125,8 @@ export class GestionStore {
   }
 
   /**
-   * Deletes a mascota by ID.
-   * @param id - The ID of the mascota to delete.
+   * Deletes a pet by ID.
+   * @param id - The ID of the pet to delete.
    */
   deleteMascota(id: number): void {
     this.loadingSignal.set(true);
@@ -136,10 +136,10 @@ export class GestionStore {
   }
 
   /**
-   * Adds a new historial.
-   * @param historial - The historial to add.
+   * Adds a new medical history.
+   * @param historial - The medical history to add.
    */
-  addHistorial(historial: HistorialMedico): void {
+  addHistorial(historial: MedicalHistory): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.historialesSignal.update(historiales => [...historiales, historial]);
@@ -147,10 +147,10 @@ export class GestionStore {
   }
 
   /**
-   * Updates an existing historial.
-   * @param updatedHistorial - The historial to update.
+   * Updates an existing medical history.
+   * @param updatedHistorial - The medical history to update.
    */
-  updateHistorial(updatedHistorial: HistorialMedico): void {
+  updateHistorial(updatedHistorial: MedicalHistory): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.historialesSignal.update(historiales =>
@@ -160,8 +160,8 @@ export class GestionStore {
   }
 
   /**
-   * Deletes a historial by ID.
-   * @param id - The ID of the historial to delete.
+   * Deletes a medical history by ID.
+   * @param id - The ID of the medical history to delete.
    */
   deleteHistorial(id: number): void {
     this.loadingSignal.set(true);
@@ -171,10 +171,10 @@ export class GestionStore {
   }
 
   /**
-   * Adds a new recomendacion.
-   * @param recomendacion - The recomendacion to add.
+   * Adds a new recommendation.
+   * @param recomendacion - The recommendation to add.
    */
-  addRecomendacion(recomendacion: Recomendacion): void {
+  addRecomendacion(recomendacion: Recommendation): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.recomendacionesSignal.update(recomendaciones => [...recomendaciones, recomendacion]);
@@ -182,10 +182,10 @@ export class GestionStore {
   }
 
   /**
-   * Updates an existing recomendacion.
-   * @param updatedRecomendacion - The recomendacion to update.
+   * Updates an existing recommendation.
+   * @param updatedRecomendacion - The recommendation to update.
    */
-  updateRecomendacion(updatedRecomendacion: Recomendacion): void {
+  updateRecomendacion(updatedRecomendacion: Recommendation): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.recomendacionesSignal.update(recomendaciones =>
@@ -207,25 +207,25 @@ export class GestionStore {
 
   /**
    * Sets the mascotas data.
-   * @param mascotas - Array of mascotas to set.
+   * @param mascotas - Array of pets to set.
    */
-  setMascotas(mascotas: Mascota[]): void {
+  setMascotas(mascotas: Pet[]): void {
     this.mascotasSignal.set(mascotas);
   }
 
   /**
    * Sets the historiales data.
-   * @param historiales - Array of historiales to set.
+   * @param historiales - Array of medical histories to set.
    */
-  setHistoriales(historiales: HistorialMedico[]): void {
+  setHistoriales(historiales: MedicalHistory[]): void {
     this.historialesSignal.set(historiales);
   }
 
   /**
    * Sets the recomendaciones data.
-   * @param recomendaciones - Array of recomendaciones to set.
+   * @param recomendaciones - Array of recommendations to set.
    */
-  setRecomendaciones(recomendaciones: Recomendacion[]): void {
+  setRecomendaciones(recomendaciones: Recommendation[]): void {
     this.recomendacionesSignal.set(recomendaciones);
   }
 

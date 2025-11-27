@@ -1,61 +1,62 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { HistorialMedico } from '../domain/model/historial-medico.entity';
-import { HistorialMedicoResource, HistorialesMedicosResponse } from './gestion-response';
+import { MedicalHistory } from '../domain/model/medical-history.entity';
+import { MedicalHistoryResource, MedicalHistoriesResponse, HistorialesMedicosResponse } from './gestion-response';
 
 /**
- * Assembler for converting between HistorialMedico entity and resources.
+ * Assembler for converting between MedicalHistory entity and resources.
  */
-export class HistorialMedicoAssembler implements BaseAssembler<HistorialMedico, HistorialMedicoResource, HistorialesMedicosResponse> {
+export class HistorialMedicoAssembler implements BaseAssembler<MedicalHistory, MedicalHistoryResource, MedicalHistoriesResponse> {
   
   /**
-   * Converts a HistorialMedico entity to a resource.
-   * @param entity - The HistorialMedico entity to convert.
-   * @returns A resource representation of the HistorialMedico.
+   * Converts a MedicalHistory entity to a resource.
+   * @param entity - The MedicalHistory entity to convert.
+   * @returns A resource representation of the MedicalHistory.
    */
-  toResourceFromEntity(entity: HistorialMedico): HistorialMedicoResource {
+  toResourceFromEntity(entity: MedicalHistory): MedicalHistoryResource {
     return {
       id: entity.id,
-      mascotaId: entity.mascotaId,
-      fechaRegistro: entity.fechaRegistro.toISOString(),
-      tipoRegistro: entity.tipoRegistro,
-      descripcion: entity.descripcion,
-      veterinario: entity.veterinario,
-      observaciones: entity.observaciones,
-      archivos: entity.archivos,
-      costo: entity.costo,
-      proximaCita: entity.proximaCita?.toISOString() || null
+      petId: entity.petId,
+      registrationDate: entity.registrationDate.toISOString(),
+      recordType: entity.recordType,
+      description: entity.description,
+      veterinarian: entity.veterinarian,
+      observations: entity.observations,
+      files: entity.files,
+      cost: entity.cost,
+      nextAppointment: entity.nextAppointment?.toISOString() || null
     };
   }
 
   /**
-   * Converts a resource to a HistorialMedico entity.
+   * Converts a resource to a MedicalHistory entity.
    * @param resource - The resource to convert.
-   * @returns A HistorialMedico entity.
+   * @returns A MedicalHistory entity.
    */
-  toEntityFromResource(resource: HistorialMedicoResource): HistorialMedico {
-    return new HistorialMedico({
+  toEntityFromResource(resource: MedicalHistoryResource): MedicalHistory {
+    return new MedicalHistory({
       id: resource.id,
-      mascotaId: resource.mascotaId,
-      fechaRegistro: new Date(resource.fechaRegistro),
-      tipoRegistro: resource.tipoRegistro,
-      descripcion: resource.descripcion,
-      veterinario: resource.veterinario,
-      observaciones: resource.observaciones,
-      archivos: resource.archivos,
-      costo: resource.costo,
-      proximaCita: resource.proximaCita ? new Date(resource.proximaCita) : undefined
+      petId: resource.petId,
+      registrationDate: new Date(resource.registrationDate),
+      recordType: resource.recordType,
+      description: resource.description,
+      veterinarian: resource.veterinarian,
+      observations: resource.observations,
+      files: resource.files,
+      cost: resource.cost,
+      nextAppointment: resource.nextAppointment ? new Date(resource.nextAppointment) : undefined
     });
   }
 
   /**
-   * Converts a response to an array of HistorialMedico entities.
-   * @param response - The response containing historiales.
-   * @returns Array of HistorialMedico entities.
+   * Converts a response to an array of MedicalHistory entities.
+   * @param response - The response containing medical histories.
+   * @returns Array of MedicalHistory entities.
    */
-  toEntitiesFromResponse(response: HistorialesMedicosResponse): HistorialMedico[] {
-    if (!response.historialesMedicos) {
+  toEntitiesFromResponse(response: MedicalHistoriesResponse | HistorialesMedicosResponse): MedicalHistory[] {
+    const histories = 'medicalHistories' in response ? response.medicalHistories : response.historialesMedicos;
+    if (!histories) {
       return [];
     }
-    return response.historialesMedicos.map(resource => this.toEntityFromResource(resource));
+    return histories.map((resource: MedicalHistoryResource) => this.toEntityFromResource(resource));
   }
 }

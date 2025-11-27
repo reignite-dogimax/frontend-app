@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {MatToolbar} from '@angular/material/toolbar';
-import {MatIconButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
 import {TranslatePipe} from '@ngx-translate/core';
 import {LanguageSwitcher} from '../language-switcher/language-switcher.component';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
@@ -11,6 +11,8 @@ import {CommonModule} from '@angular/common';
 import {NotificationBellComponent} from '../../../../notifications/presentation/notification-bell/notification-bell.component';
 import {AuthStorageService} from '../../../../iam/infrastructure/auth-storage.service';
 import {AuthStateService} from '../../../../iam/application/auth-state.service';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatDivider} from '@angular/material/divider';
 
 
 @Component({
@@ -32,9 +34,11 @@ import {AuthStateService} from '../../../../iam/application/auth-state.service';
     MatNavList,
     MatListItem,
     MatIcon,
-
     NotificationBellComponent,
-
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatDivider,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'

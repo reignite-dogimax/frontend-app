@@ -1,23 +1,161 @@
-<div class="header">
-  <h2>{{ 'notifications.title' | translate }}</h2>
-  <div class="actions">
-    <mat-button-toggle-group [value]="filter()" (change)="filter.set($event.value)">
-      <mat-button-toggle value="all">{{ 'notifications.all' | translate }}</mat-button-toggle>
-      <mat-button-toggle value="unread">{{ 'notifications.unread' | translate }}</mat-button-toggle>
-    </mat-button-toggle-group>
-    <button mat-button color="primary" (click)="store.markAllAsRead()" [disabled]="store.unreadCount()===0">{{ 'notifications.markAll' | translate }}</button>
+<div class="notifications-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <mat-icon class="header-icon">notifications_active</mat-icon>
+      <div>
+        <h1 class="title">{{ 'notifications.title' | translate }}</h1>
+        <p class="subtitle" *ngIf="store.unreadCount() > 0">
+          {{ store.unreadCount() }} {{ store.unreadCount() === 1 ? ('notifications.newSingular' | translate) : ('notifications.newPlural' | translate) }}
+        </p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <mat-button-toggle-group [value]="filter()" (change)="filter.set($event.value)" class="filter-toggle">
+        <mat-button-toggle value="all">
+          <mat-icon>notifications</mat-icon>
+          {{ 'notifications.all' | translate }}
+        </mat-button-toggle>
+        <mat-button-toggle value="unread">
+          <mat-icon>mark_email_unread</mat-icon>
+          {{ 'notifications.unread' | translate }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <button mat-flat-button color="primary" 
+              (click)="store.markAllAsRead()" 
+              [disabled]="store.unreadCount()===0"
+              class="mark-all-btn">
+        <mat-icon>done_all</mat-icon>
+        {{ 'notifications.markAll' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="notifications-list" *ngIf="store.loading()">
+    <div class="skeleton-group" *ngFor="let i of [1,2,3]">
+      <div class="skeleton skeleton-card"></div>
+    </div>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="notifications-list" *ngIf="!store.loading()">
+    <!-- Today -->
+    <ng-container *ngIf="groupedNotifications().today.length > 0">
+      <div class="date-divider">
+        <mat-icon>today</mat-icon>
+        <span>{{ 'notifications.today' | translate }}</span>
+      </div>
+      <div class="notification-card" 
+           *ngFor="let n of groupedNotifications().today" 
+           [class.unread]="!n.isRead"
+           [@fadeInOut]>
+        <div class="notification-icon" [style.background]="getTypeColor(n.type)">
+          <mat-icon>{{ getTypeIcon(n.type) }}</mat-icon>
+        </div>
+        <div class="notification-content">
+          <div class="notification-header">
+            <span class="notification-type">{{ getTypeLabel(n.type) | translate }}</span>
+            <span class="notification-time">{{ getTimeAgo(n.createdAt) }}</span>
+          </div>
+          <p class="notification-message">{{ n.message }}</p>
+          <div class="notification-actions">
+            <button mat-button class="action-btn" 
+                    (click)="store.markAsRead(n.id)" 
+                    *ngIf="!n.isRead">
+              <mat-icon>done</mat-icon>
+              {{ 'notifications.markOne' | translate }}
+            </button>
+            <button mat-button class="action-btn delete-btn" 
+                    (click)="store.remove(n.id)">
+              <mat-icon>delete</mat-icon>
+              {{ 'notifications.delete' | translate }}
+            </button>
+          </div>
+        </div>
+        <div class="unread-indicator" *ngIf="!n.isRead"></div>
+      </div>
+    </ng-container>
+
+    <!-- Yesterday -->
+    <ng-container *ngIf="groupedNotifications().yesterday.length > 0">
+      <div class="date-divider">
+        <mat-icon>event</mat-icon>
+        <span>{{ 'notifications.yesterday' | translate }}</span>
+      </div>
+      <div class="notification-card" 
+           *ngFor="let n of groupedNotifications().yesterday" 
+           [class.unread]="!n.isRead"
+           [@fadeInOut]>
+        <div class="notification-icon" [style.background]="getTypeColor(n.type)">
+          <mat-icon>{{ getTypeIcon(n.type) }}</mat-icon>
+        </div>
+        <div class="notification-content">
+          <div class="notification-header">
+            <span class="notification-type">{{ getTypeLabel(n.type) | translate }}</span>
+            <span class="notification-time">{{ getTimeAgo(n.createdAt) }}</span>
+          </div>
+          <p class="notification-message">{{ n.message }}</p>
+          <div class="notification-actions">
+            <button mat-button class="action-btn" 
+                    (click)="store.markAsRead(n.id)" 
+                    *ngIf="!n.isRead">
+              <mat-icon>done</mat-icon>
+              {{ 'notifications.markOne' | translate }}
+            </button>
+            <button mat-button class="action-btn delete-btn" 
+                    (click)="store.remove(n.id)">
+              <mat-icon>delete</mat-icon>
+              {{ 'notifications.delete' | translate }}
+            </button>
+          </div>
+        </div>
+        <div class="unread-indicator" *ngIf="!n.isRead"></div>
+      </div>
+    </ng-container>
+
+    <!-- Older -->
+    <ng-container *ngIf="groupedNotifications().older.length > 0">
+      <div class="date-divider">
+        <mat-icon>history</mat-icon>
+        <span>{{ 'notifications.older' | translate }}</span>
+      </div>
+      <div class="notification-card" 
+           *ngFor="let n of groupedNotifications().older" 
+           [class.unread]="!n.isRead"
+           [@fadeInOut]>
+        <div class="notification-icon" [style.background]="getTypeColor(n.type)">
+          <mat-icon>{{ getTypeIcon(n.type) }}</mat-icon>
+        </div>
+        <div class="notification-content">
+          <div class="notification-header">
+            <span class="notification-type">{{ getTypeLabel(n.type) | translate }}</span>
+            <span class="notification-time">{{ getTimeAgo(n.createdAt) }}</span>
+          </div>
+          <p class="notification-message">{{ n.message }}</p>
+          <div class="notification-actions">
+            <button mat-button class="action-btn" 
+                    (click)="store.markAsRead(n.id)" 
+                    *ngIf="!n.isRead">
+              <mat-icon>done</mat-icon>
+              {{ 'notifications.markOne' | translate }}
+            </button>
+            <button mat-button class="action-btn delete-btn" 
+                    (click)="store.remove(n.id)">
+              <mat-icon>delete</mat-icon>
+              {{ 'notifications.delete' | translate }}
+            </button>
+          </div>
+        </div>
+        <div class="unread-indicator" *ngIf="!n.isRead"></div>
+      </div>
+    </ng-container>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filtered().length === 0">
+      <mat-icon class="empty-icon">notifications_off</mat-icon>
+      <h3>{{ 'notifications.empty' | translate }}</h3>
+      <p>{{ 'notifications.emptyDesc' | translate }}</p>
+    </div>
   </div>
 </div>
-
-<mat-list>
-  <mat-list-item *ngFor="let n of filtered()" [class.unread]="!n.leido">
-    <mat-icon matListItemIcon>{{ icon(n.tipo, n.leido) }}</mat-icon>
-    <div matListItemTitle>{{ n.mensaje }}</div>
-    <div class="row-actions">
-      <button mat-button (click)="store.markAsRead(n.id)" *ngIf="!n.leido">{{ 'notifications.markOne' | translate }}</button>
-      <button mat-button color="warn" (click)="store.remove(n.id)">{{ 'notifications.delete' | translate }}</button>
-    </div>
-  </mat-list-item>
-</mat-list>
-
-<div class="empty" *ngIf="!store.loading() && filtered().length===0">{{ 'notifications.empty' | translate }}</div>

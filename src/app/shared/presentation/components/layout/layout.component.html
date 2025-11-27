@@ -48,30 +48,63 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <mat-toolbar color="primary">
-        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+      <mat-toolbar color="primary" class="main-toolbar">
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" class="menu-toggle">
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
-        <h1>Dogimax</h1>
+        <h1 class="toolbar-title">Dogimax</h1>
         <div class="spacer"></div>
         
-        @if ((isAuthenticated$ | async)) {
-          <div class="user-info">
-            @if (currentUser$ | async; as user) {
-              <span class="user-name">{{ user.nombre }} {{ user.apellido }}</span>
-            }
-          </div>
-        }
-        
-        <app-notification-bell></app-notification-bell>
-        <app-language-switcher/>
-        
-        @if ((isAuthenticated$ | async)) {
-          <button mat-button (click)="logout()" class="logout-button">
-            <mat-icon>logout</mat-icon>
-            <span>Logout</span>
-          </button>
-        }
+        <div class="toolbar-actions">
+          <app-notification-bell class="toolbar-item"></app-notification-bell>
+          <app-language-switcher class="toolbar-item"/>
+          
+          @if ((isAuthenticated$ | async)) {
+            <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-avatar-button toolbar-item">
+              @if (currentUser$ | async; as user) {
+                <div class="user-avatar">
+                  <span class="avatar-text">{{ user.nombre.charAt(0) }}{{ user.apellido.charAt(0) }}</span>
+                </div>
+              } @else {
+                <div class="user-avatar user-avatar-default">
+                  <mat-icon>person</mat-icon>
+                </div>
+              }
+            </button>
+            
+            <mat-menu #userMenu="matMenu" class="user-dropdown-menu">
+              @if (currentUser$ | async; as user) {
+                <div class="menu-header">
+                  <div class="menu-avatar">
+                    <span class="avatar-text-large">{{ user.nombre.charAt(0) }}{{ user.apellido.charAt(0) }}</span>
+                  </div>
+                  <div class="menu-user-info">
+                    <div class="menu-user-name">{{ user.nombre }} {{ user.apellido }}</div>
+                    <div class="menu-user-email">{{ user.email }}</div>
+                  </div>
+                </div>
+                <mat-divider></mat-divider>
+              }
+              
+              <button mat-menu-item routerLink="/profile">
+                <mat-icon>account_circle</mat-icon>
+                <span>Mi Perfil</span>
+              </button>
+              
+              <button mat-menu-item routerLink="/settings">
+                <mat-icon>settings</mat-icon>
+                <span>Configuración</span>
+              </button>
+              
+              <mat-divider></mat-divider>
+              
+              <button mat-menu-item (click)="logout()" class="logout-menu-item">
+                <mat-icon>logout</mat-icon>
+                <span>Cerrar Sesión</span>
+              </button>
+            </mat-menu>
+          }
+        </div>
       </mat-toolbar>
 
       <div class="content">

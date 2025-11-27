@@ -47,7 +47,26 @@
     "markOne": "Mark as read",
     "delete": "Delete",
     "empty": "No notifications",
-    "seeAll": "See all"
+    "emptyDesc": "When you receive notifications, they will appear here",
+    "seeAll": "See all",
+    "newSingular": "new notification",
+    "newPlural": "new notifications",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "older": "Older",
+    "types": {
+      "appointment": "Appointment",
+      "payment": "Payment",
+      "promotion": "Promotion",
+      "exam": "Exam Result",
+      "confirmation": "Confirmation",
+      "health": "Health",
+      "survey": "Survey",
+      "announcement": "Announcement",
+      "purchase": "Purchase",
+      "welcome": "Welcome",
+      "general": "General"
+    }
   }
   ,
   "auth": {

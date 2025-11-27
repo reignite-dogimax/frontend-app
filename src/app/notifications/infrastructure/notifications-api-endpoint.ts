@@ -13,7 +13,7 @@ export class NotificationsApiEndpoint extends BaseApiEndpoint<NotificationItem, 
   }
 
   markAsRead(id: number): Observable<NotificationItem> {
-    return this.http.patch<NotificationResource>(`${this.endpointUrl}/${id}`, { leido: true }).pipe(
+    return this.http.patch<NotificationResource>(`${this.endpointUrl}/${id}/mark-as-read`, {}).pipe(
       map(resource => this.assembler.toEntityFromResource(resource)),
       catchError(this.handleError('Failed to mark notification as read'))
     );

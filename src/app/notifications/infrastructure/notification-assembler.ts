@@ -6,10 +6,10 @@ export class NotificationAssembler implements BaseAssembler<NotificationItem, No
   toEntityFromResource(resource: NotificationResource): NotificationItem {
     return {
       id: resource.id,
-      usuarioId: resource.usuarioId,
-      mensaje: resource.mensaje,
-      tipo: resource.tipo,
-      leido: resource.leido,
+      userId: resource.userId,
+      message: resource.message,
+      type: resource.type,
+      isRead: resource.isRead,
       createdAt: resource.createdAt ?? null
     };
   }
@@ -17,10 +17,10 @@ export class NotificationAssembler implements BaseAssembler<NotificationItem, No
   toResourceFromEntity(entity: NotificationItem): NotificationResource {
     return {
       id: entity.id,
-      usuarioId: entity.usuarioId,
-      mensaje: entity.mensaje,
-      tipo: entity.tipo,
-      leido: entity.leido,
+      userId: entity.userId,
+      message: entity.message,
+      type: entity.type,
+      isRead: entity.isRead,
       createdAt: entity.createdAt ?? null
     };
   }
