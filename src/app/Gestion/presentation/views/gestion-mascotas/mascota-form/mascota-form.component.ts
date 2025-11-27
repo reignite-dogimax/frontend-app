@@ -14,7 +14,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GestionStore } from '../../../../application/gestion.store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Mascota } from '../../../../domain/model/mascota.entity';
+import { Pet } from '../../../../domain/model/pet.entity';
 
 // Tipos temporales para las requests
 interface CreateMascotaRequest {
@@ -119,15 +119,15 @@ export class MascotaFormComponent implements OnInit {
     
     if (mascota) {
       this.mascotaForm.patchValue({
-        nombre: mascota.nombre,
-        especie: mascota.especie,
-        raza: mascota.raza,
-        fechaNacimiento: mascota.fechaNacimiento ? new Date(mascota.fechaNacimiento) : null,
-        peso: mascota.peso,
+        nombre: mascota.name,
+        especie: mascota.species,
+        raza: mascota.breed,
+        fechaNacimiento: mascota.birthDate ? new Date(mascota.birthDate) : null,
+        peso: mascota.weight,
         color: mascota.color,
-        sexo: mascota.sexo,
-        esterilizado: mascota.esterilizado,
-        observaciones: mascota.observaciones
+        sexo: mascota.gender === 'MALE' ? 'Macho' : mascota.gender === 'FEMALE' ? 'Hembra' : undefined,
+        esterilizado: mascota.isNeutered,
+        observaciones: mascota.observations
       });
     } else {
       this.error = 'Mascota no encontrada';
@@ -155,26 +155,26 @@ export class MascotaFormComponent implements OnInit {
           observaciones: formValue.observaciones
         };
 
-        // Crear entidad Mascota para actualizar
+        // Crear entidad Pet para actualizar
         const mascotaSignal = this.gestionStore.getMascotaById(this.mascotaId);
         const mascotaExistente = mascotaSignal();
         
         if (mascotaExistente) {
-          const mascotaActualizada = new Mascota({
+          const mascotaActualizada = new Pet({
             id: mascotaExistente.id,
-            usuarioId: mascotaExistente.usuarioId,
-            nombre: updateData.nombre || mascotaExistente.nombre,
-            especie: updateData.especie || mascotaExistente.especie,
-            raza: updateData.raza || mascotaExistente.raza,
-            fechaNacimiento: updateData.fechaNacimiento || mascotaExistente.fechaNacimiento,
-            peso: updateData.peso || mascotaExistente.peso,
+            userId: mascotaExistente.userId,
+            name: updateData.nombre || mascotaExistente.name,
+            species: updateData.especie || mascotaExistente.species,
+            breed: updateData.raza || mascotaExistente.breed,
+            birthDate: updateData.fechaNacimiento || mascotaExistente.birthDate,
+            weight: updateData.peso || mascotaExistente.weight,
             color: updateData.color || mascotaExistente.color,
-            sexo: updateData.sexo || mascotaExistente.sexo,
-            esterilizado: updateData.esterilizado !== undefined ? updateData.esterilizado : mascotaExistente.esterilizado,
-            observaciones: updateData.observaciones || mascotaExistente.observaciones,
-            foto: mascotaExistente.foto,
-            fechaRegistro: mascotaExistente.fechaRegistro,
-            activo: mascotaExistente.activo
+            gender: updateData.sexo === 'Macho' ? 'MALE' : updateData.sexo === 'Hembra' ? 'FEMALE' : mascotaExistente.gender,
+            isNeutered: updateData.esterilizado !== undefined ? updateData.esterilizado : mascotaExistente.isNeutered,
+            observations: updateData.observaciones || mascotaExistente.observations,
+            photo: mascotaExistente.photo,
+            registrationDate: mascotaExistente.registrationDate,
+            isActive: mascotaExistente.isActive
           });
           
           this.gestionStore.updateMascota(mascotaActualizada);
@@ -198,21 +198,21 @@ export class MascotaFormComponent implements OnInit {
           observaciones: formValue.observaciones
         };
 
-        // Crear nueva entidad Mascota
-        const nuevaMascota = new Mascota({
+        // Crear nueva entidad Pet
+        const nuevaMascota = new Pet({
           id: 0, // Se asignará automáticamente
-          usuarioId: createData.usuarioId,
-          nombre: createData.nombre,
-          especie: createData.especie,
-          raza: createData.raza,
-          fechaNacimiento: createData.fechaNacimiento,
-          peso: createData.peso,
+          userId: createData.usuarioId,
+          name: createData.nombre,
+          species: createData.especie,
+          breed: createData.raza,
+          birthDate: createData.fechaNacimiento,
+          weight: createData.peso,
           color: createData.color,
-          sexo: createData.sexo,
-          esterilizado: createData.esterilizado,
-          observaciones: createData.observaciones,
-          fechaRegistro: new Date().toISOString(),
-          activo: true
+          gender: createData.sexo === 'Macho' ? 'MALE' : createData.sexo === 'Hembra' ? 'FEMALE' : undefined,
+          isNeutered: createData.esterilizado,
+          observations: createData.observaciones,
+          registrationDate: new Date().toISOString(),
+          isActive: true
         });
         
         this.gestionStore.addMascota(nuevaMascota);

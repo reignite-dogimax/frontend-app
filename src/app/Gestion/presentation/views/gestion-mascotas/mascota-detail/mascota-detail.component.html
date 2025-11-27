@@ -27,15 +27,23 @@
     <!-- Información Principal -->
     <div class="mascota-info card">
       <div class="mascota-header">
+        <div class="mascota-avatar-large">
+          <img 
+            *ngIf="mascota.photo" 
+            [src]="mascota.photo" 
+            [alt]="mascota.name"
+            class="mascota-image-large"
+            (error)="onImageError($event)">
+          <mat-icon *ngIf="!mascota.photo" class="mascota-icon-large">{{ getEspecieIcon(mascota.species) }}</mat-icon>
+        </div>
         <div class="mascota-main-info">
-          <mat-icon class="mascota-icon">{{ getEspecieIcon(mascota.especie) }}</mat-icon>
           <div class="mascota-details">
-            <h1 class="heading-2">{{ mascota.nombre }}</h1>
-            <p class="large-text-regular text-secondary">{{ mascota.especie }} - {{ mascota.raza }}</p>
-            <div class="mascota-tags" *ngIf="mascota.esterilizado !== undefined">
+            <h1 class="heading-2">{{ mascota.name }}</h1>
+            <p class="large-text-regular text-secondary">{{ mascota.species }} - {{ mascota.breed }}</p>
+            <div class="mascota-tags" *ngIf="mascota.isNeutered !== undefined">
               <mat-chip-set>
-                <mat-chip [class]="mascota.esterilizado ? 'chip-success' : 'chip-warning'">
-                  {{ mascota.esterilizado ? 'Esterilizado' : 'No esterilizado' }}
+                <mat-chip [class]="mascota.isNeutered ? 'chip-success' : 'chip-warning'">
+                  {{ mascota.isNeutered ? 'Esterilizado' : 'No esterilizado' }}
                 </mat-chip>
               </mat-chip-set>
             </div>
@@ -44,32 +52,32 @@
       </div>
 
       <div class="mascota-stats">
-        <div class="stat-card" *ngIf="mascota.peso">
+        <div class="stat-card" *ngIf="mascota.weight">
           <mat-icon>monitor_weight</mat-icon>
           <div class="stat-info">
-            <span class="medium-text-bold">{{ mascota.peso }} kg</span>
+            <span class="medium-text-bold">{{ mascota.weight }} kg</span>
             <span class="small-text-regular text-muted">Peso</span>
           </div>
         </div>
-        <div class="stat-card" *ngIf="mascota.fechaNacimiento">
+        <div class="stat-card" *ngIf="mascota.birthDate">
           <mat-icon>cake</mat-icon>
           <div class="stat-info">
-            <span class="medium-text-bold">{{ getEdadMascota(mascota.fechaNacimiento) }}</span>
+            <span class="medium-text-bold">{{ getEdadMascota(mascota.birthDate) }}</span>
             <span class="small-text-regular text-muted">Edad</span>
           </div>
         </div>
-        <div class="stat-card" *ngIf="mascota.sexo">
-          <mat-icon>{{ mascota.sexo === 'Macho' ? 'male' : 'female' }}</mat-icon>
+        <div class="stat-card" *ngIf="mascota.gender">
+          <mat-icon>{{ mascota.gender === 'MALE' ? 'male' : 'female' }}</mat-icon>
           <div class="stat-info">
-            <span class="medium-text-bold">{{ mascota.sexo }}</span>
+            <span class="medium-text-bold">{{ mascota.gender === 'MALE' ? 'Macho' : 'Hembra' }}</span>
             <span class="small-text-regular text-muted">Sexo</span>
           </div>
         </div>
       </div>
 
-      <div class="mascota-observations" *ngIf="mascota.observaciones">
+      <div class="mascota-observations" *ngIf="mascota.observations">
         <h3 class="heading-4">Observaciones</h3>
-        <p class="normal-text-regular">{{ mascota.observaciones }}</p>
+        <p class="normal-text-regular">{{ mascota.observations }}</p>
       </div>
     </div>
 
@@ -89,16 +97,16 @@
           <div *ngIf="historial.length === 0" class="empty-state">
             <mat-icon class="empty-icon">medical_services</mat-icon>
             <h4 class="heading-4">No hay registros médicos</h4>
-            <p class="normal-text-regular text-muted">Comienza agregando el primer registro médico de {{ mascota.nombre }}.</p>
+            <p class="normal-text-regular text-muted">Comienza agregando el primer registro médico de {{ mascota.name }}.</p>
           </div>
 
           <div *ngIf="historial.length > 0" class="historial-list">
             <div *ngFor="let registro of historial" class="historial-item card">
               <div class="historial-header">
-                <mat-icon class="historial-icon">{{ getTipoIcon(registro.tipoRegistro) }}</mat-icon>
+                <mat-icon class="historial-icon">{{ getTipoIcon(registro.recordType) }}</mat-icon>
                 <div class="historial-info">
-                  <h4 class="heading-5">{{ registro.descripcion }}</h4>
-                  <p class="small-text-regular text-muted">{{ registro.fechaRegistro | date:'dd/MM/yyyy' }}</p>
+                  <h4 class="heading-5">{{ registro.description }}</h4>
+                  <p class="small-text-regular text-muted">{{ registro.registrationDate | date:'dd/MM/yyyy' }}</p>
                 </div>
                 <div class="historial-actions">
                   <button class="btn-secondary btn-small">
@@ -106,12 +114,12 @@
                   </button>
                 </div>
               </div>
-              <div class="historial-details" *ngIf="registro.veterinario || registro.observaciones">
-                <p *ngIf="registro.veterinario" class="small-text-regular">
-                  <strong>Veterinario:</strong> {{ registro.veterinario }}
+              <div class="historial-details" *ngIf="registro.veterinarian || registro.observations">
+                <p *ngIf="registro.veterinarian" class="small-text-regular">
+                  <strong>Veterinario:</strong> {{ registro.veterinarian }}
                 </p>
-                <p *ngIf="registro.observaciones" class="small-text-regular">
-                  <strong>Observaciones:</strong> {{ registro.observaciones }}
+                <p *ngIf="registro.observations" class="small-text-regular">
+                  <strong>Observaciones:</strong> {{ registro.observations }}
                 </p>
               </div>
             </div>
@@ -133,7 +141,7 @@
           <div *ngIf="vacunas.length === 0" class="empty-state">
             <mat-icon class="empty-icon">vaccines</mat-icon>
             <h4 class="heading-4">No hay vacunas registradas</h4>
-            <p class="normal-text-regular text-muted">Mantén el registro de vacunas de {{ mascota.nombre }} actualizado.</p>
+            <p class="normal-text-regular text-muted">Mantén el registro de vacunas de {{ mascota.name }} actualizado.</p>
           </div>
 
           <div *ngIf="vacunas.length > 0" class="vacunas-list">
@@ -141,12 +149,12 @@
               <div class="vacuna-header">
                 <mat-icon class="vacuna-icon">vaccines</mat-icon>
                 <div class="vacuna-info">
-                  <h4 class="heading-5">{{ vacuna.nombreVacuna }}</h4>
+                  <h4 class="heading-5">{{ vacuna.description }}</h4>
                   <p class="small-text-regular text-muted">
-                    Aplicada: {{ vacuna.fechaAplicacion | date:'dd/MM/yyyy' }}
+                    Aplicada: {{ vacuna.registrationDate | date:'dd/MM/yyyy' }}
                   </p>
-                  <p *ngIf="vacuna.proximaAplicacion" class="small-text-regular text-primary">
-                    Próxima: {{ vacuna.proximaAplicacion | date:'dd/MM/yyyy' }}
+                  <p *ngIf="vacuna.nextAppointment" class="small-text-regular text-primary">
+                    Próxima: {{ vacuna.nextAppointment | date:'dd/MM/yyyy' }}
                   </p>
                 </div>
                 <div class="vacuna-actions">
@@ -155,12 +163,12 @@
                   </button>
                 </div>
               </div>
-              <div class="vacuna-details" *ngIf="vacuna.veterinario || vacuna.observaciones">
-                <p *ngIf="vacuna.veterinario" class="small-text-regular">
-                  <strong>Veterinario:</strong> {{ vacuna.veterinario }}
+              <div class="vacuna-details" *ngIf="vacuna.veterinarian || vacuna.observations">
+                <p *ngIf="vacuna.veterinarian" class="small-text-regular">
+                  <strong>Veterinario:</strong> {{ vacuna.veterinarian }}
                 </p>
-                <p *ngIf="vacuna.observaciones" class="small-text-regular">
-                  <strong>Observaciones:</strong> {{ vacuna.observaciones }}
+                <p *ngIf="vacuna.observations" class="small-text-regular">
+                  <strong>Observaciones:</strong> {{ vacuna.observations }}
                 </p>
               </div>
             </div>
@@ -182,44 +190,44 @@
           <div *ngIf="recomendaciones.length === 0" class="empty-state">
             <mat-icon class="empty-icon">auto_awesome</mat-icon>
             <h4 class="heading-4">No hay recomendaciones</h4>
-            <p class="normal-text-regular text-muted">Genera recomendaciones personalizadas basadas en el perfil de {{ mascota.nombre }}.</p>
+            <p class="normal-text-regular text-muted">Genera recomendaciones personalizadas basadas en el perfil de {{ mascota.name }}.</p>
           </div>
 
           <div *ngIf="recomendaciones.length > 0" class="recomendaciones-list">
             <div *ngFor="let recomendacion of recomendaciones" class="recomendacion-item card">
               <div class="recomendacion-header">
                 <div class="recomendacion-info">
-                  <h4 class="heading-5">{{ recomendacion.titulo }}</h4>
+                  <h4 class="heading-5">{{ recomendacion.title }}</h4>
                   <p class="small-text-regular text-muted">
-                    {{ recomendacion.tipo }} • {{ recomendacion.fechaGeneracion | date:'dd/MM/yyyy' }}
+                    {{ recomendacion.type }} • {{ recomendacion.generationDate | date:'dd/MM/yyyy' }}
                   </p>
                 </div>
                 <div class="recomendacion-priority">
-                  <mat-chip [class]="getPrioridadColor(recomendacion.prioridad)">
-                    {{ recomendacion.prioridad }}
+                  <mat-chip [class]="getPrioridadColor(recomendacion.priority)">
+                    {{ recomendacion.priority }}
                   </mat-chip>
                 </div>
               </div>
               <div class="recomendacion-content">
-                <p class="normal-text-regular">{{ recomendacion.descripcion }}</p>
+                <p class="normal-text-regular">{{ recomendacion.description }}</p>
                 <div class="recomendacion-meta">
                   <span class="small-text-regular text-muted">
-                    Confianza: {{ recomendacion.confianza }}%
+                    Confianza: {{ recomendacion.confidence }}%
                   </span>
                   <span class="small-text-regular text-muted">
-                    Fuente: {{ recomendacion.fuenteIA }}
+                    Fuente: {{ recomendacion.aiSource }}
                   </span>
                 </div>
               </div>
               <div class="recomendacion-actions">
                 <button 
                   class="btn-primary btn-small" 
-                  *ngIf="!recomendacion.completada"
+                  *ngIf="!recomendacion.isCompleted"
                   (click)="marcarCompletada(recomendacion.id)">
                   <mat-icon>check</mat-icon>
                   Marcar Completada
                 </button>
-                <span *ngIf="recomendacion.completada" class="completada-badge">
+                <span *ngIf="recomendacion.isCompleted" class="completada-badge">
                   <mat-icon>check_circle</mat-icon>
                   Completada
                 </span>

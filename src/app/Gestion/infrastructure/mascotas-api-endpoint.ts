@@ -1,50 +1,49 @@
 import { Injectable } from '@angular/core';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { HttpClient } from '@angular/common/http';
-import { Mascota } from '../domain/model/mascota.entity';
+import { Pet } from '../domain/model/pet.entity';
 import { MascotaAssembler } from './mascota-assembler';
-import { MascotaResponse, MascotasResponse } from './gestion-response';
+import { PetResponse, PetsResponse } from './gestion-response';
 import { Observable, map } from 'rxjs';
 
 /**
- * API endpoint for Mascota operations.
+ * API endpoint for Pet operations.
  */
 @Injectable({
   providedIn: 'root'
 })
-export class MascotasApiEndpoint extends BaseApiEndpoint<Mascota> {
+export class MascotasApiEndpoint extends BaseApiEndpoint<Pet> {
   
   constructor(http: HttpClient) {
-    super(http, 'https://dogimax-api.arroz.dev/mascotas');
+    super(http, 'https://dogimax-api.arroz.dev/api/v1/pets');
   }
 
   /**
-   * Gets all mascotas.
-   * @returns Observable of Mascota array.
+   * Gets all pets.
+   * @returns Observable of Pet array.
    */
-  getAll(): Observable<Mascota[]> {
-    return this.http.get<MascotasResponse>(this.baseUrl).pipe(
+  getAll(): Observable<Pet[]> {
+    return this.http.get<PetsResponse>(this.baseUrl).pipe(
       map(response => {
-        if (response.data) {
-          return MascotaAssembler.fromDtoArray(response.data);
-        }
-        return [];
+        const assembler = new MascotaAssembler();
+        return assembler.toEntitiesFromResponse(response);
       })
     );
   }
 
   /**
-   * Gets a mascota by ID.
-   * @param id - The mascota ID.
-   * @returns Observable of Mascota.
+   * Gets a pet by ID.
+   * @param id - The pet ID.
+   * @returns Observable of Pet.
    */
-  getById(id: number): Observable<Mascota> {
-    return this.http.get<MascotaResponse>(`${this.baseUrl}/${id}`).pipe(
+  getById(id: number): Observable<Pet> {
+    return this.http.get<PetResponse>(`${this.baseUrl}/${id}`).pipe(
       map(response => {
-        if (response.data) {
-          return MascotaAssembler.fromDto(response.data);
+        const assembler = new MascotaAssembler();
+        if (response.pet) {
+          return assembler.toEntityFromResource(response.pet);
         }
-        throw new Error('Mascota not found');
+        throw new Error('Pet not found');
       })
     );
   }

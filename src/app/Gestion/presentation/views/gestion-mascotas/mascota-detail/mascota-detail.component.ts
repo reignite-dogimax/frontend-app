@@ -6,11 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { GestionStore } from '../../../../application/gestion.store';
-import { Mascota } from '../../../../domain/model/mascota.entity';
-import { HistorialMedico } from '../../../../domain/model/historial-medico.entity';
-import { Recomendacion } from '../../../../domain/model/recomendacion.entity';
+import { Pet } from '../../../../domain/model/pet.entity';
+import { MedicalHistory } from '../../../../domain/model/medical-history.entity';
+import { Recommendation } from '../../../../domain/model/recommendation.entity';
 
 @Component({
   selector: 'app-mascota-detail',
@@ -23,16 +24,17 @@ import { Recomendacion } from '../../../../domain/model/recomendacion.entity';
     MatIconModule,
     MatChipsModule,
     MatProgressSpinnerModule,
+    MatDividerModule,
     MatTabsModule
   ],
   templateUrl: './mascota-detail.component.html',
   styleUrl: './mascota-detail.component.css'
 })
 export class MascotaDetailComponent implements OnInit {
-  mascota: Mascota | null = null;
-  historial: any[] = [];
-  vacunas: any[] = [];
-  recomendaciones: any[] = [];
+  mascota: Pet | null = null;
+  historial: MedicalHistory[] = [];
+  vacunas: MedicalHistory[] = [];
+  recomendaciones: Recommendation[] = [];
   loading = false;
   error: string | null = null;
   selectedTab = 0;
@@ -70,8 +72,22 @@ export class MascotaDetailComponent implements OnInit {
   }
 
   loadRelatedData(mascotaId: number): void {
-    // Los datos relacionados se cargan automáticamente desde el store
-    // Los signals ya están configurados para filtrar por mascotaId
+    // Obtener historiales médicos del store
+    const historialesSignal = this.gestionStore.getHistorialesByMascota(mascotaId);
+    const historiales = historialesSignal();
+    this.historial = historiales;
+    
+    // Filtrar vacunas del historial médico (tipo "Vacuna")
+    this.vacunas = historiales.filter(h => h.recordType?.toLowerCase() === 'vacuna');
+    
+    // Obtener recomendaciones del store
+    const recomendacionesSignal = this.gestionStore.getRecomendacionesByMascota(mascotaId);
+    this.recomendaciones = recomendacionesSignal();
+    
+    console.log('Historiales cargados:', this.historial);
+    console.log('Vacunas cargadas:', this.vacunas);
+    console.log('Recomendaciones cargadas:', this.recomendaciones);
+    
     this.loading = false;
   }
 
@@ -96,23 +112,45 @@ export class MascotaDetailComponent implements OnInit {
   }
 
   getPrioridadColor(prioridad: string): string {
-    switch (prioridad) {
-      case 'Critica': return 'chip-critical';
-      case 'Alta': return 'chip-high';
-      case 'Media': return 'chip-medium';
-      case 'Baja': return 'chip-low';
-      default: return 'chip-medium';
+    const prioridadUpper = prioridad?.toUpperCase();
+    switch (prioridadUpper) {
+      case 'CRITICAL':
+      case 'CRITICA':
+        return 'chip-critical';
+      case 'HIGH':
+      case 'ALTA':
+        return 'chip-high';
+      case 'MEDIUM':
+      case 'MEDIA':
+        return 'chip-medium';
+      case 'LOW':
+      case 'BAJA':
+        return 'chip-low';
+      default:
+        return 'chip-medium';
     }
   }
 
   getTipoIcon(tipo: string): string {
-    switch (tipo) {
-      case 'Vacuna': return 'vaccines';
-      case 'Consulta': return 'medical_services';
-      case 'Cirugia': return 'healing';
-      case 'Examen': return 'science';
-      case 'Tratamiento': return 'medication';
-      default: return 'medical_services';
+    const tipoUpper = tipo?.toUpperCase();
+    switch (tipoUpper) {
+      case 'VACCINATION':
+      case 'VACUNA':
+        return 'vaccines';
+      case 'CONSULTATION':
+      case 'CONSULTA':
+        return 'medical_services';
+      case 'SURGERY':
+      case 'CIRUGIA':
+        return 'healing';
+      case 'EXAM':
+      case 'EXAMEN':
+        return 'science';
+      case 'TREATMENT':
+      case 'TRATAMIENTO':
+        return 'medication';
+      default:
+        return 'medical_services';
     }
   }
 
@@ -128,19 +166,42 @@ export class MascotaDetailComponent implements OnInit {
     if (!this.mascota) return;
     
     // Simular generación de recomendaciones
-    console.log('Generando recomendaciones para:', this.mascota.nombre);
+    console.log('Generando recomendaciones para:', this.mascota.name);
     // En una implementación real, aquí se llamaría al servicio de IA
   }
 
   marcarCompletada(recomendacionId: number): void {
-    // Simular marcado como completada
-    const index = this.recomendaciones.findIndex((r: any) => r.id === recomendacionId);
+    const index = this.recomendaciones.findIndex(r => r.id === recomendacionId);
     if (index !== -1) {
-      this.recomendaciones[index] = {
-        ...this.recomendaciones[index],
-        completada: true,
-        fechaCompletada: new Date()
-      };
+      // Crear una nueva instancia de Recommendation con isCompleted actualizado
+      const recomendacion = this.recomendaciones[index];
+      const recomendacionActualizada = new Recommendation({
+        ...recomendacion,
+        id: recomendacion.id,
+        petId: recomendacion.petId,
+        type: recomendacion.type,
+        title: recomendacion.title,
+        description: recomendacion.description,
+        priority: recomendacion.priority,
+        generationDate: recomendacion.generationDate,
+        expirationDate: recomendacion.expirationDate,
+        isCompleted: true,
+        completionDate: new Date(),
+        aiSource: recomendacion.aiSource,
+        confidence: recomendacion.confidence,
+        parameters: recomendacion.parameters
+      });
+      
+      // Actualizar en el store
+      this.gestionStore.updateRecomendacion(recomendacionActualizada);
+      
+      // Actualizar localmente
+      this.recomendaciones[index] = recomendacionActualizada;
     }
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
   }
 }
