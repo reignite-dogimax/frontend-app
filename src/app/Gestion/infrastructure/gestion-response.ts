@@ -1,40 +1,50 @@
 import { BaseResource } from '../../shared/infrastructure/base-response';
 
 /**
- * Mascota resource/DTO for API communication.
+ * Pet resource/DTO for API communication.
  */
-export interface MascotaResource extends BaseResource {
+export interface PetResource extends BaseResource {
   id: number;
-  usuarioId: number;
-  nombre: string;
-  especie: string;
-  raza: string;
-  fechaNacimiento?: string;
-  peso?: number;
+  userId: number;
+  name: string;
+  species: string;
+  breed: string;
+  birthDate?: string;
+  weight?: number;
   color?: string;
-  sexo?: 'Macho' | 'Hembra';
-  esterilizado?: boolean;
-  observaciones?: string;
-  foto?: string;
-  fechaRegistro: string;
-  activo: boolean;
+  gender?: 'MALE' | 'FEMALE';
+  isNeutered?: boolean;
+  observations?: string;
+  photo?: string;
+  registrationDate: string;
+  isActive: boolean;
 }
 
 /**
- * HistorialMedico resource/DTO for API communication.
+ * @deprecated Use PetResource instead
  */
-export interface HistorialMedicoResource extends BaseResource {
+export interface MascotaResource extends PetResource {}
+
+/**
+ * MedicalHistory resource/DTO for API communication.
+ */
+export interface MedicalHistoryResource extends BaseResource {
   id: number;
-  mascotaId: number;
-  fechaRegistro: string;
-  tipoRegistro: 'Vacuna' | 'Consulta' | 'Cirugia' | 'Examen' | 'Tratamiento';
-  descripcion: string;
-  veterinario?: string;
-  observaciones?: string;
-  archivos?: string[];
-  costo?: number;
-  proximaCita?: string | null;
+  petId: number;
+  registrationDate: string;
+  recordType: 'VACCINATION' | 'CONSULTATION' | 'SURGERY' | 'EXAM' | 'TREATMENT';
+  description: string;
+  veterinarian?: string;
+  observations?: string;
+  files?: string;
+  cost?: number;
+  nextAppointment?: string | null;
 }
+
+/**
+ * @deprecated Use MedicalHistoryResource instead
+ */
+export interface HistorialMedicoResource extends MedicalHistoryResource {}
 
 /**
  * Vacuna resource/DTO for API communication.
@@ -51,49 +61,105 @@ export interface VacunaResource extends BaseResource {
 }
 
 /**
- * Recomendacion resource/DTO for API communication.
+ * Recommendation resource/DTO for API communication.
  */
-export interface RecomendacionResource extends BaseResource {
+export interface RecommendationResource extends BaseResource {
   id: number;
-  mascotaId: number;
-  tipo: string;
-  titulo: string;
-  descripcion: string;
-  prioridad: string;
-  fechaGeneracion: string;
-  fechaVencimiento?: string;
-  completada: boolean;
-  fuenteIA?: string;
-  confianza?: number;
-  parametros?: any;
+  petId: number;
+  type: 'NUTRITION' | 'EXERCISE' | 'HEALTH' | 'BEHAVIOR' | 'CARE' | 'VACCINATION';
+  title: string;
+  description: string;
+  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  generationDate: string;
+  expirationDate?: string;
+  isCompleted: boolean;
+  completionDate?: string;
+  aiSource?: string;
+  confidence?: number;
+  parameters?: string;
 }
 
 /**
- * Response wrapper for Mascota operations.
+ * @deprecated Use RecommendationResource instead
  */
-export interface MascotaResponse {
-  mascota: MascotaResource;
+export interface RecomendacionResource extends RecommendationResource {}
+
+/**
+ * Response wrapper for Pet operations.
+ */
+export interface PetResponse {
+  pet: PetResource;
 }
 
 /**
- * Response wrapper for Mascota array operations.
+ * Response wrapper for Pet array operations.
+ */
+export interface PetsResponse {
+  pets: PetResource[];
+}
+
+/**
+ * @deprecated Use PetResponse instead
+ */
+export interface MascotaResponse extends PetResponse {}
+
+/**
+ * @deprecated Use PetsResponse instead
  */
 export interface MascotasResponse {
-  mascotas: MascotaResource[];
+  mascotas: PetResource[];
 }
 
 /**
- * Response wrapper for HistorialMedico operations.
+ * Response wrapper for MedicalHistory operations.
  */
-export interface HistorialMedicoResponse {
-  historialMedico: HistorialMedicoResource;
+export interface MedicalHistoryResponse {
+  medicalHistory: MedicalHistoryResource;
 }
 
 /**
- * Response wrapper for HistorialMedico array operations.
+ * Response wrapper for MedicalHistory array operations.
+ */
+export interface MedicalHistoriesResponse {
+  medicalHistories: MedicalHistoryResource[];
+}
+
+/**
+ * @deprecated Use MedicalHistoryResponse instead
+ */
+export interface HistorialMedicoResponse extends MedicalHistoryResponse {}
+
+/**
+ * @deprecated Use MedicalHistoriesResponse instead
  */
 export interface HistorialesMedicosResponse {
-  historialesMedicos: HistorialMedicoResource[];
+  historialesMedicos: MedicalHistoryResource[];
+}
+
+/**
+ * Response wrapper for Recommendation operations.
+ */
+export interface RecommendationResponse {
+  recommendation: RecommendationResource;
+}
+
+/**
+ * Response wrapper for Recommendation array operations.
+ */
+export interface RecommendationsResponse {
+  recommendations: RecommendationResource[];
+}
+
+/**
+ * @deprecated Use RecommendationResponse instead
+ */
+export interface RecomendacionResponse extends RecommendationResponse {}
+
+/**
+ * @deprecated Use RecommendationsResponse instead
+ */
+export interface RecomendacionesResponse {
+  recomendaciones: RecommendationResource[];
 }
 
 /**
@@ -108,18 +174,4 @@ export interface VacunaResponse {
  */
 export interface VacunasResponse {
   vacunas: VacunaResource[];
-}
-
-/**
- * Response wrapper for Recomendacion operations.
- */
-export interface RecomendacionResponse {
-  recomendacion: RecomendacionResource;
-}
-
-/**
- * Response wrapper for Recomendacion array operations.
- */
-export interface RecomendacionesResponse {
-  recomendaciones: RecomendacionResource[];
 }

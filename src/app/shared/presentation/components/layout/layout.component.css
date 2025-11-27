@@ -200,23 +200,254 @@
     animation-delay: 0.24s;
   }
 
-/* User info in toolbar */
-.user-info {
-  display: flex;
-  align-items: center;
-  margin-right: 16px;
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+/* Toolbar Improvements */
+.main-toolbar {
+  padding: 0 16px;
+  height: 64px;
 }
 
-.user-name {
-  font-size: 14px;
-  font-weight: 500;
+.menu-toggle {
+  margin-right: 8px;
+}
+
+.toolbar-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+}
+
+.toolbar-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Aplicamos margen a los componentes hijos para asegurar el espaciado */
+.toolbar-actions ::ng-deep button,
+.toolbar-actions ::ng-deep app-notification-bell,
+.toolbar-actions ::ng-deep app-language-switcher {
+  margin-left: 12px !important; /* Usamos margen en lugar de gap */
+  margin-right: 0 !important;
+}
+
+.toolbar-actions ::ng-deep .mat-mdc-button,
+.toolbar-actions ::ng-deep .mat-mdc-icon-button {
+  margin: 0 !important; /* Mantenemos esto para evitar márgenes no deseados */
+}
+
+/* Eliminamos el margen del primer elemento para que se alinee correctamente */
+.toolbar-actions ::ng-deep > *:first-child {
+  margin-left: 0 !important;
+}
+
+
+/* User Avatar Button */
+.user-avatar-button {
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: visible;
+  transition: all 0.3s ease;
+}
+
+.user-avatar-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.user-avatar-button:hover .user-avatar {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.user-avatar-default {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.user-avatar-default mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.avatar-text {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 15px;
+}
+
+/* User Dropdown Menu Styles */
+::ng-deep .user-dropdown-menu {
+  margin-top: 12px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  min-width: 300px;
+  overflow: hidden;
+}
+
+::ng-deep .user-dropdown-menu .mat-mdc-menu-content {
+  padding: 0;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
 
-/* Logout button */
+.menu-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 22px;
+  color: white;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.avatar-text-large {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.menu-user-info {
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.menu-user-name {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.menu-user-email {
+  font-size: 13px;
+  opacity: 0.95;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+::ng-deep .user-dropdown-menu button.mat-mdc-menu-item {
+  padding: 14px 20px;
+  height: auto;
+  min-height: 52px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .user-dropdown-menu button.mat-mdc-menu-item:hover {
+  background: rgba(103, 126, 234, 0.1);
+}
+
+::ng-deep .user-dropdown-menu button.mat-mdc-menu-item mat-icon {
+  margin-right: 16px;
+  color: #667eea;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+::ng-deep .user-dropdown-menu button.mat-mdc-menu-item span {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+::ng-deep .user-dropdown-menu .logout-menu-item mat-icon {
+  color: #ef4444;
+}
+
+::ng-deep .user-dropdown-menu .logout-menu-item:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+::ng-deep .user-dropdown-menu mat-divider {
+  margin: 10px 0;
+  opacity: 0.12;
+}
+
+@media (max-width: 768px) {
+  .main-toolbar {
+    padding: 0 8px;
+    height: 56px;
+  }
+  
+  .toolbar-actions {
+    gap: 8px;
+  }
+  
+  .toolbar-title {
+    font-size: 18px;
+  }
+  
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+  
+  .user-avatar-button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  ::ng-deep .user-dropdown-menu {
+    min-width: 280px;
+  }
+  
+  .menu-header {
+    padding: 16px;
+  }
+  
+  .menu-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+}
+
+/* Legacy logout button styles (mantener por compatibilidad) */
 .logout-button {
   margin-left: 8px;
   color: white;
@@ -239,14 +470,4 @@
   font-weight: 500;
 }
 
-@media (max-width: 768px) {
-  .user-info {
-    display: none; /* Ocultar nombre en móvil */
-  }
-  
-  .logout-button span {
-    display: none; /* Solo mostrar icono en móvil */
-  }
-}
 }}}
-

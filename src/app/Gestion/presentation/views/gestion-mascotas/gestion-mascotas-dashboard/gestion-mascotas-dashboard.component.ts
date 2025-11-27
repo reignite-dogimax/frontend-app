@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { GestionStore } from '../../../../application/gestion.store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Mascota } from '../../../../domain/model/mascota.entity';
+import { Pet } from '../../../../domain/model/pet.entity';
 
 @Component({
   selector: 'app-gestion-mascotas-dashboard',
