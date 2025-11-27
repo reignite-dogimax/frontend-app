@@ -1,65 +1,68 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { Recomendacion } from '../domain/model/recomendacion.entity';
-import { RecomendacionResource, RecomendacionesResponse } from './gestion-response';
+import { Recommendation } from '../domain/model/recommendation.entity';
+import { RecommendationResource, RecommendationsResponse, RecomendacionesResponse } from './gestion-response';
 
 /**
- * Assembler for converting between Recomendacion entity and resources.
+ * Assembler for converting between Recommendation entity and resources.
  */
-export class RecomendacionAssembler implements BaseAssembler<Recomendacion, RecomendacionResource, RecomendacionesResponse> {
+export class RecomendacionAssembler implements BaseAssembler<Recommendation, RecommendationResource, RecommendationsResponse> {
   
   /**
-   * Converts a Recomendacion entity to a resource.
-   * @param entity - The Recomendacion entity to convert.
-   * @returns A resource representation of the Recomendacion.
+   * Converts a Recommendation entity to a resource.
+   * @param entity - The Recommendation entity to convert.
+   * @returns A resource representation of the Recommendation.
    */
-  toResourceFromEntity(entity: Recomendacion): RecomendacionResource {
+  toResourceFromEntity(entity: Recommendation): RecommendationResource {
     return {
       id: entity.id,
-      mascotaId: entity.mascotaId,
-      tipo: entity.tipo,
-      titulo: entity.titulo,
-      descripcion: entity.descripcion,
-      prioridad: entity.prioridad,
-      fechaGeneracion: entity.fechaGeneracion.toISOString(),
-      fechaVencimiento: entity.fechaVencimiento?.toISOString(),
-      completada: entity.completada,
-      fuenteIA: entity.fuenteIA,
-      confianza: entity.confianza,
-      parametros: entity.parametros
+      petId: entity.petId,
+      type: entity.type,
+      title: entity.title,
+      description: entity.description,
+      priority: entity.priority,
+      generationDate: entity.generationDate.toISOString(),
+      expirationDate: entity.expirationDate?.toISOString(),
+      isCompleted: entity.isCompleted,
+      completionDate: entity.completionDate?.toISOString(),
+      aiSource: entity.aiSource,
+      confidence: entity.confidence,
+      parameters: entity.parameters
     };
   }
 
   /**
-   * Converts a resource to a Recomendacion entity.
+   * Converts a resource to a Recommendation entity.
    * @param resource - The resource to convert.
-   * @returns A Recomendacion entity.
+   * @returns a Recommendation entity.
    */
-  toEntityFromResource(resource: RecomendacionResource): Recomendacion {
-    return new Recomendacion({
+  toEntityFromResource(resource: RecommendationResource): Recommendation {
+    return new Recommendation({
       id: resource.id,
-      mascotaId: resource.mascotaId,
-      tipo: resource.tipo,
-      titulo: resource.titulo,
-      descripcion: resource.descripcion,
-      prioridad: resource.prioridad,
-      fechaGeneracion: new Date(resource.fechaGeneracion),
-      fechaVencimiento: resource.fechaVencimiento ? new Date(resource.fechaVencimiento) : undefined,
-      completada: resource.completada,
-      fuenteIA: resource.fuenteIA,
-      confianza: resource.confianza,
-      parametros: resource.parametros
+      petId: resource.petId,
+      type: resource.type as any,
+      title: resource.title,
+      description: resource.description,
+      priority: resource.priority as any,
+      generationDate: new Date(resource.generationDate),
+      expirationDate: resource.expirationDate ? new Date(resource.expirationDate) : undefined,
+      isCompleted: resource.isCompleted,
+      completionDate: resource.completionDate ? new Date(resource.completionDate) : undefined,
+      aiSource: resource.aiSource || '',
+      confidence: resource.confidence || 0,
+      parameters: resource.parameters
     });
   }
 
   /**
-   * Converts a response to an array of Recomendacion entities.
-   * @param response - The response containing recomendaciones.
-   * @returns Array of Recomendacion entities.
+   * Converts a response to an array of Recommendation entities.
+   * @param response - The response containing recommendations.
+   * @returns Array of Recommendation entities.
    */
-  toEntitiesFromResponse(response: RecomendacionesResponse): Recomendacion[] {
-    if (!response.recomendaciones) {
+  toEntitiesFromResponse(response: RecommendationsResponse | RecomendacionesResponse): Recommendation[] {
+    const recommendations = 'recommendations' in response ? response.recommendations : response.recomendaciones;
+    if (!recommendations) {
       return [];
     }
-    return response.recomendaciones.map(resource => this.toEntityFromResource(resource));
+    return recommendations.map((resource: RecommendationResource) => this.toEntityFromResource(resource));
   }
 }
