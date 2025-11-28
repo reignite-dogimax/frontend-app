@@ -8,10 +8,13 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { GestionStore } from '../../../../application/gestion.store';
+import { GestionApi } from '../../../../infrastructure/gestion-api';
 import { Pet } from '../../../../domain/model/pet.entity';
 import { MedicalHistory } from '../../../../domain/model/medical-history.entity';
 import { Recommendation } from '../../../../domain/model/recommendation.entity';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mascota-detail',
@@ -25,7 +28,8 @@ import { Recommendation } from '../../../../domain/model/recommendation.entity';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatDividerModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSnackBarModule
   ],
   templateUrl: './mascota-detail.component.html',
   styleUrl: './mascota-detail.component.css'
@@ -36,13 +40,16 @@ export class MascotaDetailComponent implements OnInit {
   vacunas: MedicalHistory[] = [];
   recomendaciones: Recommendation[] = [];
   loading = false;
+  generatingRecommendation = false;
   error: string | null = null;
   selectedTab = 0;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private gestionStore: GestionStore
+    private gestionStore: GestionStore,
+    private gestionApi: GestionApi,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -58,16 +65,29 @@ export class MascotaDetailComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Usar el store para obtener la mascota
+    // Intentar obtener la mascota del store primero
     const mascotaSignal = this.gestionStore.getMascotaById(id);
     const mascota = mascotaSignal();
     
     if (mascota) {
+      // Si existe en el store, usar esos datos
       this.mascota = mascota;
       this.loadRelatedData(id);
     } else {
-      this.error = 'Mascota no encontrada';
-      this.loading = false;
+      // Si no existe en el store (por ejemplo, después de F5), llamar al API
+      console.log('Mascota no encontrada en store, cargando desde API...');
+      this.gestionApi.getMascota(id).subscribe({
+        next: (mascotaFromApi) => {
+          this.mascota = mascotaFromApi;
+          // También cargar historiales y recomendaciones desde el API
+          this.loadRelatedDataFromApi(id);
+        },
+        error: (err) => {
+          console.error('Error al cargar mascota desde API:', err);
+          this.error = 'No se pudo cargar la información de la mascota';
+          this.loading = false;
+        }
+      });
     }
   }
 
@@ -75,20 +95,88 @@ export class MascotaDetailComponent implements OnInit {
     // Obtener historiales médicos del store
     const historialesSignal = this.gestionStore.getHistorialesByMascota(mascotaId);
     const historiales = historialesSignal();
-    this.historial = historiales;
     
-    // Filtrar vacunas del historial médico (tipo "Vacuna")
-    this.vacunas = historiales.filter(h => h.recordType?.toLowerCase() === 'vacuna');
+    // Si el store tiene datos, usarlos
+    if (historiales.length > 0) {
+      this.historial = historiales;
+      this.vacunas = historiales.filter(h => h.recordType?.toLowerCase() === 'vacuna' || h.recordType?.toLowerCase() === 'vaccination');
+    }
     
     // Obtener recomendaciones del store
     const recomendacionesSignal = this.gestionStore.getRecomendacionesByMascota(mascotaId);
-    this.recomendaciones = recomendacionesSignal();
+    const recomendaciones = recomendacionesSignal();
     
-    console.log('Historiales cargados:', this.historial);
-    console.log('Vacunas cargadas:', this.vacunas);
-    console.log('Recomendaciones cargadas:', this.recomendaciones);
+    if (recomendaciones.length > 0) {
+      this.recomendaciones = recomendaciones;
+    }
     
-    this.loading = false;
+    // Si no hay datos en el store, cargar desde API
+    if (historiales.length === 0 || recomendaciones.length === 0) {
+      this.loadRelatedDataFromApi(mascotaId);
+    } else {
+      console.log('Historiales cargados:', this.historial);
+      console.log('Vacunas cargadas:', this.vacunas);
+      console.log('Recomendaciones cargadas:', this.recomendaciones);
+      this.loading = false;
+    }
+  }
+
+  /**
+   * Carga los datos relacionados desde el API cuando el store está vacío
+   */
+  private loadRelatedDataFromApi(mascotaId: number): void {
+    let historialesLoaded = false;
+    let recomendacionesLoaded = false;
+
+    const checkIfAllLoaded = () => {
+      if (historialesLoaded && recomendacionesLoaded) {
+        console.log('Todos los datos cargados desde API');
+        console.log('Historiales:', this.historial);
+        console.log('Vacunas:', this.vacunas);
+        console.log('Recomendaciones:', this.recomendaciones);
+        this.loading = false;
+      }
+    };
+
+    // Cargar historiales desde API
+    this.gestionApi.getHistorialesByMascota(mascotaId).subscribe({
+      next: (historiales) => {
+        this.historial = historiales;
+        this.vacunas = historiales.filter(h => 
+          h.recordType?.toLowerCase() === 'vacuna' || 
+          h.recordType?.toLowerCase() === 'vaccination'
+        );
+        
+        // Actualizar el store con los datos cargados
+        historiales.forEach(h => this.gestionStore.addHistorial(h));
+        
+        historialesLoaded = true;
+        checkIfAllLoaded();
+      },
+      error: (err) => {
+        console.error('Error al cargar historiales desde API:', err);
+        historialesLoaded = true;
+        checkIfAllLoaded();
+      }
+    });
+
+    // Cargar recomendaciones desde API
+    this.gestionApi.getRecomendacionesByMascota(mascotaId).subscribe({
+      next: (recomendaciones) => {
+        this.recomendaciones = recomendaciones;
+        
+        // Actualizar el store con los datos cargados
+        recomendaciones.forEach(r => this.gestionStore.addRecomendacion(r));
+        
+        recomendacionesLoaded = true;
+        checkIfAllLoaded();
+      },
+      error: (err) => {
+        console.error('Error al cargar recomendaciones desde API:', err);
+        recomendacionesLoaded = true;
+        checkIfAllLoaded();
+      }
+    });
   }
 
   getEdadMascota(fechaNacimiento?: string): string {
@@ -163,11 +251,264 @@ export class MascotaDetailComponent implements OnInit {
   }
 
   generarRecomendaciones(): void {
-    if (!this.mascota) return;
+    if (!this.mascota) {
+      this.snackBar.open('No hay mascota seleccionada', 'Cerrar', { duration: 3000 });
+      return;
+    }
     
-    // Simular generación de recomendaciones
-    console.log('Generando recomendaciones para:', this.mascota.name);
-    // En una implementación real, aquí se llamaría al servicio de IA
+    this.generatingRecommendation = true;
+    
+    // Preparar datos completos de la mascota para enviar a la IA
+    const petData = {
+      id: this.mascota.id,
+      name: this.mascota.name,
+      species: this.mascota.species,
+      breed: this.mascota.breed,
+      birthDate: this.mascota.birthDate,
+      age: this.getEdadMascota(this.mascota.birthDate),
+      weight: this.mascota.weight,
+      color: this.mascota.color,
+      gender: this.mascota.gender,
+      isNeutered: this.mascota.isNeutered,
+      observations: this.mascota.observations,
+      medicalHistory: this.historial.map(h => ({
+        date: h.registrationDate,
+        type: h.recordType,
+        description: h.description,
+        veterinarian: h.veterinarian,
+        observations: h.observations
+      })),
+      vaccinations: this.vacunas.map(v => ({
+        date: v.registrationDate,
+        description: v.description,
+        nextAppointment: v.nextAppointment
+      })),
+      existingRecommendations: this.recomendaciones.map(r => ({
+        type: r.type,
+        title: r.title,
+        description: r.description,
+        isCompleted: r.isCompleted
+      }))
+    };
+
+    console.log('Enviando datos al webhook de IA:', petData);
+
+    // Llamar al webhook de n8n para generar recomendación
+    this.gestionApi.generateAIRecommendation(petData).pipe(
+      finalize(() => this.generatingRecommendation = false)
+    ).subscribe({
+      next: (aiResponse) => {
+        console.log('Respuesta de IA recibida:', aiResponse);
+        this.processAndSaveAIRecommendation(aiResponse);
+      },
+      error: (error) => {
+        console.error('Error al generar recomendación:', error);
+        this.snackBar.open('Error al generar recomendación con IA', 'Cerrar', { duration: 5000 });
+      }
+    });
+  }
+
+  /**
+   * Mapea la respuesta de la IA al formato de Recommendation y la guarda en el backend
+   */
+  private processAndSaveAIRecommendation(aiResponse: any): void {
+    // La respuesta viene como un array con un objeto que tiene un campo "output"
+    let aiText = '';
+    
+    if (Array.isArray(aiResponse) && aiResponse.length > 0 && aiResponse[0].output) {
+      aiText = aiResponse[0].output;
+    } else if (typeof aiResponse === 'string') {
+      aiText = aiResponse;
+    } else if (aiResponse.output) {
+      aiText = aiResponse.output;
+    } else {
+      console.error('Formato de respuesta inesperado:', aiResponse);
+      this.snackBar.open('Error: Formato de respuesta inválido', 'Cerrar', { duration: 5000 });
+      return;
+    }
+
+    console.log('Texto de IA recibido:', aiText);
+
+    // Parsear el texto y extraer las recomendaciones principales
+    const recommendations = this.parseAIRecommendations(aiText);
+    
+    if (recommendations.length === 0) {
+      this.snackBar.open('No se pudieron extraer recomendaciones del texto', 'Cerrar', { duration: 5000 });
+      return;
+    }
+
+    // Guardar cada recomendación en el backend
+    let savedCount = 0;
+    let errorCount = 0;
+
+    recommendations.forEach((rec, index) => {
+      this.gestionApi.createRecomendacion(rec).subscribe({
+        next: (savedRecommendation) => {
+          console.log(`Recomendación ${index + 1} guardada:`, savedRecommendation);
+          this.gestionStore.addRecomendacion(savedRecommendation);
+          savedCount++;
+          
+          // Mostrar mensaje solo cuando se hayan procesado todas
+          if (savedCount + errorCount === recommendations.length) {
+            this.reloadRecommendations();
+            if (errorCount === 0) {
+              this.snackBar.open(`✨ ${savedCount} recomendación(es) generada(s) exitosamente`, 'Cerrar', { duration: 4000 });
+            } else {
+              this.snackBar.open(`⚠️ ${savedCount} guardadas, ${errorCount} fallaron`, 'Cerrar', { duration: 5000 });
+            }
+          }
+        },
+        error: (error) => {
+          console.error(`Error al guardar recomendación ${index + 1}:`, error);
+          errorCount++;
+          
+          if (savedCount + errorCount === recommendations.length) {
+            this.reloadRecommendations();
+            if (savedCount > 0) {
+              this.snackBar.open(`⚠️ ${savedCount} guardadas, ${errorCount} fallaron`, 'Cerrar', { duration: 5000 });
+            } else {
+              this.snackBar.open('Error al guardar las recomendaciones', 'Cerrar', { duration: 5000 });
+            }
+          }
+        }
+      });
+    });
+  }
+
+  /**
+   * Parsea el texto de la IA y extrae recomendaciones estructuradas
+   */
+  private parseAIRecommendations(aiText: string): Recommendation[] {
+    const recommendations: Recommendation[] = [];
+    
+    // Patrones para identificar secciones de recomendaciones
+    const sectionPattern = /\d+\.\s+\*\*([^:*]+)(?:\s*\(([^)]+)\))?:\*\*/g;
+    const bulletPattern = /\*\s+\*\*([^:*]+):\*\*\s*([^\n]+(?:\n(?!\*)[^\n]+)*)/g;
+    
+    let sectionMatch;
+    let sectionIndex = 0;
+    
+    // Extraer cada sección numerada (1., 2., 3., etc.)
+    while ((sectionMatch = sectionPattern.exec(aiText)) !== null) {
+      const sectionTitle = sectionMatch[1].trim();
+      const sectionNote = sectionMatch[2] ? sectionMatch[2].trim() : '';
+      const sectionStart = sectionMatch.index + sectionMatch[0].length;
+      
+      // Buscar el inicio de la siguiente sección o el final del texto
+      const nextSectionMatch = sectionPattern.exec(aiText);
+      const sectionEnd = nextSectionMatch ? nextSectionMatch.index : aiText.length;
+      sectionPattern.lastIndex = sectionStart; // Resetear índice
+      
+      // Extraer el contenido de esta sección
+      const sectionContent = aiText.substring(sectionStart, sectionEnd);
+      
+      // Extraer los bullet points de esta sección
+      const bullets: string[] = [];
+      let bulletMatch;
+      const bulletRegex = new RegExp(bulletPattern);
+      
+      while ((bulletMatch = bulletRegex.exec(sectionContent)) !== null) {
+        const bulletTitle = bulletMatch[1].trim();
+        const bulletContent = bulletMatch[2].trim();
+        bullets.push(`${bulletTitle}: ${bulletContent}`);
+      }
+      
+      // Si no hay bullets específicos, tomar el contenido completo
+      const description = bullets.length > 0 
+        ? bullets.join('\n\n') 
+        : sectionContent.trim().substring(0, 500);
+      
+      // Determinar tipo y prioridad basado en el título y notas
+      const type = this.inferTypeFromTitle(sectionTitle);
+      const priority = this.inferPriorityFromNote(sectionNote, sectionTitle);
+      
+      // Crear recomendación
+      const recommendation = new Recommendation({
+        id: 0,
+        petId: this.mascota!.id,
+        type: type,
+        title: sectionTitle,
+        description: description,
+        priority: priority,
+        generationDate: new Date(),
+        expirationDate: undefined,
+        isCompleted: false,
+        completionDate: undefined,
+        aiSource: 'n8n-webhook-gpt',
+        confidence: 90,
+        parameters: JSON.stringify({ section: sectionIndex + 1, note: sectionNote })
+      });
+      
+      recommendations.push(recommendation);
+      sectionIndex++;
+    }
+    
+    // Si no se encontraron secciones estructuradas, crear una recomendación general
+    if (recommendations.length === 0) {
+      const generalRecommendation = new Recommendation({
+        id: 0,
+        petId: this.mascota!.id,
+        type: 'CARE',
+        title: 'Recomendaciones Generales de Cuidado',
+        description: aiText.substring(0, 1000), // Limitar a 1000 caracteres
+        priority: 'MEDIUM',
+        generationDate: new Date(),
+        expirationDate: undefined,
+        isCompleted: false,
+        completionDate: undefined,
+        aiSource: 'n8n-webhook-gpt',
+        confidence: 85,
+        parameters: JSON.stringify({ fullText: true })
+      });
+      
+      recommendations.push(generalRecommendation);
+    }
+    
+    return recommendations;
+  }
+
+  /**
+   * Infiere el tipo de recomendación basado en el título
+   */
+  private inferTypeFromTitle(title: string): 'NUTRITION' | 'EXERCISE' | 'HEALTH' | 'BEHAVIOR' | 'CARE' | 'VACCINATION' {
+    const titleLower = title.toLowerCase();
+    
+    if (titleLower.includes('nutrición') || titleLower.includes('peso') || titleLower.includes('alimenta')) {
+      return 'NUTRITION';
+    } else if (titleLower.includes('ejercicio') || titleLower.includes('actividad') || titleLower.includes('estimulación')) {
+      return 'EXERCISE';
+    } else if (titleLower.includes('salud') || titleLower.includes('articular') || titleLower.includes('dental') || titleLower.includes('chequeo')) {
+      return 'HEALTH';
+    } else if (titleLower.includes('vacun')) {
+      return 'VACCINATION';
+    } else if (titleLower.includes('comportamiento')) {
+      return 'BEHAVIOR';
+    } else {
+      return 'CARE';
+    }
+  }
+
+  /**
+   * Infiere la prioridad basada en notas y título
+   */
+  private inferPriorityFromNote(note: string, title: string): 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' {
+    const textToCheck = (note + ' ' + title).toLowerCase();
+    
+    if (textToCheck.includes('prioridad clave') || textToCheck.includes('crucial') || textToCheck.includes('urgente')) {
+      return 'HIGH';
+    } else if (textToCheck.includes('importante')) {
+      return 'MEDIUM';
+    } else {
+      return 'MEDIUM';
+    }
+  }
+
+  /**
+   * Recarga las recomendaciones desde el store
+   */
+  private reloadRecommendations(): void {
+    const recomendacionesSignal = this.gestionStore.getRecomendacionesByMascota(this.mascota!.id);
+    this.recomendaciones = recomendacionesSignal();
   }
 
   marcarCompletada(recomendacionId: number): void {

@@ -181,9 +181,13 @@
         <div class="tab-content">
           <div class="tab-header">
             <h3 class="heading-3">Recomendaciones Personalizadas</h3>
-            <button class="btn-primary" (click)="generarRecomendaciones()">
-              <mat-icon>auto_awesome</mat-icon>
-              Generar Recomendaciones
+            <button 
+              class="btn-primary" 
+              (click)="generarRecomendaciones()"
+              [disabled]="generatingRecommendation">
+              <mat-spinner *ngIf="generatingRecommendation" diameter="20" style="display: inline-block; margin-right: 8px;"></mat-spinner>
+              <mat-icon *ngIf="!generatingRecommendation">auto_awesome</mat-icon>
+              {{ generatingRecommendation ? 'Generando...' : 'Generar Recomendaciones' }}
             </button>
           </div>
 
