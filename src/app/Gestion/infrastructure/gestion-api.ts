@@ -140,4 +140,14 @@ export class GestionApi extends BaseApi {
   deleteRecomendacion(id: number): Observable<void> {
     return this.http.delete<void>(`${this.recommendationsEndpoint}/${id}`);
   }
+
+  /**
+   * Call n8n webhook to generate AI recommendations for a pet
+   * @param petData - Complete pet data to send to the AI
+   * @returns Observable with AI recommendation response
+   */
+  generateAIRecommendation(petData: any): Observable<any> {
+    const webhookUrl = environment.n8nWebhookUrl;
+    return this.http.post<any>(webhookUrl, petData);
+  }
 }
