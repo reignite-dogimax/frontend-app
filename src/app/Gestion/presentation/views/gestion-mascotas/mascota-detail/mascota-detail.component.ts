@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -36,9 +36,13 @@ import { finalize } from 'rxjs/operators';
 })
 export class MascotaDetailComponent implements OnInit {
   mascota: Pet | null = null;
-  historial: MedicalHistory[] = [];
-  vacunas: MedicalHistory[] = [];
-  recomendaciones: Recommendation[] = [];
+  mascotaId: number = 0;
+  
+  // Usar signals del store en lugar de variables locales
+  historial!: Signal<MedicalHistory[]>;
+  vacunas!: Signal<MedicalHistory[]>;
+  recomendaciones!: Signal<Recommendation[]>;
+  
   loading = false;
   generatingRecommendation = false;
   error: string | null = null;
@@ -54,11 +58,30 @@ export class MascotaDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const mascotaId = +params['id'];
-      if (mascotaId) {
-        this.loadMascota(mascotaId);
+      const id = +params['id'];
+      if (id) {
+        this.mascotaId = id;
+        this.loadMascota(id);
+        this.initializeSignals(id);
       }
     });
+  }
+
+  /**
+   * Inicializa los signals reactivos que se conectan al store
+   */
+  private initializeSignals(mascotaId: number): void {
+    // Conectar directamente a los signals del store
+    this.historial = this.gestionStore.getHistorialesByMascota(mascotaId);
+    this.recomendaciones = this.gestionStore.getRecomendacionesByMascota(mascotaId);
+    
+    // Crear un signal computed para las vacunas
+    this.vacunas = computed(() => 
+      this.historial().filter(h => 
+        h.recordType?.toLowerCase() === 'vacuna' || 
+        h.recordType?.toLowerCase() === 'vaccination'
+      )
+    );
   }
 
   loadMascota(id: number): void {
@@ -92,31 +115,15 @@ export class MascotaDetailComponent implements OnInit {
   }
 
   loadRelatedData(mascotaId: number): void {
-    // Obtener historiales médicos del store
-    const historialesSignal = this.gestionStore.getHistorialesByMascota(mascotaId);
-    const historiales = historialesSignal();
-    
-    // Si el store tiene datos, usarlos
-    if (historiales.length > 0) {
-      this.historial = historiales;
-      this.vacunas = historiales.filter(h => h.recordType?.toLowerCase() === 'vacuna' || h.recordType?.toLowerCase() === 'vaccination');
-    }
-    
-    // Obtener recomendaciones del store
-    const recomendacionesSignal = this.gestionStore.getRecomendacionesByMascota(mascotaId);
-    const recomendaciones = recomendacionesSignal();
-    
-    if (recomendaciones.length > 0) {
-      this.recomendaciones = recomendaciones;
-    }
+    // Los signals ya están conectados al store, solo necesitamos verificar si hay datos
+    const historiales = this.historial();
+    const recomendaciones = this.recomendaciones();
     
     // Si no hay datos en el store, cargar desde API
     if (historiales.length === 0 || recomendaciones.length === 0) {
       this.loadRelatedDataFromApi(mascotaId);
     } else {
-      console.log('Historiales cargados:', this.historial);
-      console.log('Vacunas cargadas:', this.vacunas);
-      console.log('Recomendaciones cargadas:', this.recomendaciones);
+      console.log('Datos ya disponibles en el store');
       this.loading = false;
     }
   }
@@ -131,9 +138,6 @@ export class MascotaDetailComponent implements OnInit {
     const checkIfAllLoaded = () => {
       if (historialesLoaded && recomendacionesLoaded) {
         console.log('Todos los datos cargados desde API');
-        console.log('Historiales:', this.historial);
-        console.log('Vacunas:', this.vacunas);
-        console.log('Recomendaciones:', this.recomendaciones);
         this.loading = false;
       }
     };
@@ -141,15 +145,8 @@ export class MascotaDetailComponent implements OnInit {
     // Cargar historiales desde API
     this.gestionApi.getHistorialesByMascota(mascotaId).subscribe({
       next: (historiales) => {
-        this.historial = historiales;
-        this.vacunas = historiales.filter(h => 
-          h.recordType?.toLowerCase() === 'vacuna' || 
-          h.recordType?.toLowerCase() === 'vaccination'
-        );
-        
-        // Actualizar el store con los datos cargados
-        historiales.forEach(h => this.gestionStore.addHistorial(h));
-        
+        // Los historiales se agregan al store automáticamente y los signals se actualizan
+        historiales.forEach(h => this.gestionStore.addHistorial(h).subscribe());
         historialesLoaded = true;
         checkIfAllLoaded();
       },
@@ -163,11 +160,8 @@ export class MascotaDetailComponent implements OnInit {
     // Cargar recomendaciones desde API
     this.gestionApi.getRecomendacionesByMascota(mascotaId).subscribe({
       next: (recomendaciones) => {
-        this.recomendaciones = recomendaciones;
-        
-        // Actualizar el store con los datos cargados
-        recomendaciones.forEach(r => this.gestionStore.addRecomendacion(r));
-        
+        // Las recomendaciones se agregan al store automáticamente y los signals se actualizan
+        recomendaciones.forEach(r => this.gestionStore.addRecomendacion(r).subscribe());
         recomendacionesLoaded = true;
         checkIfAllLoaded();
       },
@@ -271,19 +265,19 @@ export class MascotaDetailComponent implements OnInit {
       gender: this.mascota.gender,
       isNeutered: this.mascota.isNeutered,
       observations: this.mascota.observations,
-      medicalHistory: this.historial.map(h => ({
+      medicalHistory: this.historial().map(h => ({
         date: h.registrationDate,
         type: h.recordType,
         description: h.description,
         veterinarian: h.veterinarian,
         observations: h.observations
       })),
-      vaccinations: this.vacunas.map(v => ({
+      vaccinations: this.vacunas().map(v => ({
         date: v.registrationDate,
         description: v.description,
         nextAppointment: v.nextAppointment
       })),
-      existingRecommendations: this.recomendaciones.map(r => ({
+      existingRecommendations: this.recomendaciones().map(r => ({
         type: r.type,
         title: r.title,
         description: r.description,
@@ -501,18 +495,19 @@ export class MascotaDetailComponent implements OnInit {
   }
 
   /**
-   * Recarga las recomendaciones desde el store
+   * Recarga las recomendaciones desde el store (ya no es necesario porque usamos signals)
    */
   private reloadRecommendations(): void {
-    const recomendacionesSignal = this.gestionStore.getRecomendacionesByMascota(this.mascota!.id);
-    this.recomendaciones = recomendacionesSignal();
+    // No hacer nada - los signals se actualizan automáticamente
+    console.log('Recomendaciones actualizadas automáticamente via signals');
   }
 
   marcarCompletada(recomendacionId: number): void {
-    const index = this.recomendaciones.findIndex(r => r.id === recomendacionId);
+    const recomendaciones = this.recomendaciones();
+    const index = recomendaciones.findIndex(r => r.id === recomendacionId);
     if (index !== -1) {
       // Crear una nueva instancia de Recommendation con isCompleted actualizado
-      const recomendacion = this.recomendaciones[index];
+      const recomendacion = recomendaciones[index];
       const recomendacionActualizada = new Recommendation({
         ...recomendacion,
         id: recomendacion.id,
@@ -530,11 +525,16 @@ export class MascotaDetailComponent implements OnInit {
         parameters: recomendacion.parameters
       });
       
-      // Actualizar en el store
-      this.gestionStore.updateRecomendacion(recomendacionActualizada);
-      
-      // Actualizar localmente
-      this.recomendaciones[index] = recomendacionActualizada;
+      // Actualizar en el store (el signal se actualizará automáticamente)
+      this.gestionStore.updateRecomendacion(recomendacionActualizada).subscribe({
+        next: () => {
+          this.snackBar.open('Recomendación marcada como completada', 'Cerrar', { duration: 3000 });
+        },
+        error: (error) => {
+          console.error('Error al marcar recomendación como completada:', error);
+          this.snackBar.open('Error al actualizar la recomendación', 'Cerrar', { duration: 3000 });
+        }
+      });
     }
   }
 
