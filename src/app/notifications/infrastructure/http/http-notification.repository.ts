@@ -17,6 +17,12 @@ export class HttpNotificationRepository implements NotificationRepository {
     );
   }
 
+  listByUserId(userId: number): Observable<NotificationItem[]> {
+    return this.http.get<NotificationDto[]>(`${this.baseUrl}/user/${userId}`).pipe(
+      map(dtos => dtos.map(notificationFromDto))
+    );
+  }
+
   markAsRead(id: number): Observable<NotificationItem> {
     return this.http.patch<NotificationDto>(`${this.baseUrl}/${id}/mark-as-read`, {}).pipe(
       map(notificationFromDto)

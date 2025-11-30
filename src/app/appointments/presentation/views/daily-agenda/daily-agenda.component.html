@@ -1,0 +1,115 @@
+<div class="container">
+  <mat-card class="agenda-card">
+    <mat-card-header>
+      <mat-icon class="header-icon">today</mat-icon>
+      <mat-card-title>{{ 'appointments.dailyAgenda.title' | translate }}</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <p class="description">{{ 'appointments.dailyAgenda.description' | translate }}</p>
+      
+      <!-- Next Appointment Alert -->
+      @if (getNextAppointment(); as nextAppt) {
+        <div class="next-appointment-alert">
+          <mat-icon>schedule</mat-icon>
+          <div class="alert-content">
+            <strong>{{ 'appointments.dailyAgenda.nextAppointment' | translate }}</strong>
+            <span>{{ nextAppt.fechaHora | date: 'HH:mm' }} - {{ getPetName(nextAppt.mascotaId) }} ({{ getTimeRemaining(nextAppt.fechaHora) }})</span>
+          </div>
+        </div>
+      }
+      
+      @if (store.loading()) {
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+        </div>
+      } @else if (store.error()) {
+        <mat-error>{{ store.error() }}</mat-error>
+      } @else if (dataSource().data.length === 0) {
+        <div class="empty-state">
+          <mat-icon class="empty-icon">event_available</mat-icon>
+          <h3>{{ 'appointments.dailyAgenda.noAppointments' | translate }}</h3>
+          <p>{{ 'appointments.dailyAgenda.noAppointmentsDesc' | translate }}</p>
+        </div>
+      } @else {
+        <div class="table-container">
+          <table mat-table [dataSource]="dataSource()" matSort class="agenda-table">
+            
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.id' | translate }}</th>
+              <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+            </ng-container>
+
+            <!-- Pet ID Column -->
+            <ng-container matColumnDef="mascotaId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.petName' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="pet-cell">
+                  <mat-icon class="pet-icon">pets</mat-icon>
+                  <span>{{ getPetName(element.mascotaId) }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Time Column -->
+            <ng-container matColumnDef="fechaHora">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.dailyAgenda.columns.time' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="time-cell">
+                  <mat-icon class="time-icon">access_time</mat-icon>
+                  <span class="time-text">{{ element.fechaHora | date: 'HH:mm' }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Reason Column -->
+            <ng-container matColumnDef="motivo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.reason' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="reason-text">{{ element.motivo }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.status' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="status-badge" [ngClass]="element.estado.toLowerCase()">
+                  {{ element.estado }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Veterinary Status Column -->
+            <ng-container matColumnDef="veterinaryStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.veterinaryStatus' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="status-badge accepted">
+                  {{ ('appointments.veterinaryStatus.' + element.veterinaryStatus) | translate }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Time Remaining Column -->
+            <ng-container matColumnDef="timeRemaining">
+              <th mat-header-cell *matHeaderCellDef>{{ 'appointments.dailyAgenda.columns.timeRemaining' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="time-remaining-badge" [ngClass]="getTimeStatus(element.fechaHora)">
+                  <mat-icon>{{ getTimeStatus(element.fechaHora) === 'past' ? 'check_circle' : 'schedule' }}</mat-icon>
+                  {{ getTimeRemaining(element.fechaHora) }}
+                </span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                [ngClass]="'status-' + getTimeStatus(row.fechaHora)"></tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="20" showFirstLastButtons></mat-paginator>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

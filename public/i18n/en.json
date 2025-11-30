@@ -5,7 +5,10 @@
     "categories": "Categories",
     "courses": "Courses",
     "notifications": "Notifications",
-    "appointments": "Appointments"
+    "appointments": "Appointments",
+    "dailyAgenda": "Daily Agenda",
+    "patientHistory": "Patient History",
+    "myPetsHistory": "My Pets History"
   },
   "pets": {
     "title": "My Pets",
@@ -113,20 +116,129 @@
     "list": {
       "title": "Appointments Management"
     },
+    "veterinary": {
+      "title": "My Accepted Appointments"
+    },
+    "followup": {
+      "title": "Create Follow-up Appointment",
+      "description": "Pets you have previously treated. You can create follow-up appointments for them.",
+      "selectPet": "Select Pet",
+      "completed": "completed",
+      "columns": {
+        "petId": "Pet ID",
+        "petName": "Pet Name",
+        "lastAppointment": "Last Appointment",
+        "lastReason": "Last Reason",
+        "totalCompleted": "Completed Appointments"
+      },
+      "actions": {
+        "create": "Create Follow-up Appointment"
+      },
+      "empty": "You haven't completed any appointments yet. Treated pets will appear here."
+    },
+    "dailyAgenda": {
+      "title": "Daily Agenda",
+      "description": "All your scheduled appointments for today. Stay on top of your schedule.",
+      "nextAppointment": "Next Appointment",
+      "noAppointments": "No appointments today",
+      "noAppointmentsDesc": "You have no scheduled appointments for today. Enjoy your free day!",
+      "columns": {
+        "time": "Time",
+        "timeRemaining": "Time Remaining"
+      }
+    },
+    "patientHistory": {
+      "title": "Patient History",
+      "description": "Complete medical history of all pets you have treated as a veterinarian.",
+      "selectPet": "Select Pet",
+      "appointments": "appointments",
+      "since": "since",
+      "noPets": "No Patients",
+      "noPetsDesc": "You haven't treated any pets yet. Patients will appear here after completing appointments.",
+      "totalVisits": "Total Visits",
+      "firstVisit": "First Visit",
+      "lastVisit": "Last Visit",
+      "quickStats": "Quick Statistics",
+      "commonReasons": "Most Common Reasons",
+      "monthlyVisits": "Monthly Visits",
+      "detailedHistory": "Detailed History",
+      "details": "Details"
+    },
+    "myPetsHistory": {
+      "title": "My Pets History",
+      "description": "View the complete medical history of all your pets and monitor their health.",
+      "selectPet": "Select Pet",
+      "appointments": "appointments",
+      "nextAppointment": "Next Appointment:",
+      "noPets": "No Pets",
+      "noPetsDesc": "You have no registered pets. Register a pet to view their medical history here.",
+      "createFirst": "Create First Appointment",
+      "healthScore": "Health Score",
+      "recommendation": "Recommendation:",
+      "totalVisits": "Total Visits",
+      "firstVisit": "First Visit",
+      "lastVisit": "Last Visit",
+      "completedVisits": "Completed Visits",
+      "pendingVisits": "Pending Visits",
+      "veterinariesUsed": "Veterinaries Visited",
+      "completed": "Completed",
+      "pending": "Pending",
+      "veterinaries": "Veterinaries",
+      "appointmentTimeline": "Appointment Timeline",
+      "quickInsights": "Quick Insights",
+      "commonReasons": "Most Common Reasons",
+      "monthlyActivity": "Monthly Activity",
+      "appointmentHistory": "Appointment History",
+      "reason": "Reason",
+      "veterinary": "Veterinary",
+      "details": "Details"
+    },
+    "columns": {
+      "id": "ID",
+      "petId": "Pet ID",
+      "petName": "Pet Name",
+      "dateTime": "Date & Time",
+      "reason": "Reason",
+      "status": "Status",
+      "veterinaryStatus": "Veterinary Status",
+      "actions": "Actions"
+    },
     "table": {
       "id": "ID",
       "petId": "Pet ID",
+      "petName": "Pet Name",
       "datetime": "Date & Time",
       "reason": "Reason",
       "status": "Status",
+      "veterinaryStatus": "Veterinary Status",
       "veterinary": "Veterinary",
       "actions": "Actions"
     },
+    "veterinaryStatus": {
+      "PENDING": "Pending",
+      "ACCEPTED": "Accepted",
+      "REJECTED": "Rejected",
+      "COMPLETED": "Completed"
+    },
+    "cannotEdit": "Cannot edit a completed or rejected appointment",
     "noAssigned": "Not assigned",
     "edit": "Edit",
     "delete": "Delete",
     "actions": {
-      "new": "New Appointment"
+      "new": "New Appointment",
+      "complete": "Complete Appointment",
+      "followup": "Create Follow-up"
+    },
+    "acceptReject": {
+      "title": "Review Appointment Request",
+      "accept": "Accept Appointment",
+      "reject": "Reject Appointment",
+      "processing": "Processing..."
+    },
+    "pendingRequests": {
+      "title": "Pending Appointment Requests",
+      "subtitle": "You have {{count}} request(s) waiting for your response",
+      "review": "Review Request"
     },
     "form": {
       "title": {
@@ -134,12 +246,16 @@
         "edit": "Edit Appointment"
       },
       "petId": "Pet ID",
+      "petName": "Pet Name",
+      "selectPet": "Select a pet",
       "veterinary": "Veterinary",
       "selectVeterinary": "Select a veterinary",
       "datetime": "Date & Time",
       "reason": "Reason",
       "status": "Status",
       "notes": "Notes",
+      "inProgress": "In Progress",
+      "cancelled": "Cancelled",
       "actions": {
         "cancel": "Cancel",
         "create": "Create",
@@ -148,6 +264,7 @@
       "errors": {
         "fillRequired": "Please fill in all required fields",
         "petIdRequired": "Pet ID is required",
+        "petRequired": "Pet is required",
         "veterinaryRequired": "Veterinary is required",
         "datetimeRequired": "Date and time are required",
         "reasonRequired": "Reason is required",

@@ -22,8 +22,8 @@
 
       <!-- Pet ID Column -->
       <ng-container matColumnDef="mascotaId">
-  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.table.petId' | translate }}</th>
-        <td mat-cell *matCellDef="let appointment"> {{ appointment.mascotaId }} </td>
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.table.petName' | translate }}</th>
+        <td mat-cell *matCellDef="let appointment"> {{ getPetName(appointment.mascotaId) }} </td>
       </ng-container>
 
       <!-- Date Time Column -->
@@ -48,6 +48,16 @@
         </td>
       </ng-container>
 
+      <!-- Veterinary Status Column -->
+      <ng-container matColumnDef="veterinaryStatus">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.table.veterinaryStatus' | translate }}</th>
+        <td mat-cell *matCellDef="let appointment">
+          <span [class]="'vet-status-badge vet-status-' + appointment.veterinaryStatus.toLowerCase()">
+            {{ 'appointments.veterinaryStatus.' + appointment.veterinaryStatus | translate }}
+          </span>
+        </td>
+      </ng-container>
+
       <!-- Veterinary Column -->
       <ng-container matColumnDef="veterinary">
   <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.table.veterinary' | translate }}</th>
@@ -58,7 +68,11 @@
       <ng-container matColumnDef="actions">
   <th mat-header-cell *matHeaderCellDef>{{ 'appointments.table.actions' | translate }}</th>
         <td mat-cell *matCellDef="let appointment">
-          <button mat-icon-button  (click)="editAppointment(appointment.id)" color="primary">
+          <button mat-icon-button  
+                  (click)="editAppointment(appointment.id)" 
+                  color="primary"
+                  [disabled]="!canEdit(appointment)"
+                  [matTooltip]="!canEdit(appointment) ? ('appointments.cannotEdit' | translate) : ''">
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button  (click)="deleteAppointment(appointment.id)" color="warn">
@@ -72,7 +86,7 @@
     </table>
   </div>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="20" showFirstLastButtons></mat-paginator>
 
   <div class="actions-container">
     <button mat-raised-button color="primary" (click)="navigateToNew()">

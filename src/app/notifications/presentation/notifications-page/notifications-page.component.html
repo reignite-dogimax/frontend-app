@@ -1,4 +1,7 @@
 <div class="notifications-container">
+  <!-- Pending Appointment Requests (Veterinary Only) -->
+  <app-pending-requests *ngIf="isVeterinary()"></app-pending-requests>
+
   <!-- Header -->
   <div class="header">
     <div class="header-content">

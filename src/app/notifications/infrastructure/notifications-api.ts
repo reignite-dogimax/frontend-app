@@ -18,6 +18,10 @@ export class NotificationsApi extends BaseApi {
     return this.endpoint.getAll();
   }
 
+  getNotificationsByUserId(userId: number): Observable<NotificationItem[]> {
+    return this.endpoint.getByCustomPath(`user/${userId}`);
+  }
+
   getNotification(id: number): Observable<NotificationItem> {
     return this.endpoint.getById(id);
   }

@@ -13,6 +13,7 @@ import {AuthStorageService} from '../../../../iam/infrastructure/auth-storage.se
 import {AuthStateService} from '../../../../iam/application/auth-state.service';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatDivider} from '@angular/material/divider';
+import {map} from 'rxjs/operators';
 
 
 @Component({
@@ -51,6 +52,15 @@ export class Layout {
   // Observable para saber si el usuario está autenticado
   isAuthenticated$ = this.authState.isAuthenticated$;
   currentUser$ = this.authState.currentUser$;
+
+  // Observables para detectar el rol del usuario de forma reactiva
+  isVeterinarian$ = this.currentUser$.pipe(
+    map(user => user?.rol?.toLowerCase() === 'veterinary')
+  );
+
+  isPetLover$ = this.currentUser$.pipe(
+    map(user => user?.rol?.toLowerCase() !== 'veterinary')
+  );
 
   options = [
     {link: '/home', label: 'option.home'},

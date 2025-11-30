@@ -5,7 +5,10 @@
     "categories": "Categorías",
     "courses": "Cursos",
     "notifications": "Notificaciones",
-    "appointments": "Citas"
+    "appointments": "Citas",
+    "dailyAgenda": "Agenda del Día",
+    "patientHistory": "Historial de Pacientes",
+    "myPetsHistory": "Historial de Mis Mascotas"
   },
   "pets": {
     "title": "Mis Mascotas",
@@ -113,20 +116,129 @@
     "list": {
       "title": "Gestión de Citas"
     },
+    "veterinary": {
+      "title": "Mis Citas Aceptadas"
+    },
+    "followup": {
+      "title": "Crear Cita de Seguimiento",
+      "description": "Mascotas que has atendido previamente. Puedes crear citas de seguimiento para ellas.",
+      "selectPet": "Seleccionar Mascota",
+      "completed": "completadas",
+      "columns": {
+        "petId": "ID Mascota",
+        "petName": "Nombre Mascota",
+        "lastAppointment": "Última Cita",
+        "lastReason": "Último Motivo",
+        "totalCompleted": "Citas Completadas"
+      },
+      "actions": {
+        "create": "Crear Cita de Seguimiento"
+      },
+      "empty": "No has completado citas aún. Las mascotas atendidas aparecerán aquí."
+    },
+    "dailyAgenda": {
+      "title": "Agenda del Día",
+      "description": "Todas tus citas programadas para hoy. Mantente al día con tu horario.",
+      "nextAppointment": "Próxima Cita",
+      "noAppointments": "Sin citas para hoy",
+      "noAppointmentsDesc": "No tienes citas programadas para hoy. ¡Disfruta tu día libre!",
+      "columns": {
+        "time": "Hora",
+        "timeRemaining": "Tiempo Restante"
+      }
+    },
+    "patientHistory": {
+      "title": "Historial de Pacientes",
+      "description": "Historial médico completo de todas las mascotas que has atendido como veterinario.",
+      "selectPet": "Seleccionar Mascota",
+      "appointments": "citas",
+      "since": "desde",
+      "noPets": "Sin Pacientes",
+      "noPetsDesc": "No has atendido mascotas aún. Los pacientes aparecerán aquí después de completar citas.",
+      "totalVisits": "Visitas Totales",
+      "firstVisit": "Primera Visita",
+      "lastVisit": "Última Visita",
+      "quickStats": "Estadísticas Rápidas",
+      "commonReasons": "Motivos Más Comunes",
+      "monthlyVisits": "Visitas por Mes",
+      "detailedHistory": "Historial Detallado",
+      "details": "Detalles"
+    },
+    "myPetsHistory": {
+      "title": "Historial de Mis Mascotas",
+      "description": "Consulta el historial médico completo de todas tus mascotas y monitorea su salud.",
+      "selectPet": "Seleccionar Mascota",
+      "appointments": "citas",
+      "nextAppointment": "Próxima Cita:",
+      "noPets": "Sin Mascotas",
+      "noPetsDesc": "No tienes mascotas registradas. Registra una mascota para ver su historial médico aquí.",
+      "createFirst": "Crear Primera Cita",
+      "healthScore": "Puntuación de Salud",
+      "recommendation": "Recomendación:",
+      "totalVisits": "Visitas Totales",
+      "firstVisit": "Primera Visita",
+      "lastVisit": "Última Visita",
+      "completedVisits": "Citas Completadas",
+      "pendingVisits": "Citas Pendientes",
+      "veterinariesUsed": "Veterinarias Visitadas",
+      "completed": "Completadas",
+      "pending": "Pendientes",
+      "veterinaries": "Veterinarias",
+      "appointmentTimeline": "Cronología de Citas",
+      "quickInsights": "Información Rápida",
+      "commonReasons": "Motivos Más Comunes",
+      "monthlyActivity": "Actividad Mensual",
+      "appointmentHistory": "Historial de Citas",
+      "reason": "Motivo",
+      "veterinary": "Veterinaria",
+      "details": "Detalles"
+    },
+    "columns": {
+      "id": "ID",
+      "petId": "ID Mascota",
+      "petName": "Nombre Mascota",
+      "dateTime": "Fecha y Hora",
+      "reason": "Motivo",
+      "status": "Estado",
+      "veterinaryStatus": "Estado Veterinario",
+      "actions": "Acciones"
+    },
     "table": {
       "id": "ID",
       "petId": "ID Mascota",
+      "petName": "Nombre Mascota",
       "datetime": "Fecha y Hora",
       "reason": "Motivo",
       "status": "Estado",
+      "veterinaryStatus": "Estado Veterinario",
       "veterinary": "veterinary",
       "actions": "Acciones"
     },
+    "veterinaryStatus": {
+      "PENDING": "Pendiente",
+      "ACCEPTED": "Aceptada",
+      "REJECTED": "Rechazada",
+      "COMPLETED": "Completada"
+    },
+    "cannotEdit": "No se puede editar una cita completada o rechazada",
     "noAssigned": "No asignada",
     "edit": "Editar",
     "delete": "Eliminar",
     "actions": {
-      "new": "Nueva Cita"
+      "new": "Nueva Cita",
+      "complete": "Completar Cita",
+      "followup": "Crear Seguimiento"
+    },
+    "acceptReject": {
+      "title": "Revisar Solicitud de Cita",
+      "accept": "Aceptar Cita",
+      "reject": "Rechazar Cita",
+      "processing": "Procesando..."
+    },
+    "pendingRequests": {
+      "title": "Solicitudes de Cita Pendientes",
+      "subtitle": "Tienes {{count}} solicitud(es) esperando tu respuesta",
+      "review": "Revisar Solicitud"
     },
     "form": {
       "title": {
@@ -134,12 +246,16 @@
         "edit": "Editar Cita"
       },
       "petId": "ID de Mascota",
+      "petName": "Nombre de Mascota",
+      "selectPet": "Seleccione una mascota",
       "veterinary": "veterinary",
       "selectVeterinary": "Seleccione una veterinary",
       "datetime": "Fecha y Hora",
       "reason": "Motivo",
       "status": "Estado",
       "notes": "Notas",
+      "inProgress": "En progreso",
+      "cancelled": "Cancelada",
       "actions": {
         "cancel": "Cancelar",
         "create": "Crear",
@@ -148,6 +264,7 @@
       "errors": {
         "fillRequired": "Por favor complete todos los campos requeridos",
         "petIdRequired": "El ID de mascota es requerido",
+        "petRequired": "La mascota es requerida",
         "veterinaryRequired": "La veterinary es requerida",
         "datetimeRequired": "La fecha y hora son requeridas",
         "reasonRequired": "El motivo es requerido",

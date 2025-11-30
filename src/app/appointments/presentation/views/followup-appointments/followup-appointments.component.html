@@ -1,0 +1,89 @@
+<div class="container">
+  <mat-card class="followup-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="header-icon">pets</mat-icon>
+      <mat-card-title>{{ 'appointments.followup.title' | translate }}</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <p class="description">{{ 'appointments.followup.description' | translate }}</p>
+      
+      @if (store.loading()) {
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+        </div>
+      } @else if (store.error()) {
+        <mat-error>{{ store.error() }}</mat-error>
+      } @else {
+        @if (petsWithCompletedAppointments().data.length > 0) {
+          <mat-form-field appearance="outline" class="pet-select">
+            <mat-label>{{ 'appointments.followup.selectPet' | translate }}</mat-label>
+            <mat-select [(value)]="selectedPetId" (selectionChange)="onPetSelected()">
+              @for (pet of petsWithCompletedAppointments().data; track pet.petId) {
+                <mat-option [value]="pet.petId">
+                  {{ pet.petName }} (ID: {{ pet.petId }}) - {{ pet.completedAppointmentsCount }} {{ 'appointments.followup.completed' | translate }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          @if (selectedPet()) {
+            <div class="pet-details-section">
+              <mat-card class="pet-card">
+                <mat-card-content class="pet-card-content">
+                  <div class="pet-info">
+                    <div class="pet-header">
+                      <div class="pet-avatar">
+                        <mat-icon>pets</mat-icon>
+                      </div>
+                      <div class="pet-details">
+                        <h3 class="pet-name">{{ selectedPet()!.petName }}</h3>
+                        <span class="pet-id">ID: {{ selectedPet()!.petId }}</span>
+                      </div>
+                      <div class="completed-badge">
+                        <mat-icon>check_circle</mat-icon>
+                        <span>{{ selectedPet()!.completedAppointmentsCount }}</span>
+                      </div>
+                    </div>
+                    
+                    <div class="appointment-info">
+                      <div class="info-row">
+                        <mat-icon class="info-icon">calendar_today</mat-icon>
+                        <div class="info-content">
+                          <span class="info-label">{{ 'appointments.followup.columns.lastAppointment' | translate }}</span>
+                          <span class="info-value">{{ selectedPet()!.lastAppointmentDate | date: 'dd/MM/yyyy HH:mm' }}</span>
+                        </div>
+                      </div>
+                      
+                      <div class="info-row">
+                        <mat-icon class="info-icon">description</mat-icon>
+                        <div class="info-content">
+                          <span class="info-label">{{ 'appointments.followup.columns.lastReason' | translate }}</span>
+                          <span class="info-value">{{ selectedPet()!.lastAppointmentReason }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <button 
+                    mat-raised-button 
+                    color="primary" 
+                    class="followup-button"
+                    (click)="createFollowUpForPet(selectedPet()!.petId)">
+                    <mat-icon>add_circle</mat-icon>
+                    {{ 'appointments.followup.actions.create' | translate }}
+                  </button>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          }
+        } @else {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">inbox</mat-icon>
+            <p>{{ 'appointments.followup.empty' | translate }}</p>
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

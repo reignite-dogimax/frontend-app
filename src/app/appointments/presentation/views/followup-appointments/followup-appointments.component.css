@@ -1,0 +1,231 @@
+.container {
+  padding: 0;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.followup-card {
+  margin-bottom: 0;
+}
+
+.header-icon {
+  color: #4caf50;
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+mat-card-header {
+  margin-bottom: 16px;
+}
+
+.description {
+  color: #666;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.pet-select {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.pet-select ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.pet-details-section {
+  margin-top: 24px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pet-card {
+  transition: all 0.3s ease;
+  border: 2px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.pet-card-content {
+  padding: 20px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pet-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pet-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.pet-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+  
+  mat-icon {
+    color: white;
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.pet-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pet-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.pet-id {
+  font-size: 13px;
+  color: #999;
+  font-weight: 500;
+}
+
+.completed-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background-color: #e8f5e9;
+  border-radius: 16px;
+  
+  mat-icon {
+    color: #4caf50;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+  
+  span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2e7d32;
+  }
+}
+
+.appointment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid #4caf50;
+}
+
+.info-icon {
+  color: #4caf50;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.info-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.followup-button {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.empty-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  opacity: 0.5;
+}
+
+mat-error {
+  color: #d32f2f;
+  padding: 20px;
+  text-align: center;
+}

@@ -41,14 +41,24 @@ export class AppointmentFormComponent {
     veterinaryId: new FormControl<number | null>(null, { validators: [Validators.required] }),
     fechaHora: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     motivo: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-    estado: new FormControl<string>('Programada', { nonNullable: true, validators: [Validators.required] }),
+    estado: new FormControl<string>('En progreso', { nonNullable: true, validators: [Validators.required] }),
     notas: new FormControl<string>('', { nonNullable: true })
   });
 
   veterinaries = this.store.veterinaries;
-  estados = ['Programada', 'Completada', 'Cancelada'];
+  estados = ['En progreso', 'Cancelada'];
   isEdit = false;
   appointmentId: number | null = null;
+
+  // Available pets for selection
+  availablePets = [
+    { id: 1, name: 'Max' },
+    { id: 2, name: 'Luna' },
+    { id: 3, name: 'Charlie' },
+    { id: 4, name: 'Bella' },
+    { id: 5, name: 'Rocky' },
+    { id: 6, name: 'Mia' }
+  ];
 
   constructor() {
     this.route.params.subscribe(params => {

@@ -15,17 +15,20 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { CommonModule } from '@angular/common';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatCard, MatCardAvatar, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { AuthStorageService } from '../../../../iam/infrastructure/auth-storage.service';
+import { FollowupAppointmentsComponent } from '../followup-appointments/followup-appointments.component';
 
 @Component({
-  selector: 'app-appointment-list',
+  selector: 'app-veterinary-appointments',
   standalone: true,
   imports: [
     TranslateModule,
@@ -39,7 +42,6 @@ import { MatTooltip } from '@angular/material/tooltip';
     MatCell,
     MatHeaderRowDef,
     MatRowDef,
-    MatButton,
     MatHeaderRow,
     MatRow,
     MatProgressSpinner,
@@ -48,50 +50,65 @@ import { MatTooltip } from '@angular/material/tooltip';
     MatSort,
     MatSortHeader,
     MatPaginator,
-    MatTooltip
+    MatTooltip,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    MatCardAvatar,
+    FollowupAppointmentsComponent
   ],
-  templateUrl: './appointment-list.component.html',
-  styleUrl: './appointment-list.component.css'
+  templateUrl: './veterinary-appointments.component.html',
+  styleUrl: './veterinary-appointments.component.css'
 })
-export class AppointmentListComponent implements AfterViewChecked {
+export class VeterinaryAppointmentsComponent implements AfterViewChecked {
   readonly store = inject(AppointmentsStore);
   protected router = inject(Router);
+  private authStorage = inject(AuthStorageService);
 
-  displayedColumns: string[] = ['id', 'mascotaId', 'fechaHora', 'motivo', 'estado', 'veterinaryStatus', 'veterinary', 'actions'];
+  displayedColumns: string[] = ['id', 'mascotaId', 'fechaHora', 'motivo', 'estado', 'veterinaryStatus', 'actions'];
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  // Filtrar solo citas aceptadas del veterinario actual
   dataSource = computed(() => {
+    const currentUser = this.authStorage.getUser();
+    if (!currentUser) {
+      return new MatTableDataSource([]);
+    }
+
+    // Filtrar citas: veterinaryStatus = 'ACCEPTED' y asignadas a este veterinario
+    const filteredAppointments = this.store.appointments().filter(apt => 
+      apt.veterinaryStatus === 'ACCEPTED' && 
+      apt.veterinaryId === currentUser.id
+    );
+
     // Sort appointments by date (most recent first)
-    const sortedAppointments = [...this.store.appointments()].sort((a, b) => 
+    const sortedAppointments = filteredAppointments.sort((a, b) => 
       new Date(b.fechaHora).getTime() - new Date(a.fechaHora).getTime()
     );
+
     const source = new MatTableDataSource(sortedAppointments);
     source.sort = this.sort;
     source.paginator = this.paginator;
     return source;
   });
 
-  editAppointment(id: number) {
-    this.router.navigate(['appointments/pet-lover', id, 'edit']).then();
+  /**
+   * Navigate to complete/register appointment form
+   */
+  completeAppointment(id: number) {
+    this.router.navigate(['appointments/veterinary', id, 'complete']).then();
   }
 
-  canEdit(appointment: any): boolean {
-    // Cannot edit if veterinaryStatus is COMPLETED or REJECTED, or if estado is Cancelada
-    return appointment.veterinaryStatus !== 'COMPLETED' && 
-           appointment.veterinaryStatus !== 'REJECTED' &&
-           appointment.estado !== 'Cancelada';
-  }
-
-  deleteAppointment(id: number) {
-    if (confirm('¿Está seguro de eliminar esta cita?')) {
-      this.store.deleteAppointment(id);
-    }
-  }
-
-  navigateToNew() {
-    this.router.navigate(['appointments/pet-lover/new']).then();
+  /**
+   * Navigate to create follow-up appointment
+   */
+  createFollowUp(appointmentId: number) {
+    this.router.navigate(['appointments/veterinary/followup'], { 
+      queryParams: { fromAppointment: appointmentId } 
+    }).then();
   }
 
   // Helper method to get pet name from ID

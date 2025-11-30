@@ -6,11 +6,13 @@ import { MatButton } from '@angular/material/button';
 import { MatButtonToggleGroup, MatButtonToggle } from '@angular/material/button-toggle';
 import { TranslatePipe } from '@ngx-translate/core';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { PendingRequestsComponent } from '../../../appointments/presentation/views/pending-requests/pending-requests.component';
+import { AuthStorageService } from '../../../iam/infrastructure/auth-storage.service';
 
 @Component({
   selector: 'app-notifications-page',
   standalone: true,
-  imports: [NgFor, NgIf, MatIcon, MatButton, MatButtonToggleGroup, MatButtonToggle, TranslatePipe],
+  imports: [NgFor, NgIf, MatIcon, MatButton, MatButtonToggleGroup, MatButtonToggle, TranslatePipe, PendingRequestsComponent],
   templateUrl: './notifications-page.component.html',
   styleUrl: './notifications-page.component.css',
   animations: [
@@ -27,7 +29,13 @@ import { trigger, transition, style, animate } from '@angular/animations';
 })
 export class NotificationsPageComponent {
   store = inject(NotificationsStore);
+  private authStorage = inject(AuthStorageService);
   filter = signal<'all' | 'unread'>('all');
+
+  readonly isVeterinary = computed(() => {
+    const user = this.authStorage.getUser();
+    return user?.rol === 'veterinary';
+  });
 
   readonly filtered = computed(() => {
     const list = this.store.items();

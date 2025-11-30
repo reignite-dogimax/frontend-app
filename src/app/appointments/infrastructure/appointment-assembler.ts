@@ -14,7 +14,8 @@ export class AppointmentAssembler implements BaseAssembler<Appointment, Appointm
       fechaHora: resource.fechaHora,
       motivo: resource.motivo,
       estado: resource.estado,
-      notas: resource.notas
+      notas: resource.notas,
+      veterinaryStatus: resource.veterinaryStatus
     });
   }
 
@@ -26,7 +27,8 @@ export class AppointmentAssembler implements BaseAssembler<Appointment, Appointm
       fechaHora: entity.fechaHora,
       motivo: entity.motivo,
       estado: entity.estado,
-      notas: entity.notas
+      notas: entity.notas,
+      veterinaryStatus: entity.veterinaryStatus
     };
   }
 
