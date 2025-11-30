@@ -95,7 +95,10 @@ export class MascotaDetailComponent implements OnInit {
     if (mascota) {
       // Si existe en el store, usar esos datos
       this.mascota = mascota;
-      this.loadRelatedData(id);
+      // Dar un pequeño tiempo para que los datos filtrados estén listos
+      setTimeout(() => {
+        this.loading = false;
+      }, 100);
     } else {
       // Si no existe en el store (por ejemplo, después de F5), llamar al API
       console.log('Mascota no encontrada en store, cargando desde API...');
@@ -115,19 +118,8 @@ export class MascotaDetailComponent implements OnInit {
   }
 
   loadRelatedData(mascotaId: number): void {
-    // Los signals ya están conectados al store global
-    // El store ya cargó todos los datos en su constructor
-    // Solo necesitamos verificar si los datos filtrados para esta mascota están disponibles
-    const historiales = this.historial();
-    const recomendaciones = this.recomendaciones();
-    
-    console.log(`Datos filtrados para mascota ${mascotaId}:`, {
-      historiales: historiales.length,
-      recomendaciones: recomendaciones.length
-    });
-    
-    // Los datos ya deberían estar disponibles porque el store los cargó globalmente
-    this.loading = false;
+    // Ya no se usa, los datos se cargan directamente desde signals
+    // Método mantenido por compatibilidad
   }
 
   getEdadMascota(fechaNacimiento?: string): string {
