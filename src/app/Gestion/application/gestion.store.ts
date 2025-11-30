@@ -118,10 +118,18 @@ export class GestionStore {
   updateMascota(updatedMascota: Pet): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.mascotasSignal.update(mascotas =>
-      mascotas.map(m => m.id === updatedMascota.id ? updatedMascota : m)
-    );
-    this.loadingSignal.set(false);
+    this.gestionApi.updateMascota(updatedMascota).pipe(retry(2)).subscribe({
+      next: updated => {
+        this.mascotasSignal.update(mascotas =>
+          mascotas.map(m => m.id === updated.id ? updated : m)
+        );
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to update pet'));
+        this.loadingSignal.set(false);
+      }
+    });
   }
 
   /**
@@ -131,8 +139,16 @@ export class GestionStore {
   deleteMascota(id: number): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.mascotasSignal.update(mascotas => mascotas.filter(m => m.id !== id));
-    this.loadingSignal.set(false);
+    this.gestionApi.deleteMascota(id).pipe(retry(2)).subscribe({
+      next: () => {
+        this.mascotasSignal.update(mascotas => mascotas.filter(m => m.id !== id));
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to delete pet'));
+        this.loadingSignal.set(false);
+      }
+    });
   }
 
   /**
@@ -142,8 +158,16 @@ export class GestionStore {
   addHistorial(historial: MedicalHistory): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.historialesSignal.update(historiales => [...historiales, historial]);
-    this.loadingSignal.set(false);
+    this.gestionApi.createHistorial(historial).pipe(retry(2)).subscribe({
+      next: created => {
+        this.historialesSignal.update(historiales => [...historiales, created]);
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to create medical history'));
+        this.loadingSignal.set(false);
+      }
+    });
   }
 
   /**
@@ -153,10 +177,18 @@ export class GestionStore {
   updateHistorial(updatedHistorial: MedicalHistory): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.historialesSignal.update(historiales =>
-      historiales.map(h => h.id === updatedHistorial.id ? updatedHistorial : h)
-    );
-    this.loadingSignal.set(false);
+    this.gestionApi.updateHistorial(updatedHistorial).pipe(retry(2)).subscribe({
+      next: updated => {
+        this.historialesSignal.update(historiales =>
+          historiales.map(h => h.id === updated.id ? updated : h)
+        );
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to update medical history'));
+        this.loadingSignal.set(false);
+      }
+    });
   }
 
   /**
@@ -166,8 +198,16 @@ export class GestionStore {
   deleteHistorial(id: number): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.historialesSignal.update(historiales => historiales.filter(h => h.id !== id));
-    this.loadingSignal.set(false);
+    this.gestionApi.deleteHistorial(id).pipe(retry(2)).subscribe({
+      next: () => {
+        this.historialesSignal.update(historiales => historiales.filter(h => h.id !== id));
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to delete medical history'));
+        this.loadingSignal.set(false);
+      }
+    });
   }
 
   /**
@@ -177,8 +217,16 @@ export class GestionStore {
   addRecomendacion(recomendacion: Recommendation): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.recomendacionesSignal.update(recomendaciones => [...recomendaciones, recomendacion]);
-    this.loadingSignal.set(false);
+    this.gestionApi.createRecomendacion(recomendacion).pipe(retry(2)).subscribe({
+      next: created => {
+        this.recomendacionesSignal.update(recomendaciones => [...recomendaciones, created]);
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to create recommendation'));
+        this.loadingSignal.set(false);
+      }
+    });
   }
 
   /**
@@ -188,10 +236,18 @@ export class GestionStore {
   updateRecomendacion(updatedRecomendacion: Recommendation): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.recomendacionesSignal.update(recomendaciones =>
-      recomendaciones.map(r => r.id === updatedRecomendacion.id ? updatedRecomendacion : r)
-    );
-    this.loadingSignal.set(false);
+    this.gestionApi.updateRecomendacion(updatedRecomendacion).pipe(retry(2)).subscribe({
+      next: updated => {
+        this.recomendacionesSignal.update(recomendaciones =>
+          recomendaciones.map(r => r.id === updated.id ? updated : r)
+        );
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to update recommendation'));
+        this.loadingSignal.set(false);
+      }
+    });
   }
 
   /**
@@ -201,8 +257,16 @@ export class GestionStore {
   deleteRecomendacion(id: number): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.recomendacionesSignal.update(recomendaciones => recomendaciones.filter(r => r.id !== id));
-    this.loadingSignal.set(false);
+    this.gestionApi.deleteRecomendacion(id).pipe(retry(2)).subscribe({
+      next: () => {
+        this.recomendacionesSignal.update(recomendaciones => recomendaciones.filter(r => r.id !== id));
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to delete recommendation'));
+        this.loadingSignal.set(false);
+      }
+    });
   }
 
   /**
