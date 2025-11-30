@@ -1,0 +1,101 @@
+<div class="container">
+  <!-- Sección de seguimiento - Mascotas atendidas previamente -->
+  <app-followup-appointments></app-followup-appointments>
+
+  <!-- Sección de citas aceptadas -->
+  <mat-card class="appointments-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="header-icon">check_circle</mat-icon>
+      <mat-card-title>{{ 'appointments.veterinary.title' | translate }}</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      @if (store.loading()) {
+        <mat-spinner></mat-spinner>
+      } @else if (store.error()) {
+        <mat-error>{{ store.error() }}</mat-error>
+      } @else if (dataSource().data.length === 0) {
+        <div class="empty-state">
+          <mat-icon class="empty-icon">event_busy</mat-icon>
+          <p>No tienes citas aceptadas en este momento</p>
+        </div>
+      } @else {
+        <div class="table-container">
+          <table mat-table [dataSource]="dataSource()" matSort class="mat-elevation-z8">
+            
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.id' | translate }}</th>
+              <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+            </ng-container>
+
+            <!-- Pet ID Column -->
+            <ng-container matColumnDef="mascotaId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.petName' | translate }}</th>
+              <td mat-cell *matCellDef="let element">{{ getPetName(element.mascotaId) }}</td>
+            </ng-container>
+
+            <!-- Date & Time Column -->
+            <ng-container matColumnDef="fechaHora">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.dateTime' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="date-cell">
+                  <mat-icon class="date-icon">event</mat-icon>
+                  <span>{{ element.fechaHora | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Reason Column -->
+            <ng-container matColumnDef="motivo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.reason' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="reason-text">{{ element.motivo }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.status' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="status-badge" [ngClass]="element.estado.toLowerCase()">
+                  {{ element.estado }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Veterinary Status Column -->
+            <ng-container matColumnDef="veterinaryStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'appointments.columns.veterinaryStatus' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="status-badge" [ngClass]="element.veterinaryStatus.toLowerCase()">
+                  {{ ('appointments.veterinaryStatus.' + element.veterinaryStatus) | translate }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>{{ 'appointments.columns.actions' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button color="primary" (click)="completeAppointment(element.id)" 
+                        matTooltip="{{ 'appointments.actions.complete' | translate }}">
+                  <mat-icon>check_circle</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" (click)="createFollowUp(element.id)"
+                        matTooltip="{{ 'appointments.actions.followup' | translate }}">
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="20" showFirstLastButtons></mat-paginator>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
