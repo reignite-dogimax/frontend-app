@@ -5,6 +5,7 @@ import { MarkAsReadUseCase } from '../../application/mark-as-read.usecase';
 import { MarkAllAsReadUseCase } from '../../application/mark-all-as-read.usecase';
 import RemoveNotificationUseCase from '../../application/remove-notification.usecase';
 import { firstValueFrom } from 'rxjs';
+import { AuthStorageService } from '../../../iam/infrastructure/auth-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationsStore {
@@ -26,6 +27,7 @@ export class NotificationsStore {
   private readonly markAsReadUc: MarkAsReadUseCase = inject(MarkAsReadUseCase);
   private readonly markAllAsReadUc: MarkAllAsReadUseCase = inject(MarkAllAsReadUseCase);
   private readonly removeNotificationUc: RemoveNotificationUseCase = inject(RemoveNotificationUseCase);
+  private readonly authStorage: AuthStorageService = inject(AuthStorageService);
 
   async load() {
     // Si ya se intentó cargar y no estamos forzando, evita repetir
@@ -34,7 +36,9 @@ export class NotificationsStore {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const data = await firstValueFrom(this.listNotifications.execute());
+      const user = this.authStorage.getUser();
+      const userId = user?.id;
+      const data = await firstValueFrom(this.listNotifications.execute(userId));
       this._items.set(data ?? []);
     } catch (e: any) {
       this._error.set(e?.message ?? 'Error loading notifications');

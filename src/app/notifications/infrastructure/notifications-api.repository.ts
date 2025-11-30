@@ -12,6 +12,10 @@ export class NotificationsApiRepository implements NotificationRepository {
     return this.api.getNotifications();
   }
 
+  listByUserId(userId: number): Observable<NotificationItem[]> {
+    return this.api.getNotificationsByUserId(userId);
+  }
+
   markAsRead(id: number): Observable<NotificationItem> {
     return this.api.markAsRead(id);
   }

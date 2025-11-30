@@ -4,6 +4,7 @@ import { NotificationItem } from './notification.entity';
 
 export interface NotificationRepository {
   list(): Observable<NotificationItem[]>;
+  listByUserId(userId: number): Observable<NotificationItem[]>;
   markAsRead(id: number): Observable<NotificationItem>;
   markAllAsRead(ids: number[]): Observable<NotificationItem[]>;
   remove(id: number): Observable<void>;

@@ -6,8 +6,9 @@ import { NOTIFICATION_REPOSITORY, NotificationRepository } from '../domain/notif
 @Injectable({ providedIn: 'root' })
 export class ListNotificationsUseCase {
   constructor(@Inject(NOTIFICATION_REPOSITORY) private readonly repo: NotificationRepository) {}
-  execute(): Observable<NotificationItem[]> {
-    return this.repo.list();
+  
+  execute(userId?: number): Observable<NotificationItem[]> {
+    return userId ? this.repo.listByUserId(userId) : this.repo.list();
   }
 }
 
