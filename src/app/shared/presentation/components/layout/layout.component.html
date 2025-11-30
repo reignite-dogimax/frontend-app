@@ -11,29 +11,51 @@
 
       <div class="sidenav-content">
         <mat-nav-list class="nav-list">
-          <a mat-list-item [routerLink]="'/home'" routerLinkActive="active" class="nav-item">
-            <mat-icon matListItemIcon>home</mat-icon>
-            <span matListItemTitle>{{ 'option.home' | translate }}</span>
-          </a>
+          <!-- Opciones solo para Pet Lovers -->
+          @if ((isPetLover$ | async)) {
+            <a mat-list-item [routerLink]="'/home'" routerLinkActive="active" class="nav-item">
+              <mat-icon matListItemIcon>home</mat-icon>
+              <span matListItemTitle>{{ 'option.home' | translate }}</span>
+            </a>
 
-          <a mat-list-item [routerLink]="'/about'" routerLinkActive="active" class="nav-item">
-            <mat-icon matListItemIcon>info</mat-icon>
-            <span matListItemTitle>{{ 'option.about' | translate }}</span>
+            <a mat-list-item [routerLink]="'/about'" routerLinkActive="active" class="nav-item">
+              <mat-icon matListItemIcon>info</mat-icon>
+              <span matListItemTitle>{{ 'option.about' | translate }}</span>
+            </a>
+
+            <a mat-list-item [routerLink]="'/gestion-mascotas/mascotas'" routerLinkActive="active" class="nav-item">
+              <mat-icon matListItemIcon>pets</mat-icon>
+              <span matListItemTitle>Gestión de Mascotas</span>
+            </a>
+
+            <a mat-list-item [routerLink]="'/appointments/pet-lover/my-pets-history'" routerLinkActive="active" class="nav-item">
+              <mat-icon matListItemIcon>medical_services</mat-icon>
+              <span matListItemTitle>{{ 'option.myPetsHistory' | translate }}</span>
+            </a>
+          }
+
+          <!-- Opciones solo para Veterinarios -->
+          @if ((isVeterinarian$ | async)) {
+            <a mat-list-item [routerLink]="'/appointments/veterinary/daily-agenda'" routerLinkActive="active" class="nav-item">
+              <mat-icon matListItemIcon>today</mat-icon>
+              <span matListItemTitle>{{ 'option.dailyAgenda' | translate }}</span>
+            </a>
+            
+            <a mat-list-item [routerLink]="'/appointments/veterinary/patient-history'" routerLinkActive="active" class="nav-item">
+              <mat-icon matListItemIcon>history</mat-icon>
+              <span matListItemTitle>{{ 'option.patientHistory' | translate }}</span>
+            </a>
+          }
+
+          <!-- Opciones compartidas por todos los roles -->
+          <a mat-list-item [routerLink]="'/appointments'" routerLinkActive="active" class="nav-item">
+            <mat-icon matListItemIcon>event</mat-icon>
+            <span matListItemTitle>{{ 'option.appointments' | translate }}</span>
           </a>
 
           <a mat-list-item [routerLink]="'/notifications'" routerLinkActive="active" class="nav-item">
             <mat-icon matListItemIcon>notifications</mat-icon>
             <span matListItemTitle>{{ 'option.notifications' | translate }}</span>
-          </a>
-
-          <a mat-list-item [routerLink]="'/gestion-mascotas/mascotas'" routerLinkActive="active" class="nav-item">
-            <mat-icon matListItemIcon>pets</mat-icon>
-            <span matListItemTitle>Gestión de Mascotas</span>
-          </a>
-
-          <a mat-list-item [routerLink]="'/appointments'" routerLinkActive="active" class="nav-item">
-            <mat-icon matListItemIcon>event</mat-icon>
-            <span matListItemTitle>{{ 'option.appointments' | translate }}</span>
           </a>
 
         </mat-nav-list>

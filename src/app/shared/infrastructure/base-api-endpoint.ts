@@ -26,6 +26,23 @@ export abstract class BaseApiEndpoint<
   ) {}
 
   /**
+   * Retrieves entities from a custom path.
+   * @param path - The custom path relative to the endpoint URL.
+   * @returns An Observable for an array of entities.
+   */
+  getByCustomPath(path: string): Observable<TEntity[]> {
+    return this.http.get<TResponse | TResource[]>(`${this.endpointUrl}/${path}`).pipe(
+      map(response => {
+        if (Array.isArray(response)) {
+          return response.map(resource => this.assembler.toEntityFromResource(resource));
+        }
+        return this.assembler.toEntitiesFromResponse(response as TResponse);
+      }),
+      catchError(this.handleError('Failed to fetch entities from custom path'))
+    );
+  }
+
+  /**
    * Retrieves all entities from the API, handling both response objects and arrays.
    * @returns An Observable for an array of entities.
    */
@@ -78,6 +95,17 @@ export abstract class BaseApiEndpoint<
     return this.http.put<TResource>(`${this.endpointUrl}/${id}`, resource).pipe(
       map(updated => this.assembler.toEntityFromResource(updated)),
       catchError(this.handleError('Failed to update entity'))
+    );
+  }
+
+  /**
+   * Partially updates an entity using PATCH with a custom path.
+   * @param path - The custom path relative to the endpoint URL.
+   * @returns An Observable of the updated resource.
+   */
+  patch<T>(path: string): Observable<T> {
+    return this.http.patch<T>(`${this.endpointUrl}/${path}`, {}).pipe(
+      catchError(this.handleError('Failed to patch entity'))
     );
   }
 
