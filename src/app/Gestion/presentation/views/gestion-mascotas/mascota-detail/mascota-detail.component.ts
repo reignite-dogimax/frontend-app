@@ -342,15 +342,13 @@ export class MascotaDetailComponent implements OnInit {
     let errorCount = 0;
 
     recommendations.forEach((rec, index) => {
-      this.gestionApi.createRecomendacion(rec).subscribe({
+      this.gestionStore.addRecomendacion(rec).subscribe({
         next: (savedRecommendation) => {
           console.log(`Recomendación ${index + 1} guardada:`, savedRecommendation);
-          this.gestionStore.addRecomendacion(savedRecommendation);
           savedCount++;
           
           // Mostrar mensaje solo cuando se hayan procesado todas
           if (savedCount + errorCount === recommendations.length) {
-            this.reloadRecommendations();
             if (errorCount === 0) {
               this.snackBar.open(`✨ ${savedCount} recomendación(es) generada(s) exitosamente`, 'Cerrar', { duration: 4000 });
             } else {
@@ -363,7 +361,6 @@ export class MascotaDetailComponent implements OnInit {
           errorCount++;
           
           if (savedCount + errorCount === recommendations.length) {
-            this.reloadRecommendations();
             if (savedCount > 0) {
               this.snackBar.open(`⚠️ ${savedCount} guardadas, ${errorCount} fallaron`, 'Cerrar', { duration: 5000 });
             } else {
