@@ -2,6 +2,11 @@ import { BaseEntity } from '../../../shared/infrastructure/base-entity';
 import { Veterinary } from './veterinary.entity';
 
 /**
+ * Veterinary status for appointment workflow
+ */
+export type VeterinaryStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'COMPLETED';
+
+/**
  * Represents an Appointment entity in the application.
  * @remarks
  * This class is used as a domain model for appointments in the appointments context.
@@ -9,12 +14,13 @@ import { Veterinary } from './veterinary.entity';
 export class Appointment implements BaseEntity {
   private _id: number;
   private _mascotaId: number;
-  private _veterinaryId: number;
+  private _veterinaryId: number; // ID del usuario veterinario
   private _fechaHora: string;
   private _motivo: string;
   private _estado: string;
   private _notas: string;
   private _veterinary: Veterinary | null;
+  private _veterinaryStatus: VeterinaryStatus;
 
   constructor(appointment: {
     id: number;
@@ -24,6 +30,7 @@ export class Appointment implements BaseEntity {
     motivo: string;
     estado: string;
     notas: string;
+    veterinaryStatus?: VeterinaryStatus;
   }) {
     this._id = appointment.id;
     this._mascotaId = appointment.mascotaId;
@@ -33,6 +40,7 @@ export class Appointment implements BaseEntity {
     this._estado = appointment.estado;
     this._notas = appointment.notas;
     this._veterinary = null;
+    this._veterinaryStatus = appointment.veterinaryStatus || 'PENDING';
   }
 
   get id(): number {
@@ -97,5 +105,13 @@ export class Appointment implements BaseEntity {
 
   set veterinary(value: Veterinary | null) {
     this._veterinary = value;
+  }
+
+  get veterinaryStatus(): VeterinaryStatus {
+    return this._veterinaryStatus;
+  }
+
+  set veterinaryStatus(value: VeterinaryStatus) {
+    this._veterinaryStatus = value;
   }
 }

@@ -26,6 +26,10 @@ export class AppointmentsApi extends BaseApi {
     return this.appointmentsEndpoint.getAll();
   }
 
+  getAppointmentsByPetOwnerId(petOwnerId: number): Observable<Appointment[]> {
+    return this.appointmentsEndpoint.getByCustomPath(`pet-owner/${petOwnerId}`);
+  }
+
   getAppointment(id: number): Observable<Appointment> {
     return this.appointmentsEndpoint.getById(id);
   }
@@ -40,6 +44,12 @@ export class AppointmentsApi extends BaseApi {
 
   deleteAppointment(id: number): Observable<void> {
     return this.appointmentsEndpoint.delete(id);
+  }
+
+  updateVeterinaryStatus(appointmentId: number, veterinaryStatus: string): Observable<Appointment> {
+    return this.appointmentsEndpoint.patch<Appointment>(
+      `${appointmentId}/veterinary-status?veterinaryStatus=${veterinaryStatus}`
+    );
   }
 
   // Veterinaries CRUD

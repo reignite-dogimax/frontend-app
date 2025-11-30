@@ -4,6 +4,7 @@ import { Veterinary } from '../domain/model/veterinary.entity';
 import { AppointmentsApi } from '../infrastructure/appointments-api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { retry } from 'rxjs';
+import { AuthStorageService } from '../../iam/infrastructure/auth-storage.service';
 
 /**
  * State management store for appointments and veterinaries using Angular signals.
@@ -27,7 +28,8 @@ export class AppointmentsStore {
   private readonly errorSignal = signal<string | null>(null);
   readonly error = this.errorSignal.asReadonly();
 
-  constructor(private appointmentsApi: AppointmentsApi) {
+  constructor(private appointmentsApi: AppointmentsApi,
+              private authStorage: AuthStorageService) {
     this.loadVeterinaries();
     this.loadAppointments();
   }
@@ -172,19 +174,29 @@ export class AppointmentsStore {
 
   /**
    * Loads all appointments from the API.
+   * If user is pet lover, loads only their appointments.
+   * If user is veterinary, loads all appointments.
    */
-  private loadAppointments(): void {
+  loadAppointments(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.appointmentsApi.getAppointments().pipe(takeUntilDestroyed()).subscribe({
+    
+    const user = this.authStorage.getUser();
+    const observable = user && user.rol === 'petlover' && user.id
+      ? this.appointmentsApi.getAppointmentsByPetOwnerId(user.id)
+      : this.appointmentsApi.getAppointments();
+    
+    const subscription = observable.subscribe({
       next: appointments => {
         this.appointmentsSignal.set(appointments);
         this.loadingSignal.set(false);
         this.assignVeterinariesToAppointments();
+        subscription.unsubscribe();
       },
       error: err => {
         this.errorSignal.set(this.formatError(err, 'Failed to load appointments'));
         this.loadingSignal.set(false);
+        subscription.unsubscribe();
       }
     });
   }
@@ -195,14 +207,16 @@ export class AppointmentsStore {
   private loadVeterinaries(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.appointmentsApi.getVeterinaries().pipe(takeUntilDestroyed()).subscribe({
+    const subscription = this.appointmentsApi.getVeterinaries().subscribe({
       next: veterinaries => {
         this.veterinariesSignal.set(veterinaries);
         this.loadingSignal.set(false);
+        subscription.unsubscribe();
       },
       error: err => {
         this.errorSignal.set(this.formatError(err, 'Failed to load veterinaries'));
         this.loadingSignal.set(false);
+        subscription.unsubscribe();
       }
     });
   }

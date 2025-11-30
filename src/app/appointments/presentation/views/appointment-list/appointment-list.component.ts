@@ -22,6 +22,7 @@ import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-appointment-list',
@@ -46,7 +47,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     MatIconButton,
     MatSort,
     MatSortHeader,
-    MatPaginator
+    MatPaginator,
+    MatTooltip
   ],
   templateUrl: './appointment-list.component.html',
   styleUrl: './appointment-list.component.css'
@@ -55,20 +57,31 @@ export class AppointmentListComponent implements AfterViewChecked {
   readonly store = inject(AppointmentsStore);
   protected router = inject(Router);
 
-  displayedColumns: string[] = ['id', 'mascotaId', 'fechaHora', 'motivo', 'estado', 'veterinary', 'actions'];
+  displayedColumns: string[] = ['id', 'mascotaId', 'fechaHora', 'motivo', 'estado', 'veterinaryStatus', 'veterinary', 'actions'];
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   dataSource = computed(() => {
-    const source = new MatTableDataSource(this.store.appointments());
+    // Sort appointments by date (most recent first)
+    const sortedAppointments = [...this.store.appointments()].sort((a, b) => 
+      new Date(b.fechaHora).getTime() - new Date(a.fechaHora).getTime()
+    );
+    const source = new MatTableDataSource(sortedAppointments);
     source.sort = this.sort;
     source.paginator = this.paginator;
     return source;
   });
 
   editAppointment(id: number) {
-    this.router.navigate(['appointments', id, 'edit']).then();
+    this.router.navigate(['appointments/pet-lover', id, 'edit']).then();
+  }
+
+  canEdit(appointment: any): boolean {
+    // Cannot edit if veterinaryStatus is COMPLETED or REJECTED, or if estado is Cancelada
+    return appointment.veterinaryStatus !== 'COMPLETED' && 
+           appointment.veterinaryStatus !== 'REJECTED' &&
+           appointment.estado !== 'Cancelada';
   }
 
   deleteAppointment(id: number) {
@@ -78,7 +91,20 @@ export class AppointmentListComponent implements AfterViewChecked {
   }
 
   navigateToNew() {
-    this.router.navigate(['appointments/new']).then();
+    this.router.navigate(['appointments/pet-lover/new']).then();
+  }
+
+  // Helper method to get pet name from ID
+  getPetName(petId: number): string {
+    const petNames: { [key: number]: string } = {
+      1: 'Max',
+      2: 'Luna', 
+      3: 'Charlie',
+      4: 'Bella',
+      5: 'Rocky',
+      6: 'Mia'
+    };
+    return petNames[petId] || `Mascota ${petId}`;
   }
 
   ngAfterViewChecked() {
