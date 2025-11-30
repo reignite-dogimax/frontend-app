@@ -1,0 +1,253 @@
+<div class="container">
+  <mat-card class="history-card">
+    <mat-card-header>
+      <mat-icon class="header-icon">pets</mat-icon>
+      <mat-card-title>{{ 'appointments.myPetsHistory.title' | translate }}</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <p class="description">{{ 'appointments.myPetsHistory.description' | translate }}</p>
+      
+      @if (store.loading()) {
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+        </div>
+      } @else if (store.error()) {
+        <mat-error>{{ store.error() }}</mat-error>
+      } @else if (petsHistory().length === 0) {
+        <div class="empty-state">
+          <mat-icon class="empty-icon">pets</mat-icon>
+          <h3>{{ 'appointments.myPetsHistory.noPets' | translate }}</h3>
+          <p>{{ 'appointments.myPetsHistory.noPetsDesc' | translate }}</p>
+          <button mat-raised-button color="primary" routerLink="/appointments/pet-lover/new">
+            {{ 'appointments.myPetsHistory.createFirst' | translate }}
+          </button>
+        </div>
+      } @else {
+        <!-- Pet Selection -->
+        <div class="selection-section">
+          <mat-form-field appearance="outline" class="pet-select">
+            <mat-label>{{ 'appointments.myPetsHistory.selectPet' | translate }}</mat-label>
+            <mat-select [(value)]="selectedPetId" (selectionChange)="onPetSelected()">
+              @for (pet of petsHistory(); track pet.petId) {
+                <mat-option [value]="pet.petId">
+                  {{ pet.petName }} - {{ pet.totalAppointments }} {{ 'appointments.myPetsHistory.appointments' | translate }}
+                  @if (pet.nextAppointment) {
+                    ({{ 'appointments.myPetsHistory.nextAppointment' | translate }}: {{ pet.nextAppointment | date: 'dd/MM/yyyy' }})
+                  }
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Pet Details and Health Dashboard -->
+        @if (selectedPetHistory(); as petHistory) {
+          <div class="pet-overview">
+            <!-- Pet Info Card -->
+            <mat-card class="info-card">
+              <mat-card-content>
+                <div class="pet-summary">
+                  <div class="pet-avatar">
+                    <mat-icon>pets</mat-icon>
+                  </div>
+                  <div class="pet-details">
+                    <h2>{{ petHistory.petName }}</h2>
+                    <div class="health-score">
+                      <mat-icon [ngClass]="getHealthScore() >= 80 ? 'health-good' : getHealthScore() >= 60 ? 'health-warning' : 'health-poor'">
+                        {{ getHealthScore() >= 80 ? 'favorite' : getHealthScore() >= 60 ? 'warning' : 'error' }}
+                      </mat-icon>
+                      <span class="score-text">
+                        {{ 'appointments.myPetsHistory.healthScore' | translate }}: {{ getHealthScore() }}%
+                      </span>
+                    </div>
+                    <div class="recommendation">
+                      <mat-icon>lightbulb</mat-icon>
+                      <span>{{ getNextRecommendedAction() }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <mat-icon>event</mat-icon>
+                <span class="stat-value">{{ petHistory.totalAppointments }}</span>
+                <span class="stat-label">{{ 'appointments.myPetsHistory.totalVisits' | translate }}</span>
+              </div>
+              
+              <div class="stat-card">
+                <mat-icon>schedule</mat-icon>
+                <span class="stat-value">{{ petHistory.firstAppointment | date: 'dd/MM/yyyy' }}</span>
+                <span class="stat-label">{{ 'appointments.myPetsHistory.firstVisit' | translate }}</span>
+              </div>
+              
+              <div class="stat-card">
+                <mat-icon>update</mat-icon>
+                <span class="stat-value">{{ petHistory.lastAppointment | date: 'dd/MM/yyyy' }}</span>
+                <span class="stat-label">{{ 'appointments.myPetsHistory.lastVisit' | translate }}</span>
+              </div>
+              
+              <div class="stat-card">
+                <mat-icon>check_circle</mat-icon>
+                <span class="stat-value">{{ petHistory.completedAppointments.length }}</span>
+                <span class="stat-label">{{ 'appointments.myPetsHistory.completed' | translate }}</span>
+              </div>
+              
+              <div class="stat-card">
+                <mat-icon>pending</mat-icon>
+                <span class="stat-value">{{ petHistory.pendingAppointments.length }}</span>
+                <span class="stat-label">{{ 'appointments.myPetsHistory.pending' | translate }}</span>
+              </div>
+              
+              <div class="stat-card">
+                <mat-icon>local_hospital</mat-icon>
+                <span class="stat-value">{{ petHistory.veterinaries.length }}</span>
+                <span class="stat-label">{{ 'appointments.myPetsHistory.veterinaries' | translate }}</span>
+              </div>
+            </div>
+
+            <!-- Quick Insights -->
+            <div class="insights-section">
+              <h3>{{ 'appointments.myPetsHistory.quickInsights' | translate }}</h3>
+              
+              <!-- Most Common Reasons -->
+              @if (getMostCommonReasons().length > 0) {
+                <div class="insight-card">
+                  <h4>{{ 'appointments.myPetsHistory.commonReasons' | translate }}</h4>
+                  <mat-chip-set class="reasons-chips">
+                    @for (reasonData of getMostCommonReasons(); track reasonData.reason) {
+                      <mat-chip [color]="'primary'" selected>
+                        {{ reasonData.reason }} ({{ reasonData.count }})
+                      </mat-chip>
+                    }
+                  </mat-chip-set>
+                </div>
+              }
+
+              <!-- Veterinaries Used -->
+              <div class="insight-card">
+                <h4>{{ 'appointments.myPetsHistory.veterinariesUsed' | translate }}</h4>
+                <div class="veterinary-list">
+                  @for (veterinary of petHistory.veterinaries; track veterinary) {
+                    <div class="veterinary-item">
+                      <mat-icon>local_hospital</mat-icon>
+                      <span>{{ veterinary }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Monthly Activity -->
+              @if (getAppointmentsByMonth().length > 0) {
+                <div class="insight-card">
+                  <h4>{{ 'appointments.myPetsHistory.monthlyActivity' | translate }}</h4>
+                  <div class="monthly-chart">
+                    @for (monthData of getAppointmentsByMonth(); track monthData.month) {
+                      <div class="month-bar">
+                        <div class="bar-value">{{ monthData.count }}</div>
+                        <div class="bar" [style.height.px]="monthData.count * 20">
+                        </div>
+                        <div class="bar-label">{{ monthData.month }}</div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Appointments Timeline -->
+            <div class="timeline-section">
+              <h3>{{ 'appointments.myPetsHistory.appointmentTimeline' | translate }}</h3>
+              
+              <div class="table-container">
+                <table mat-table [dataSource]="appointmentsDataSource()" class="appointments-table">
+                  
+                  <!-- Date Column -->
+                  <ng-container matColumnDef="fechaHora">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'appointments.columns.dateTime' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="date-cell">
+                        <mat-icon class="date-icon">event</mat-icon>
+                        <div class="date-info">
+                          <span class="date-text">{{ element.fechaHora | date: 'dd/MM/yyyy' }}</span>
+                          <span class="time-text">{{ element.fechaHora | date: 'HH:mm' }}</span>
+                        </div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Reason Column -->
+                  <ng-container matColumnDef="motivo">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'appointments.columns.reason' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="reason-cell">
+                        <mat-icon class="reason-icon">description</mat-icon>
+                        <span class="reason-text">{{ element.motivo }}</span>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Status Column -->
+                  <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'appointments.columns.status' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                      <span class="status-badge" [ngClass]="element.estado.toLowerCase()">
+                        {{ element.estado }}
+                      </span>
+                    </td>
+                  </ng-container>
+
+                  <!-- Veterinary Status Column -->
+                  <ng-container matColumnDef="veterinaryStatus">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'appointments.columns.veterinaryStatus' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                      <mat-chip [color]="getStatusColor(element.veterinaryStatus)" selected>
+                        <mat-icon>
+                          {{ element.veterinaryStatus === 'COMPLETED' ? 'check_circle' : 
+                             element.veterinaryStatus === 'ACCEPTED' ? 'schedule' : 
+                             element.veterinaryStatus === 'PENDING' ? 'access_time' : 'cancel' }}
+                        </mat-icon>
+                        {{ ('appointments.veterinaryStatus.' + element.veterinaryStatus) | translate }}
+                      </mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <!-- Veterinary Column -->
+                  <ng-container matColumnDef="veterinary">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'appointments.myPetsHistory.veterinary' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="veterinary-cell">
+                        <mat-icon class="veterinary-icon">local_hospital</mat-icon>
+                        <span class="veterinary-name">{{ getVeterinaryName(element.veterinaryId) }}</span>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Details Column -->
+                  <ng-container matColumnDef="details">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'appointments.myPetsHistory.details' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="details-cell">
+                        <span class="appointment-id">ID: {{ element.id }}</span>
+                        @if (element.notas && element.notas.trim()) {
+                          <mat-icon class="notes-icon" matTooltip="{{ element.notas }}">note</mat-icon>
+                        }
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                      [ngClass]="'status-' + row.veterinaryStatus.toLowerCase()"></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
