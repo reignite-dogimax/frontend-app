@@ -13,6 +13,7 @@ import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDivider } from '@angular/material/divider';
 import { MatChip, MatChipSet } from '@angular/material/chips';
 
 interface PetHistory {
@@ -46,6 +47,7 @@ interface PetHistory {
     MatSortModule,
     MatPaginatorModule,
     MatExpansionModule,
+    MatDivider,
     MatChip,
     MatChipSet
   ],
