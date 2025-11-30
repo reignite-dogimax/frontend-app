@@ -86,7 +86,7 @@ export class AppointmentListComponent implements AfterViewChecked {
 
   deleteAppointment(id: number) {
     if (confirm('¿Está seguro de eliminar esta cita?')) {
-      this.store.deleteAppointment(id);
+      this.store.deleteAppointment(id).subscribe();
     }
   }
 

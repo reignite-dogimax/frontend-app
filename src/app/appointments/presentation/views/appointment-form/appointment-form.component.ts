@@ -97,12 +97,18 @@ export class AppointmentFormComponent {
     });
 
     if (this.isEdit) {
-      this.store.updateAppointment(appointment);
+      this.store.updateAppointment(appointment).subscribe({
+        next: () => {
+          this.router.navigate(['appointments']).then();
+        }
+      });
     } else {
-      this.store.addAppointment(appointment);
+      this.store.addAppointment(appointment).subscribe({
+        next: () => {
+          this.router.navigate(['appointments']).then();
+        }
+      });
     }
-
-    this.router.navigate(['appointments']).then();
   }
 
   cancel() {

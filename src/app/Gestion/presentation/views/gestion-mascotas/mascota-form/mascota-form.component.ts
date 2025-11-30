@@ -177,9 +177,15 @@ export class MascotaFormComponent implements OnInit {
             isActive: mascotaExistente.isActive
           });
           
-          this.gestionStore.updateMascota(mascotaActualizada);
-          this.saving = false;
-          this.router.navigate(['/gestion-mascotas/mascotas', mascotaActualizada.id]);
+          this.gestionStore.updateMascota(mascotaActualizada).subscribe({
+            next: () => {
+              this.saving = false;
+              this.router.navigate(['/gestion-mascotas/mascotas', mascotaActualizada.id]);
+            },
+            error: () => {
+              this.saving = false;
+            }
+          });
         } else {
           this.error = 'Mascota no encontrada para actualizar';
           this.saving = false;
@@ -215,9 +221,15 @@ export class MascotaFormComponent implements OnInit {
           isActive: true
         });
         
-        this.gestionStore.addMascota(nuevaMascota);
-        this.saving = false;
-        this.router.navigate(['/gestion-mascotas/mascotas']);
+        this.gestionStore.addMascota(nuevaMascota).subscribe({
+          next: () => {
+            this.saving = false;
+            this.router.navigate(['/gestion-mascotas/mascotas']);
+          },
+          error: () => {
+            this.saving = false;
+          }
+        });
       }
     } else {
       this.markFormGroupTouched();

@@ -4,7 +4,7 @@ import { MedicalHistory } from '../domain/model/medical-history.entity';
 import { Recommendation } from '../domain/model/recommendation.entity';
 import { GestionApi } from '../infrastructure/gestion-api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { retry } from 'rxjs';
+import { Observable, retry, tap } from 'rxjs';
 
 /**
  * State management store for Gestion using Angular signals.
@@ -95,178 +95,214 @@ export class GestionStore {
   /**
    * Adds a new pet.
    * @param mascota - The pet to add.
+   * @returns Observable that completes when the pet is created
    */
-  addMascota(mascota: Pet): void {
+  addMascota(mascota: Pet): Observable<Pet> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gestionApi.createMascota(mascota).pipe(retry(2)).subscribe({
-      next: createdMascota => {
-        this.mascotasSignal.update(mascotas => [...mascotas, createdMascota]);
-        this.loadingSignal.set(false);
-      },
-      error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to create pet'));
-        this.loadingSignal.set(false);
-      }
-    });
+    return this.gestionApi.createMascota(mascota).pipe(
+      retry(2),
+      tap({
+        next: createdMascota => {
+          this.mascotasSignal.update(mascotas => [...mascotas, createdMascota]);
+          this.loadingSignal.set(false);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to create pet'));
+          this.loadingSignal.set(false);
+        }
+      })
+    );
   }
 
   /**
    * Updates an existing pet.
    * @param updatedMascota - The pet to update.
+   * @returns Observable that completes when the pet is updated
    */
-  updateMascota(updatedMascota: Pet): void {
+  updateMascota(updatedMascota: Pet): Observable<Pet> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gestionApi.updateMascota(updatedMascota).pipe(retry(2)).subscribe({
-      next: updated => {
-        this.mascotasSignal.update(mascotas =>
-          mascotas.map(m => m.id === updated.id ? updated : m)
-        );
-        this.loadingSignal.set(false);
-      },
-      error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to update pet'));
-        this.loadingSignal.set(false);
-      }
-    });
+    return this.gestionApi.updateMascota(updatedMascota).pipe(
+      retry(2),
+      tap({
+        next: updated => {
+          this.mascotasSignal.update(mascotas =>
+            mascotas.map(m => m.id === updated.id ? updated : m)
+          );
+          this.loadingSignal.set(false);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to update pet'));
+          this.loadingSignal.set(false);
+        }
+      })
+    );
   }
 
   /**
    * Deletes a pet by ID.
    * @param id - The ID of the pet to delete.
+   * @returns Observable that completes when the pet is deleted
    */
-  deleteMascota(id: number): void {
+  deleteMascota(id: number): Observable<void> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gestionApi.deleteMascota(id).pipe(retry(2)).subscribe({
-      next: () => {
-        this.mascotasSignal.update(mascotas => mascotas.filter(m => m.id !== id));
-        this.loadingSignal.set(false);
-      },
-      error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to delete pet'));
-        this.loadingSignal.set(false);
-      }
-    });
+    return this.gestionApi.deleteMascota(id).pipe(
+      retry(2),
+      tap({
+        next: () => {
+          this.mascotasSignal.update(mascotas => mascotas.filter(m => m.id !== id));
+          this.loadingSignal.set(false);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to delete pet'));
+          this.loadingSignal.set(false);
+        }
+      })
+    );
   }
 
   /**
    * Adds a new medical history.
    * @param historial - The medical history to add.
+   * @returns Observable that completes when the medical history is created
    */
-  addHistorial(historial: MedicalHistory): void {
+  addHistorial(historial: MedicalHistory): Observable<MedicalHistory> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gestionApi.createHistorial(historial).pipe(retry(2)).subscribe({
-      next: created => {
-        this.historialesSignal.update(historiales => [...historiales, created]);
-        this.loadingSignal.set(false);
-      },
-      error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to create medical history'));
-        this.loadingSignal.set(false);
-      }
-    });
+    return this.gestionApi.createHistorial(historial).pipe(
+      retry(2),
+      tap({
+        next: created => {
+          this.historialesSignal.update(historiales => [...historiales, created]);
+          this.loadingSignal.set(false);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to create medical history'));
+          this.loadingSignal.set(false);
+        }
+      })
+    );
   }
 
   /**
    * Updates an existing medical history.
    * @param updatedHistorial - The medical history to update.
+   * @returns Observable that completes when the medical history is updated
    */
-  updateHistorial(updatedHistorial: MedicalHistory): void {
+  updateHistorial(updatedHistorial: MedicalHistory): Observable<MedicalHistory> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gestionApi.updateHistorial(updatedHistorial).pipe(retry(2)).subscribe({
-      next: updated => {
-        this.historialesSignal.update(historiales =>
-          historiales.map(h => h.id === updated.id ? updated : h)
-        );
-        this.loadingSignal.set(false);
-      },
-      error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to update medical history'));
-        this.loadingSignal.set(false);
-      }
-    });
+    return this.gestionApi.updateHistorial(updatedHistorial).pipe(
+      retry(2),
+      tap({
+        next: updated => {
+          this.historialesSignal.update(historiales =>
+            historiales.map(h => h.id === updated.id ? updated : h)
+          );
+          this.loadingSignal.set(false);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to update medical history'));
+          this.loadingSignal.set(false);
+        }
+      })
+    );
   }
 
   /**
    * Deletes a medical history by ID.
    * @param id - The ID of the medical history to delete.
+   * @returns Observable that completes when the medical history is deleted
    */
-  deleteHistorial(id: number): void {
+  deleteHistorial(id: number): Observable<void> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gestionApi.deleteHistorial(id).pipe(retry(2)).subscribe({
-      next: () => {
-        this.historialesSignal.update(historiales => historiales.filter(h => h.id !== id));
-        this.loadingSignal.set(false);
-      },
-      error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to delete medical history'));
-        this.loadingSignal.set(false);
-      }
-    });
+    return this.gestionApi.deleteHistorial(id).pipe(
+      retry(2),
+      tap({
+        next: () => {
+          this.historialesSignal.update(historiales => historiales.filter(h => h.id !== id));
+          this.loadingSignal.set(false);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to delete medical history'));
+          this.loadingSignal.set(false);
+        }
+      })
+    );
   }
 
   /**
    * Adds a new recommendation.
    * @param recomendacion - The recommendation to add.
+   * @returns Observable that completes when the recommendation is created
    */
-  addRecomendacion(recomendacion: Recommendation): void {
+  addRecomendacion(recomendacion: Recommendation): Observable<Recommendation> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gestionApi.createRecomendacion(recomendacion).pipe(retry(2)).subscribe({
-      next: created => {
-        this.recomendacionesSignal.update(recomendaciones => [...recomendaciones, created]);
-        this.loadingSignal.set(false);
-      },
-      error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to create recommendation'));
-        this.loadingSignal.set(false);
-      }
-    });
+    return this.gestionApi.createRecomendacion(recomendacion).pipe(
+      retry(2),
+      tap({
+        next: created => {
+          this.recomendacionesSignal.update(recomendaciones => [...recomendaciones, created]);
+          this.loadingSignal.set(false);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to create recommendation'));
+          this.loadingSignal.set(false);
+        }
+      })
+    );
   }
 
   /**
    * Updates an existing recommendation.
    * @param updatedRecomendacion - The recommendation to update.
+   * @returns Observable that completes when the recommendation is updated
    */
-  updateRecomendacion(updatedRecomendacion: Recommendation): void {
+  updateRecomendacion(updatedRecomendacion: Recommendation): Observable<Recommendation> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gestionApi.updateRecomendacion(updatedRecomendacion).pipe(retry(2)).subscribe({
-      next: updated => {
-        this.recomendacionesSignal.update(recomendaciones =>
-          recomendaciones.map(r => r.id === updated.id ? updated : r)
-        );
-        this.loadingSignal.set(false);
-      },
-      error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to update recommendation'));
-        this.loadingSignal.set(false);
-      }
-    });
+    return this.gestionApi.updateRecomendacion(updatedRecomendacion).pipe(
+      retry(2),
+      tap({
+        next: updated => {
+          this.recomendacionesSignal.update(recomendaciones =>
+            recomendaciones.map(r => r.id === updated.id ? updated : r)
+          );
+          this.loadingSignal.set(false);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to update recommendation'));
+          this.loadingSignal.set(false);
+        }
+      })
+    );
   }
 
   /**
    * Deletes a recomendacion by ID.
    * @param id - The ID of the recomendacion to delete.
+   * @returns Observable that completes when the recommendation is deleted
    */
-  deleteRecomendacion(id: number): void {
+  deleteRecomendacion(id: number): Observable<void> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gestionApi.deleteRecomendacion(id).pipe(retry(2)).subscribe({
-      next: () => {
-        this.recomendacionesSignal.update(recomendaciones => recomendaciones.filter(r => r.id !== id));
-        this.loadingSignal.set(false);
-      },
-      error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to delete recommendation'));
-        this.loadingSignal.set(false);
-      }
-    });
+    return this.gestionApi.deleteRecomendacion(id).pipe(
+      retry(2),
+      tap({
+        next: () => {
+          this.recomendacionesSignal.update(recomendaciones => recomendaciones.filter(r => r.id !== id));
+          this.loadingSignal.set(false);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to delete recommendation'));
+          this.loadingSignal.set(false);
+        }
+      })
+    );
   }
 
   /**
