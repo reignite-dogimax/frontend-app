@@ -2,7 +2,6 @@ import { computed, Injectable, Signal, signal } from '@angular/core';
 import { Appointment } from '../domain/model/appointment.entity';
 import { Veterinary } from '../domain/model/veterinary.entity';
 import { AppointmentsApi } from '../infrastructure/appointments-api';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, retry, tap } from 'rxjs';
 import { AuthStorageService } from '../../iam/infrastructure/auth-storage.service';
 

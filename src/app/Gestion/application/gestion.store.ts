@@ -3,7 +3,6 @@ import { Pet } from '../domain/model/pet.entity';
 import { MedicalHistory } from '../domain/model/medical-history.entity';
 import { Recommendation } from '../domain/model/recommendation.entity';
 import { GestionApi } from '../infrastructure/gestion-api';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, retry, tap } from 'rxjs';
 
 /**
@@ -350,18 +349,14 @@ export class GestionStore {
    */
   private loadMascotas(): void {
     console.log('GestionStore: Loading mascotas from API...');
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.gestionApi.getMascotas().pipe(takeUntilDestroyed()).subscribe({
+    this.gestionApi.getMascotas().subscribe({
       next: mascotas => {
-        console.log('GestionStore: Mascotas loaded successfully:', mascotas);
+        console.log('GestionStore: Mascotas loaded successfully:', mascotas.length, 'items');
         this.mascotasSignal.set(mascotas);
-        this.loadingSignal.set(false);
       },
       error: err => {
         console.error('GestionStore: Error loading mascotas:', err);
         this.errorSignal.set(this.formatError(err, 'Failed to load mascotas'));
-        this.loadingSignal.set(false);
       }
     });
   }
@@ -371,18 +366,14 @@ export class GestionStore {
    */
   private loadHistoriales(): void {
     console.log('GestionStore: Loading historiales from API...');
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.gestionApi.getHistoriales().pipe(takeUntilDestroyed()).subscribe({
+    this.gestionApi.getHistoriales().subscribe({
       next: historiales => {
-        console.log('GestionStore: Historiales loaded successfully:', historiales);
+        console.log('GestionStore: Historiales loaded successfully:', historiales.length, 'items');
         this.historialesSignal.set(historiales);
-        this.loadingSignal.set(false);
       },
       error: err => {
         console.error('GestionStore: Error loading historiales:', err);
         this.errorSignal.set(this.formatError(err, 'Failed to load historiales'));
-        this.loadingSignal.set(false);
       }
     });
   }
@@ -392,13 +383,10 @@ export class GestionStore {
    */
   private loadRecomendaciones(): void {
     console.log('GestionStore: Loading recomendaciones from API...');
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.gestionApi.getRecomendaciones().pipe(takeUntilDestroyed()).subscribe({
+    this.gestionApi.getRecomendaciones().subscribe({
       next: recomendaciones => {
-        console.log('GestionStore: Recomendaciones loaded successfully:', recomendaciones);
+        console.log('GestionStore: Recomendaciones loaded successfully:', recomendaciones.length, 'items');
         this.recomendacionesSignal.set(recomendaciones);
-        this.loadingSignal.set(false);
       },
       error: err => {
         console.error('GestionStore: Error loading recomendaciones:', err);

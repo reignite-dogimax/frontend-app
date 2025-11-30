@@ -102,8 +102,8 @@ export class MascotaDetailComponent implements OnInit {
       this.gestionApi.getMascota(id).subscribe({
         next: (mascotaFromApi) => {
           this.mascota = mascotaFromApi;
-          // También cargar historiales y recomendaciones desde el API
-          this.loadRelatedDataFromApi(id);
+          // Los datos relacionados ya están en el store global
+          this.loading = false;
         },
         error: (err) => {
           console.error('Error al cargar mascota desde API:', err);
@@ -115,62 +115,19 @@ export class MascotaDetailComponent implements OnInit {
   }
 
   loadRelatedData(mascotaId: number): void {
-    // Los signals ya están conectados al store, solo necesitamos verificar si hay datos
+    // Los signals ya están conectados al store global
+    // El store ya cargó todos los datos en su constructor
+    // Solo necesitamos verificar si los datos filtrados para esta mascota están disponibles
     const historiales = this.historial();
     const recomendaciones = this.recomendaciones();
     
-    // Si no hay datos en el store, cargar desde API
-    if (historiales.length === 0 || recomendaciones.length === 0) {
-      this.loadRelatedDataFromApi(mascotaId);
-    } else {
-      console.log('Datos ya disponibles en el store');
-      this.loading = false;
-    }
-  }
-
-  /**
-   * Carga los datos relacionados desde el API cuando el store está vacío
-   */
-  private loadRelatedDataFromApi(mascotaId: number): void {
-    let historialesLoaded = false;
-    let recomendacionesLoaded = false;
-
-    const checkIfAllLoaded = () => {
-      if (historialesLoaded && recomendacionesLoaded) {
-        console.log('Todos los datos cargados desde API');
-        this.loading = false;
-      }
-    };
-
-    // Cargar historiales desde API
-    this.gestionApi.getHistorialesByMascota(mascotaId).subscribe({
-      next: (historiales) => {
-        // Los historiales se agregan al store automáticamente y los signals se actualizan
-        historiales.forEach(h => this.gestionStore.addHistorial(h).subscribe());
-        historialesLoaded = true;
-        checkIfAllLoaded();
-      },
-      error: (err) => {
-        console.error('Error al cargar historiales desde API:', err);
-        historialesLoaded = true;
-        checkIfAllLoaded();
-      }
+    console.log(`Datos filtrados para mascota ${mascotaId}:`, {
+      historiales: historiales.length,
+      recomendaciones: recomendaciones.length
     });
-
-    // Cargar recomendaciones desde API
-    this.gestionApi.getRecomendacionesByMascota(mascotaId).subscribe({
-      next: (recomendaciones) => {
-        // Las recomendaciones se agregan al store automáticamente y los signals se actualizan
-        recomendaciones.forEach(r => this.gestionStore.addRecomendacion(r).subscribe());
-        recomendacionesLoaded = true;
-        checkIfAllLoaded();
-      },
-      error: (err) => {
-        console.error('Error al cargar recomendaciones desde API:', err);
-        recomendacionesLoaded = true;
-        checkIfAllLoaded();
-      }
-    });
+    
+    // Los datos ya deberían estar disponibles porque el store los cargó globalmente
+    this.loading = false;
   }
 
   getEdadMascota(fechaNacimiento?: string): string {
